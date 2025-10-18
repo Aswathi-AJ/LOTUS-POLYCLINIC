@@ -13,8 +13,10 @@ const App = () => {
     name: '',
     contact: '',
     service: '',
+    preferredDoctor: '',
     date: '',
-    time: ''
+    time: '',
+    notes: ''
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -40,8 +42,16 @@ const App = () => {
     e.preventDefault();
     console.log('Appointment Request:', formData);
     setFormSubmitted(true);
-    setFormData({ name: '', contact: '', service: '', date: '', time: '' });
-    setTimeout(() => setFormSubmitted(false), 3000);
+    setFormData({ 
+      name: '', 
+      contact: '', 
+      service: '', 
+      preferredDoctor: '', 
+      date: '', 
+      time: '', 
+      notes: '' 
+    });
+    setTimeout(() => setFormSubmitted(false), 5000);
   };
 
   // Smooth scroll to section
@@ -156,7 +166,7 @@ const App = () => {
     <div className="font-sans" style={{ fontFamily: "'Montserrat', sans-serif" }}>
       {/* WhatsApp Floating Button */}
       <a
-        href="https://wa.me/918201234567"
+        href="https://wa.me/918200000000"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-2xl hover:bg-green-600 transition-all hover:scale-110 group"
@@ -169,106 +179,106 @@ const App = () => {
       </a>
 
       {/* Header - Fixed to always be visible */}
-<header className="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-[#E8A3B9]/20">
-  <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-    {/* Logo Section */}
-    <button 
-      onClick={() => scrollToSection('home')} 
-      className="flex items-center space-x-3 group z-50"
-    >
-      {/* Your Logo */}
-      <img 
-        src="/logo.png" 
-        alt="Lotus Polyclinic" 
-        className="h-10 w-auto md:h-12 object-contain group-hover:scale-105 transition-transform"
-      />
-      <div className="text-left">
-        <span className="text-xl md:text-2xl font-bold text-[#0D3B66] block leading-tight" style={{ letterSpacing: '0.02em' }}>
-          Lotus Polyclinic
-        </span>
-        <span className="text-xs font-medium text-[#E8A3B9]">
-          Healthcare Excellence
-        </span>
-      </div>
-    </button>
-
-    {/* Desktop Nav */}
-    <nav className="hidden lg:flex space-x-6 xl:space-x-8">
-      {[
-        { id: 'home', label: 'Home', icon: Home },
-        { id: 'about', label: 'About', icon: Info },
-        { id: 'services', label: 'Services', icon: Briefcase },
-        { id: 'doctors', label: 'Doctors', icon: Users },
-        { id: 'testimonials', label: 'Testimonials', icon: Star },
-        { id: 'contact', label: 'Contact', icon: Mail }
-      ].map((item) => (
-        <button
-          key={item.id}
-          onClick={() => scrollToSection(item.id)}
-          className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] font-medium transition-all duration-300 group"
-          style={{ letterSpacing: '0.02em' }}
-        >
-          <item.icon size={18} className="mr-2 group-hover:scale-110 transition-transform" />
-          {item.label}
-        </button>
-      ))}
-    </nav>
-
-    <div className="flex items-center space-x-3 md:space-x-4">
-      <button
-        onClick={() => scrollToSection('contact')}
-        className="hidden md:flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-4 py-2 md:px-6 md:py-3 rounded-full hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
-      >
-        <Calendar size={16} className="mr-2 group-hover:scale-110 transition-transform" />
-        <span className="hidden sm:inline">Book Appointment</span>
-      </button>
-
-      <button
-        className="lg:hidden text-[#0D3B66] p-2 rounded-lg hover:bg-[#F5CEDD]/20 transition-colors"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-    </div>
-  </div>
-
-  {/* Mobile Menu */}
-  {isMenuOpen && (
-    <div className="lg:hidden bg-white/95 backdrop-blur-md border-t border-[#E8A3B9]/20 py-6 px-6">
-      <div className="flex flex-col space-y-4">
-        {[
-          { id: 'home', label: 'Home', icon: Home },
-          { id: 'about', label: 'About', icon: Info },
-          { id: 'services', label: 'Services', icon: Briefcase },
-          { id: 'doctors', label: 'Doctors', icon: Users },
-          { id: 'testimonials', label: 'Testimonials', icon: Star },
-          { id: 'contact', label: 'Contact', icon: Mail }
-        ].map((item) => (
-          <button
-            key={item.id}
-            onClick={() => {
-              scrollToSection(item.id);
-              setIsMenuOpen(false);
-            }}
-            className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] font-medium text-lg py-3 transition-all duration-300"
+      <header className="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-[#E8A3B9]/20">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          {/* Logo Section */}
+          <button 
+            onClick={() => scrollToSection('home')} 
+            className="flex items-center space-x-3 group z-50"
           >
-            <item.icon size={20} className="mr-3" />
-            {item.label}
+            {/* Your Logo */}
+            <img 
+              src="/logo.png" 
+              alt="Lotus Polyclinic" 
+              className="h-10 w-auto md:h-12 object-contain group-hover:scale-105 transition-transform"
+            />
+            <div className="text-left">
+              <span className="text-xl md:text-2xl font-bold text-[#0D3B66] block leading-tight" style={{ letterSpacing: '0.02em' }}>
+                Lotus Polyclinic
+              </span>
+              <span className="text-xs font-medium text-[#E8A3B9]">
+                Healthcare Excellence
+              </span>
+            </div>
           </button>
-        ))}
-        <button
-          onClick={() => {
-            scrollToSection('contact');
-            setIsMenuOpen(false);
-          }}
-          className="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-4 rounded-xl hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 font-semibold text-center mt-2"
-        >
-          Book Appointment
-        </button>
-      </div>
-    </div>
-  )}
-</header>
+
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex space-x-6 xl:space-x-8">
+            {[
+              { id: 'home', label: 'Home', icon: Home },
+              { id: 'about', label: 'About', icon: Info },
+              { id: 'services', label: 'Services', icon: Briefcase },
+              { id: 'doctors', label: 'Doctors', icon: Users },
+              { id: 'testimonials', label: 'Testimonials', icon: Star },
+              { id: 'contact', label: 'Contact', icon: Mail }
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] font-medium transition-all duration-300 group"
+                style={{ letterSpacing: '0.02em' }}
+              >
+                <item.icon size={18} className="mr-2 group-hover:scale-110 transition-transform" />
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="flex items-center space-x-3 md:space-x-4">
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="hidden md:flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-4 py-2 md:px-6 md:py-3 rounded-full hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 shadow-lg hover:shadow-xl font-semibold group"
+            >
+              <Calendar size={16} className="mr-2 group-hover:scale-110 transition-transform" />
+              <span className="hidden sm:inline">Book Appointment</span>
+            </button>
+
+            <button
+              className="lg:hidden text-[#0D3B66] p-2 rounded-lg hover:bg-[#F5CEDD]/20 transition-colors"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="lg:hidden bg-white/95 backdrop-blur-md border-t border-[#E8A3B9]/20 py-6 px-6">
+            <div className="flex flex-col space-y-4">
+              {[
+                { id: 'home', label: 'Home', icon: Home },
+                { id: 'about', label: 'About', icon: Info },
+                { id: 'services', label: 'Services', icon: Briefcase },
+                { id: 'doctors', label: 'Doctors', icon: Users },
+                { id: 'testimonials', label: 'Testimonials', icon: Star },
+                { id: 'contact', label: 'Contact', icon: Mail }
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    scrollToSection(item.id);
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] font-medium text-lg py-3 transition-all duration-300"
+                >
+                  <item.icon size={20} className="mr-3" />
+                  {item.label}
+                </button>
+              ))}
+              <button
+                onClick={() => {
+                  scrollToSection('contact');
+                  setIsMenuOpen(false);
+                }}
+                className="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-4 rounded-xl hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 font-semibold text-center mt-2"
+              >
+                Book Appointment
+              </button>
+            </div>
+          </div>
+        )}
+      </header>
 
       {/* Add padding for fixed header */}
       <div className="pt-16"></div>
@@ -668,7 +678,7 @@ const App = () => {
                     <div>
                       <h4 className="font-bold text-base md:text-lg mb-1">Phone</h4>
                       <a href="tel:08201234567" className="opacity-90 hover:underline block text-sm md:text-base">
-                        820-1234567
+                        820-0000000
                       </a>
                     </div>
                   </div>
@@ -704,7 +714,7 @@ const App = () => {
                   </h4>
                   <p className="mb-3 md:mb-4 opacity-90 text-sm md:text-base">Get instant responses and quick appointments</p>
                   <a
-                    href="https://wa.me/918201234567"
+                    href="https://wa.me/918200000000"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center bg-green-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold hover:bg-green-600 transition-all text-sm md:text-base"
@@ -716,90 +726,175 @@ const App = () => {
               </div>
             </div>
 
-            {/* Appointment Form */}
+            {/* Enhanced Appointment Form */}
             <div>
               <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 border border-[#E8A3B9]/20">
-                <h3 className="text-xl md:text-2xl font-bold text-[#0D3B66] mb-2">Book an Appointment</h3>
-                <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">Fill out the form below and we'll get back to you shortly</p>
+                <div className="flex items-center mb-4 md:mb-6">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-xl flex items-center justify-center mr-3">
+                    <Calendar size={20} className="text-[#E8A3B9]" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-bold text-[#0D3B66]">Book an Appointment</h3>
+                    <p className="text-gray-600 text-sm md:text-base">Quick & easy booking process</p>
+                  </div>
+                </div>
                 
                 {formSubmitted ? (
-                  <div className="bg-green-100 border border-green-400 text-green-800 px-4 py-6 md:px-6 md:py-8 rounded-xl md:rounded-2xl text-center">
-                    <CheckCircle size={32} className="md:w-12 md:h-12 mx-auto mb-3 md:mb-4 text-green-500" />
-                    <h4 className="text-lg md:text-xl font-bold mb-2">Thank You!</h4>
-                    <p className="text-sm md:text-base">Your appointment request has been received. We'll contact you shortly to confirm your booking.</p>
+                  <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-6 md:px-6 md:py-8 rounded-xl md:rounded-2xl text-center">
+                    <CheckCircle size={40} className="mx-auto mb-3 md:mb-4 text-green-500" />
+                    <h4 className="text-lg md:text-xl font-bold mb-2">Appointment Request Sent!</h4>
+                    <p className="text-sm md:text-base mb-4">Thank you for choosing Lotus Polyclinic. We'll contact you within 30 minutes to confirm your appointment.</p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <a
+                        href="https://wa.me/918200000000"
+                        className="inline-flex items-center bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition-all"
+                      >
+                        <MessageCircle size={16} className="mr-2" />
+                        Chat on WhatsApp
+                      </a>
+                      <button
+                        onClick={() => setFormSubmitted(false)}
+                        className="inline-flex items-center bg-[#0D3B66] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#4A90E2] transition-all"
+                      >
+                        Book Another Appointment
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                    {/* Personal Information */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                       <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
                         <input
                           type="text"
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
-                          placeholder="Full Name"
+                          placeholder="Enter your full name"
                           required
-                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-transparent transition-all text-sm md:text-base"
+                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base"
                         />
                       </div>
                       <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Contact Number *</label>
                         <input
                           type="tel"
                           name="contact"
                           value={formData.contact}
                           onChange={handleInputChange}
-                          placeholder="Contact Number"
+                          placeholder="10-digit mobile number"
                           required
-                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-transparent transition-all text-sm md:text-base"
+                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base"
                         />
                       </div>
                     </div>
+
+                    {/* Service Selection */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Select Service *</label>
+                      <select
+                        name="service"
+                        value={formData.service}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base bg-white appearance-none"
+                      >
+                        <option value="">Choose a medical service...</option>
+                        <option value="Diabetology">Diabetology Consultation</option>
+                        <option value="OB/GYN">Obstetrics & Gynecology</option>
+                        <option value="General Medicine">General Medicine</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Health Check-up">Preventive Health Check-up</option>
+                        <option value="Vaccination">Vaccination</option>
+                        <option value="Other">Other Service</option>
+                      </select>
+                    </div>
+
+                    {/* Preferred Doctor */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Doctor (Optional)</label>
+                      <select
+                        name="preferredDoctor"
+                        value={formData.preferredDoctor}
+                        onChange={handleInputChange}
+                        className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base bg-white appearance-none"
+                      >
+                        <option value="">Any Available Doctor</option>
+                        <option value="Dr. Meena">Dr. Meena (Diabetology & OB/GYN)</option>
+                        <option value="Dr. Arjun">Dr. Arjun (Dermatology)</option>
+                        <option value="No Preference">No Preference</option>
+                      </select>
+                    </div>
                     
-                    <select
-                      name="service"
-                      value={formData.service}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-transparent transition-all text-sm md:text-base"
-                    >
-                      <option value="">Select Service</option>
-                      <option value="Diabetology">Diabetology</option>
-                      <option value="OB/GYN">OB/GYN</option>
-                      <option value="General Medicine">General Medicine</option>
-                      <option value="Dermatology">Dermatology</option>
-                      <option value="Pediatrics">Pediatrics</option>
-                      <option value="Other">Other</option>
-                    </select>
-                    
+                    {/* Date & Time */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                       <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Date *</label>
                         <input
                           type="date"
                           name="date"
                           value={formData.date}
                           onChange={handleInputChange}
+                          min={new Date().toISOString().split('T')[0]}
                           required
-                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-transparent transition-all text-sm md:text-base"
+                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base"
                         />
                       </div>
                       <div>
-                        <input
-                          type="time"
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Time *</label>
+                        <select
                           name="time"
                           value={formData.time}
                           onChange={handleInputChange}
                           required
-                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-transparent transition-all text-sm md:text-base"
-                        />
+                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base bg-white appearance-none"
+                        >
+                          <option value="">Select time slot</option>
+                          <option value="07:00">7:00 AM - 8:00 AM</option>
+                          <option value="08:00">8:00 AM - 9:00 AM</option>
+                          <option value="09:00">9:00 AM - 10:00 AM</option>
+                          <option value="10:00">10:00 AM - 11:00 AM</option>
+                          <option value="11:00">11:00 AM - 12:00 PM</option>
+                          <option value="12:00">12:00 PM - 1:00 PM</option>
+                          <option value="13:00">1:00 PM - 2:00 PM</option>
+                          <option value="14:00">2:00 PM - 3:00 PM</option>
+                          <option value="15:00">3:00 PM - 4:00 PM</option>
+                          <option value="16:00">4:00 PM - 5:00 PM</option>
+                          <option value="17:00">5:00 PM - 6:00 PM</option>
+                          <option value="18:00">6:00 PM - 7:00 PM</option>
+                        </select>
                       </div>
                     </div>
+
+                    {/* Additional Notes */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes (Optional)</label>
+                      <textarea
+                        name="notes"
+                        value={formData.notes}
+                        onChange={handleInputChange}
+                        placeholder="Any specific concerns, symptoms, or previous medical history you'd like to share..."
+                        rows="3"
+                        className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base resize-none"
+                      />
+                    </div>
                     
+                    {/* Submit Button */}
                     <button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white py-3 md:py-4 rounded-lg md:rounded-xl font-bold hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base"
+                      className="w-full bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white py-3 md:py-4 rounded-lg md:rounded-xl font-bold hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base flex items-center justify-center transform hover:scale-105"
                     >
-                      Submit Appointment Request
+                      <Calendar size={20} className="mr-2" />
+                      Confirm Appointment Request
                     </button>
+
+                    {/* Quick Contact Info */}
+                    <div className="text-center text-sm text-gray-500 pt-4 border-t border-gray-200">
+                      <p className="mb-2">📞 Prefer to call? <a href="tel:820-0000000" className="text-[#0D3B66] hover:underline font-medium">820-0000000</a></p>
+                      <p>💬 Quick response on <a href="https://wa.me/918200000000" className="text-green-600 hover:underline font-medium">WhatsApp</a></p>
+                    </div>
                   </form>
                 )}
               </div>
@@ -807,88 +902,87 @@ const App = () => {
           </div>
 
           {/* Google Maps Embed - General Mangalore Area */}
-{/* Google Maps Embed - Search View */}
-<div className="mt-8 md:mt-12 lg:mt-16 rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#E8A3B9]/20">
-  <iframe
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62276.05783643242!2d74.8207412!3d12.9141365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba35a594c26a883%3A0xb08f0f5a0ae5dd6a!2sMangalore%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1710000000000"
-    width="100%"
-    height="400"
-    style={{ border: 0 }}
-    allowFullScreen=""
-    loading="lazy"
-    referrerPolicy="no-referrer-when-downgrade"
-    title="Lotus Polyclinic Location in Mangalore"
-    className="rounded-xl md:rounded-2xl lg:rounded-3xl"
-  ></iframe>
-</div>
+          <div className="mt-8 md:mt-12 lg:mt-16 rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#E8A3B9]/20">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62276.05783643242!2d74.8207412!3d12.9141365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba35a594c26a883%3A0xb08f0f5a0ae5dd6a!2sMangalore%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1710000000000"
+              width="100%"
+              height="400"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Lotus Polyclinic Location in Mangalore"
+              className="rounded-xl md:rounded-2xl lg:rounded-3xl"
+            ></iframe>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-<footer className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white py-8 md:py-12 px-4">
-  <div className="container mx-auto max-w-6xl">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
-      <div>
-        {/* Footer Logo */}
-        <div className="flex items-center mb-3 md:mb-4">
-          <img 
-            src="/logo.png" 
-            alt="Lotus Polyclinic" 
-            className="h-10 w-10 md:h-12 md:w-12 object-contain mr-3"
-          />
-          <span className="text-xl md:text-2xl font-bold">Lotus Polyclinic</span>
+      <footer className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white py-8 md:py-12 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
+            <div>
+              {/* Footer Logo */}
+              <div className="flex items-center mb-3 md:mb-4">
+                <img 
+                  src="/logo.png" 
+                  alt="Lotus Polyclinic" 
+                  className="h-10 w-10 md:h-12 md:w-12 object-contain mr-3"
+                />
+                <span className="text-xl md:text-2xl font-bold">Lotus Polyclinic</span>
+              </div>
+              <p className="text-white/80 leading-relaxed text-sm md:text-base" style={{ fontFamily: "'Lora', serif" }}>
+                Compassionate, community-focused healthcare since 2020. Your health is our priority.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Quick Links</h4>
+              <div className="space-y-1 md:space-y-2">
+                {['home', 'about', 'services', 'doctors', 'contact'].map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => scrollToSection(item)}
+                    className="block text-white/70 hover:text-[#E8A3B9] transition-colors capitalize text-sm md:text-base"
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Contact Info</h4>
+              <div className="space-y-1 md:space-y-2 text-white/70 text-sm md:text-base">
+                <div>Mangalore, Karnataka</div>
+                <div>820-0000000</div>
+                <div>contact@lotuspolyclinic.com</div>
+                <div>Mon-Sun: 7:00 AM - 7:30 PM</div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Emergency</h4>
+              <div className="space-y-1 md:space-y-2">
+                <div className="text-[#E8A3B9] font-semibold text-sm md:text-base">24/7 Support</div>
+                <a href="tel:08201234567" className="text-white/70 hover:text-[#E8A3B9] transition-colors block text-sm md:text-base">
+                  Emergency Helpline
+                </a>
+                <a href="https://wa.me/918200000000" className="text-white/70 hover:text-[#E8A3B9] transition-colors block text-sm md:text-base">
+                  WhatsApp Emergency
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-white/20 pt-6 md:pt-8 text-center">
+            <p className="text-white/70 text-sm md:text-base" style={{ fontFamily: "'Lora', serif" }}>
+              © 2025 Lotus Polyclinic. All rights reserved. | Compassionate Care, Clinical Excellence
+            </p>
+          </div>
         </div>
-        <p className="text-white/80 leading-relaxed text-sm md:text-base" style={{ fontFamily: "'Lora', serif" }}>
-          Compassionate, community-focused healthcare since 2020. Your health is our priority.
-        </p>
-      </div>
-      
-      <div>
-        <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Quick Links</h4>
-        <div className="space-y-1 md:space-y-2">
-          {['home', 'about', 'services', 'doctors', 'contact'].map((item) => (
-            <button
-              key={item}
-              onClick={() => scrollToSection(item)}
-              className="block text-white/70 hover:text-[#E8A3B9] transition-colors capitalize text-sm md:text-base"
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      </div>
-      
-      <div>
-        <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Contact Info</h4>
-        <div className="space-y-1 md:space-y-2 text-white/70 text-sm md:text-base">
-          <div>Mangalore, Karnataka</div>
-          <div>0820-XXXXXXX</div>
-          <div>contact@lotuspolyclinic.com</div>
-          <div>Mon-Sun: 7:00 AM - 7:30 PM</div>
-        </div>
-      </div>
-      
-      <div>
-        <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Emergency</h4>
-        <div className="space-y-1 md:space-y-2">
-          <div className="text-[#E8A3B9] font-semibold text-sm md:text-base">24/7 Support</div>
-          <a href="tel:08201234567" className="text-white/70 hover:text-[#E8A3B9] transition-colors block text-sm md:text-base">
-            Emergency Helpline
-          </a>
-          <a href="https://wa.me/918201234567" className="text-white/70 hover:text-[#E8A3B9] transition-colors block text-sm md:text-base">
-            WhatsApp Emergency
-          </a>
-        </div>
-      </div>
-    </div>
-    
-    <div className="border-t border-white/20 pt-6 md:pt-8 text-center">
-      <p className="text-white/70 text-sm md:text-base" style={{ fontFamily: "'Lora', serif" }}>
-        © 2025 Lotus Polyclinic. All rights reserved. | Compassionate Care, Clinical Excellence
-      </p>
-    </div>
-  </div>
-</footer>
+      </footer>
     </div>
   );
 };
