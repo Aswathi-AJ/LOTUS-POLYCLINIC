@@ -668,7 +668,7 @@ const App = () => {
                     <div>
                       <h4 className="font-bold text-base md:text-lg mb-1">Phone</h4>
                       <a href="tel:08201234567" className="opacity-90 hover:underline block text-sm md:text-base">
-                        0820-XXXXXXX
+                        820-1234567
                       </a>
                     </div>
                   </div>
