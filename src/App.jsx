@@ -273,8 +273,6 @@ const App = () => {
       {/* Add padding for fixed header */}
       <div className="pt-16"></div>
 
-// Replace your current Hero Section with this FIXED version:
-
       {/* Hero Section - FIXED FOR 100% ZOOM */}
       <section id="home" className="relative bg-gradient-to-br from-[#0D3B66] via-[#2A5F8F] to-[#4A90E2] text-white py-12 md:py-16 lg:py-20 xl:py-24 px-4 overflow-hidden min-h-[80vh] flex items-center">
         {/* Animated Background Elements */}
