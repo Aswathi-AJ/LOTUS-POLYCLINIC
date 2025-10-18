@@ -273,8 +273,10 @@ const App = () => {
       {/* Add padding for fixed header */}
       <div className="pt-16"></div>
 
-      {/* Hero Section */}
-      <section id="home" className="relative bg-gradient-to-br from-[#0D3B66] via-[#2A5F8F] to-[#4A90E2] text-white py-16 md:py-24 px-4 overflow-hidden">
+// Replace your current Hero Section with this FIXED version:
+
+      {/* Hero Section - FIXED FOR 100% ZOOM */}
+      <section id="home" className="relative bg-gradient-to-br from-[#0D3B66] via-[#2A5F8F] to-[#4A90E2] text-white py-12 md:py-16 lg:py-20 xl:py-24 px-4 overflow-hidden min-h-[80vh] flex items-center">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-16 h-16 md:w-20 md:h-20 bg-[#E8A3B9] rounded-full blur-xl"></div>
@@ -282,47 +284,51 @@ const App = () => {
           <div className="absolute top-1/2 left-1/4 w-12 h-12 md:w-16 md:h-16 bg-[#F5CEDD] rounded-full blur-lg"></div>
         </div>
 
-        <div className="container mx-auto max-w-6xl text-center relative z-10">
-          <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 md:px-4 md:py-2 mb-4 md:mb-6 border border-white/20">
-            <Award size={14} className="mr-2 text-[#E8A3B9]" />
-            <span className="text-xs md:text-sm font-medium">Mangalore's Trusted Healthcare Partner Since 2020</span>
+        <div className="container mx-auto max-w-4xl lg:max-w-6xl text-center relative z-10">
+          {/* Badge - Fixed for mobile */}
+          <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 md:px-4 md:py-2 mb-4 md:mb-6 border border-white/20 mx-auto max-w-xs md:max-w-none">
+            <Award size={14} className="mr-2 text-[#E8A3B9] flex-shrink-0" />
+            <span className="text-xs md:text-sm font-medium truncate">Mangalore's Trusted Healthcare</span>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 md:mb-6 leading-tight">
+          {/* MAIN HEADING - FIXED OVERLAP ISSUE */}
+          <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-snug md:leading-tight px-2">
             Your Health, 
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#E8A3B9] to-[#F5CEDD] mt-1 md:mt-2">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#E8A3B9] to-[#F5CEDD] mt-1 md:mt-2 lg:mt-3">
               Our Commitment
             </span>
           </h1>
           
-          <p className="text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed opacity-90 px-4" style={{ fontFamily: "'Lora', serif" }}>
+          {/* SUBTITLE - Better line breaks */}
+          <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed opacity-90 px-2 break-words" style={{ fontFamily: "'Lora', serif" }}>
             Expert-led, compassionate healthcare for your entire family. Where modern medicine meets heartfelt care.
           </p>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-5 mb-8 md:mb-12 px-4">
+          {/* BUTTONS - Fixed spacing and sizing */}
+          <div className="flex flex-col xs:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-5 mb-8 md:mb-12 px-2">
             <button
               onClick={() => scrollToSection('contact')}
-              className="group bg-gradient-to-r from-[#E8A3B9] to-[#F5CEDD] text-[#0D3B66] px-6 py-3 md:px-8 md:py-4 lg:px-10 lg:py-4 rounded-full font-bold hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center text-sm md:text-base"
+              className="group bg-gradient-to-r from-[#E8A3B9] to-[#F5CEDD] text-[#0D3B66] px-4 sm:px-6 md:px-8 lg:px-10 py-3 rounded-full font-bold hover:shadow-2xl transition-all duration-300 hover:scale-105 flex items-center justify-center text-sm sm:text-base whitespace-nowrap w-full xs:w-auto min-w-[160px] sm:min-w-[180px]"
             >
-              <Calendar size={18} className="mr-2 md:mr-3 group-hover:scale-110 transition-transform" />
+              <Calendar size={16} className="mr-2 group-hover:scale-110 transition-transform flex-shrink-0" />
               Book Appointment
-              <ArrowRight size={18} className="ml-2 md:ml-3 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform flex-shrink-0" />
             </button>
             <button
               onClick={() => scrollToSection('services')}
-              className="group border-2 border-white/60 text-white px-6 py-3 md:px-8 md:py-4 lg:px-10 lg:py-4 rounded-full font-bold hover:bg-white hover:text-[#0D3B66] transition-all duration-300 backdrop-blur-sm text-sm md:text-base"
+              className="group border-2 border-white/60 text-white px-4 sm:px-6 md:px-8 lg:px-10 py-3 rounded-full font-bold hover:bg-white hover:text-[#0D3B66] transition-all duration-300 backdrop-blur-sm text-sm sm:text-base whitespace-nowrap w-full xs:w-auto min-w-[160px] sm:min-w-[180px]"
             >
               Explore Services
-              <Play size={14} className="ml-2 inline group-hover:translate-x-1 transition-transform" />
+              <Play size={12} className="ml-2 inline group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-4xl mx-auto px-4">
+          {/* STATS - Improved grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 lg:gap-6 max-w-2xl lg:max-w-4xl mx-auto px-2">
             {stats.map((stat, index) => (
               <div key={index} className="text-center bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/20 transition-all duration-300">
-                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-[#E8A3B9] mb-1">{stat.number}</div>
-                <div className="text-xs md:text-sm font-medium opacity-90">{stat.label}</div>
+                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-[#E8A3B9] mb-1">{stat.number}</div>
+                <div className="text-xs sm:text-sm font-medium opacity-90 leading-tight px-1">{stat.label}</div>
               </div>
             ))}
           </div>

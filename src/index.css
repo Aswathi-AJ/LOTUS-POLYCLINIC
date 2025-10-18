@@ -1,1 +1,55 @@
+/* src/index.css */
 @import "tailwindcss";
+
+/* CUSTOM FIXES FOR OVERLAP ISSUES */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Custom breakpoint for extra small screens */
+@media (min-width: 475px) {
+  .xs\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+  
+  .xs\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  
+  .xs\:flex-row {
+    flex-direction: row;
+  }
+  
+  .xs\:w-auto {
+    width: auto;
+  }
+}
+
+/* Ensure text doesn't overflow containers */
+.break-words {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Prevent horizontal scrolling */
+.container {
+  max-width: 100%;
+}
+
+/* Improve button text rendering */
+button, a {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
