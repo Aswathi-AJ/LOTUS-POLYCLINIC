@@ -806,20 +806,21 @@ const App = () => {
             </div>
           </div>
 
-          {/* Google Maps Embed */}
-          <div className="mt-8 md:mt-12 lg:mt-16 rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#E8A3B9]/20">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.894223456789!2d74.856789!3d12.912345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDU0JzQ0LjQiTiA3NMKwNTEnMjQuNCJF!5e0!3m2!1sen!2sin!4v1710000000000!5m2!1sen!2sin"
-              width="100%"
-              height="300"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Lotus Polyclinic Location"
-              className="rounded-xl md:rounded-2xl lg:rounded-3xl"
-            ></iframe>
-          </div>
+          {/* Google Maps Embed - General Mangalore Area */}
+{/* Google Maps Embed - Search View */}
+<div className="mt-8 md:mt-12 lg:mt-16 rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#E8A3B9]/20">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62276.05783643242!2d74.8207412!3d12.9141365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba35a594c26a883%3A0xb08f0f5a0ae5dd6a!2sMangalore%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1710000000000"
+    width="100%"
+    height="400"
+    style={{ border: 0 }}
+    allowFullScreen=""
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+    title="Lotus Polyclinic Location in Mangalore"
+    className="rounded-xl md:rounded-2xl lg:rounded-3xl"
+  ></iframe>
+</div>
         </div>
       </section>
 
