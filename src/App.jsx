@@ -2,34 +2,22 @@
 import React, { useState, useEffect } from 'react';
 import {
   Phone, Mail, MapPin, Clock, MessageCircle, Menu, X,
-  Heart, Home, Info, Briefcase, Users, Star, Award, Shield,
+  Heart, Home, Info, Shield, Users, Star, Award,
   Calendar, ArrowRight, CheckCircle, Play, Stethoscope,
-  Baby, Eye, Activity, Apple, ShieldCheck
+  Baby, Activity, Apple, Plus, FileText
 } from 'lucide-react';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    contact: '',
-    service: '',
-    preferredDoctor: '',
-    date: '',
-    time: '',
-    notes: ''
+    email: '',
+    mobile: '',
+    subject: '',
+    message: ''
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // Handle scroll for header background
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -40,16 +28,14 @@ const App = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Appointment Request:', formData);
+    console.log('Contact Form Submitted:', formData);
     setFormSubmitted(true);
     setFormData({ 
       name: '', 
-      contact: '', 
-      service: '', 
-      preferredDoctor: '', 
-      date: '', 
-      time: '', 
-      notes: '' 
+      email: '', 
+      mobile: '', 
+      subject: '', 
+      message: '' 
     });
     setTimeout(() => setFormSubmitted(false), 5000);
   };
@@ -63,7 +49,7 @@ const App = () => {
     setIsMenuOpen(false);
   };
 
-  // Testimonials data from content document
+  // Testimonials data from PPT
   const testimonials = [
     {
       name: "Sanjay K., 58",
@@ -82,12 +68,12 @@ const App = () => {
     }
   ];
 
-  // Stats data
+  // Stats data from PPT
   const stats = [
     { number: "5000+", label: "Patients Treated" },
-    { number: "15+", label: "Years Experience" },
-    { number: "98%", label: "Patient Satisfaction" },
-    { number: "24/7", label: "Support Available" }
+    { number: "16+", label: "Years Experience" },
+    { number: "24/7", label: "Medical Care" },
+    { number: "98%", label: "Patient Satisfaction" }
   ];
 
   // Core values from brand guide
@@ -98,59 +84,53 @@ const App = () => {
       description: "Healthcare as service, not privilege"
     },
     {
-      icon: ShieldCheck,
+      icon: Shield,
       title: "Accessibility",
       description: "Easy reach for underserved populations"
     },
     {
       icon: Award,
       title: "Trust & Expertise",
-      description: "Female-led with specializations in diabetology, OB/GYN, and general medicine"
+      description: "Female-led with 16+ years experience in diabetes and family medicine"
     },
     {
       icon: Stethoscope,
       title: "Modern Care",
-      description: "Multi-department facility with visiting specialists"
+      description: "Multi-department facility with 24/7 emergency care"
     }
   ];
 
-  // Services with icons
-  const services = [
+  // Facilities from PPT
+  const facilities = [
     {
-      icon: Activity,
-      title: "Diabetology",
-      description: "Comprehensive diabetes management with advanced monitoring and lifestyle coaching",
-      features: ["Expert Consultation", "Advanced Monitoring", "Diet & Lifestyle Coaching"]
-    },
-    {
-      icon: Baby,
-      title: "Obstetrics & Gynecology",
-      description: "Complete women's health services from prenatal care to menopause support",
-      features: ["Prenatal Care", "Well-woman Exams", "Family Planning"]
-    },
-    {
-      icon: Stethoscope,
-      title: "General Medicine",
-      description: "Holistic primary care for acute illnesses and chronic disease management",
-      features: ["Primary Care", "Chronic Disease Management", "Preventive Screenings"]
+      icon: Clock,
+      title: "24/7 Medical Care",
+      description: "Round-the-clock healthcare accessible to you and your family"
     },
     {
       icon: Shield,
-      title: "Dermatology",
-      description: "Expert care for skin, hair, and nail conditions with personalized treatments",
-      features: ["Skin Conditions", "Allergy Testing", "Cosmetic Advice"]
+      title: "Emergency Care Services",
+      description: "Modern emergency facilities for urgent medical situations"
     },
     {
-      icon: Users,
-      title: "Visiting Specialists",
-      description: "Access to pediatrics, cardiology, orthopedics, ENT, and ophthalmology",
-      features: ["Pediatrics", "Cardiology", "Orthopedics"]
+      icon: Plus,
+      title: "24/7 On-Site Pharmacy",
+      description: "Fully-stocked pharmacy operating 24 hours daily"
     },
     {
-      icon: Apple,
-      title: "Wellness Services",
-      description: "Preventive health check-ups, vaccinations, and lifestyle counseling",
-      features: ["Health Check-ups", "Vaccinations", "Nutrition Counseling"]
+      icon: Activity,
+      title: "Advanced Laboratory",
+      description: "Comprehensive diagnostic testing with ECG and home collection"
+    },
+    {
+      icon: Star,
+      title: "Wellness Packages",
+      description: "Preventive care and health maintenance programs"
+    },
+    {
+      icon: Home,
+      title: "Home Collection Services",
+      description: "Doorstep sample collection for laboratory tests"
     }
   ];
 
@@ -178,39 +158,30 @@ const App = () => {
         </div>
       </a>
 
-      {/* Header - Fixed to always be visible */}
-      <header className="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-[#E8A3B9]/20">
+      {/* Header - Fixed with solid background */}
+      <header className="fixed w-full top-0 z-50 bg-white shadow-lg border-b border-[#E8A3B9]/20">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           {/* Logo Section */}
           <button 
             onClick={() => scrollToSection('home')} 
-            className="flex items-center space-x-3 group z-50"
+            className="flex items-center group z-50"
           >
-            {/* Your Logo */}
             <img 
               src="/logo.png" 
               alt="Lotus Polyclinic" 
               className="h-10 w-auto md:h-12 object-contain group-hover:scale-105 transition-transform"
             />
-            <div className="text-left">
-              <span className="text-xl md:text-2xl font-bold text-[#0D3B66] block leading-tight" style={{ letterSpacing: '0.02em' }}>
-                Lotus Polyclinic
-              </span>
-              <span className="text-xs font-medium text-[#E8A3B9]">
-                Healthcare Excellence
-              </span>
-            </div>
           </button>
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav - Updated to match PPT structure */}
           <nav className="hidden lg:flex space-x-6 xl:space-x-8">
             {[
               { id: 'home', label: 'Home', icon: Home },
-              { id: 'about', label: 'About', icon: Info },
-              { id: 'services', label: 'Services', icon: Briefcase },
-              { id: 'doctors', label: 'Doctors', icon: Users },
+              { id: 'about', label: 'About Us', icon: Info },
+              { id: 'facilities', label: 'Facilities', icon: Shield },
+              { id: 'blogs', label: 'Blogs', icon: FileText },
               { id: 'testimonials', label: 'Testimonials', icon: Star },
-              { id: 'contact', label: 'Contact', icon: Mail }
+              { id: 'contact', label: 'Contact Us', icon: Mail }
             ].map((item) => (
               <button
                 key={item.id}
@@ -242,17 +213,17 @@ const App = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Updated to match PPT structure */}
         {isMenuOpen && (
-          <div className="lg:hidden bg-white/95 backdrop-blur-md border-t border-[#E8A3B9]/20 py-6 px-6">
+          <div className="lg:hidden bg-white border-t border-[#E8A3B9]/20 py-6 px-6">
             <div className="flex flex-col space-y-4">
               {[
                 { id: 'home', label: 'Home', icon: Home },
-                { id: 'about', label: 'About', icon: Info },
-                { id: 'services', label: 'Services', icon: Briefcase },
-                { id: 'doctors', label: 'Doctors', icon: Users },
+                { id: 'about', label: 'About Us', icon: Info },
+                { id: 'facilities', label: 'Facilities', icon: Shield },
+                { id: 'blogs', label: 'Blogs', icon: FileText },
                 { id: 'testimonials', label: 'Testimonials', icon: Star },
-                { id: 'contact', label: 'Contact', icon: Mail }
+                { id: 'contact', label: 'Contact Us', icon: Mail }
               ].map((item) => (
                 <button
                   key={item.id}
@@ -283,7 +254,7 @@ const App = () => {
       {/* Add padding for fixed header */}
       <div className="pt-16"></div>
 
-      {/* Hero Section - FIXED FOR 100% ZOOM */}
+      {/* Hero Section - Updated with logo and PPT content */}
       <section id="home" className="relative bg-gradient-to-br from-[#0D3B66] via-[#2A5F8F] to-[#4A90E2] text-white py-12 md:py-16 lg:py-20 xl:py-24 px-4 overflow-hidden min-h-[80vh] flex items-center">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 opacity-10">
@@ -293,26 +264,36 @@ const App = () => {
         </div>
 
         <div className="container mx-auto max-w-4xl lg:max-w-6xl text-center relative z-10">
-          {/* Badge - Fixed for mobile */}
-          <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 md:px-4 md:py-2 mb-4 md:mb-6 border border-white/20 mx-auto max-w-xs md:max-w-none">
-            <Award size={14} className="mr-2 text-[#E8A3B9] flex-shrink-0" />
-            <span className="text-xs md:text-sm font-medium truncate">Mangalore's Trusted Healthcare</span>
+          {/* Main Logo in Hero */}
+          <div className="text-center mb-6 md:mb-8">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4">
+              LOTUS
+            </h1>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white -mt-6 md:-mt-8">
+              POLYCLINIC
+            </h1>
           </div>
 
-          {/* MAIN HEADING - FIXED OVERLAP ISSUE */}
+          {/* Badge */}
+          <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 md:px-4 md:py-2 mb-4 md:mb-6 border border-white/20 mx-auto">
+            <Award size={14} className="mr-2 text-[#E8A3B9] flex-shrink-0" />
+            <span className="text-xs md:text-sm font-medium">Trusted Healthcare</span>
+          </div>
+
+          {/* Main Heading from PPT */}
           <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-snug md:leading-tight px-2">
-            Your Health, 
+            Caring Beyond 
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#E8A3B9] to-[#F5CEDD] mt-1 md:mt-2 lg:mt-3">
-              Our Commitment
+              Treatment
             </span>
           </h1>
           
-          {/* SUBTITLE - Better line breaks */}
-          <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed opacity-90 px-2 break-words" style={{ fontFamily: "'Lora', serif" }}>
-            Expert-led, compassionate healthcare for your entire family. Where modern medicine meets heartfelt care.
+          {/* Subtitle from PPT */}
+          <p className="text-sm xs:text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-2xl lg:max-w-3xl mx-auto leading-relaxed opacity-90 px-2" style={{ fontFamily: "'Lora', serif" }}>
+            Comprehensive healthcare provider committed to deliver compassionate, personalized and evidence based medical care.
           </p>
 
-          {/* BUTTONS - Fixed spacing and sizing */}
+          {/* Buttons */}
           <div className="flex flex-col xs:flex-row justify-center items-center gap-3 sm:gap-4 md:gap-5 mb-8 md:mb-12 px-2">
             <button
               onClick={() => scrollToSection('contact')}
@@ -323,15 +304,15 @@ const App = () => {
               <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform flex-shrink-0" />
             </button>
             <button
-              onClick={() => scrollToSection('services')}
+              onClick={() => scrollToSection('facilities')}
               className="group border-2 border-white/60 text-white px-4 sm:px-6 md:px-8 lg:px-10 py-3 rounded-full font-bold hover:bg-white hover:text-[#0D3B66] transition-all duration-300 backdrop-blur-sm text-sm sm:text-base whitespace-nowrap w-full xs:w-auto min-w-[160px] sm:min-w-[180px]"
             >
-              Explore Services
+              Explore Facilities
               <Play size={12} className="ml-2 inline group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
-          {/* STATS - Improved grid */}
+          {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 lg:gap-6 max-w-2xl lg:max-w-4xl mx-auto px-2">
             {stats.map((stat, index) => (
               <div key={index} className="text-center bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 border border-white/20 hover:bg-white/20 transition-all duration-300">
@@ -362,7 +343,7 @@ const App = () => {
         </div>
       </section>
 
-      {/* About Section */}
+      {/* About Section - Updated with PPT content */}
       <section id="about" className="py-12 md:py-16 lg:py-20 px-4 bg-gradient-to-br from-[#F5CEDD]/5 to-[#0D3B66]/5 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 md:w-64 md:h-64 bg-gradient-to-bl from-[#F5CEDD]/10 to-[#0D3B66]/5 rounded-full -translate-y-24 md:-translate-y-32 translate-x-24 md:translate-x-32"></div>
         
@@ -375,15 +356,17 @@ const App = () => {
                   <h3 className="text-xl md:text-2xl font-bold">Our Mission & Vision</h3>
                 </div>
                 <p className="text-base md:text-lg mb-4 md:mb-6 leading-relaxed opacity-90" style={{ fontFamily: "'Lora', serif" }}>
-                  To make high-quality healthcare accessible and affordable for every individual in our community, 
-                  combining clinical excellence with genuine compassion.
+                  <strong>Vision:</strong> To deliver uncompromised, expert healthcare to all, grounded in compassion and guided by modern medical excellence.
+                </p>
+                <p className="text-base md:text-lg mb-4 md:mb-6 leading-relaxed opacity-90" style={{ fontFamily: "'Lora', serif" }}>
+                  <strong>Mission:</strong> To provide accessible, high-quality healthcare to every patient, treating each individual with dignity, empathy, and respect.
                 </p>
                 <div className="space-y-2 md:space-y-3">
                   {[
-                    "15+ Years Medical Experience",
-                    "Female-Led Healthcare Team",
-                    "Affordable Pricing",
-                    "Community-First Approach"
+                    "Evidence-based medical care",
+                    "Compassionate listening",
+                    "Personalized attention",
+                    "Community-focused approach"
                   ].map((item, index) => (
                     <div key={index} className="flex items-center">
                       <CheckCircle size={16} className="md:w-5 md:h-5 text-[#E8A3B9] mr-2 md:mr-3" />
@@ -400,189 +383,248 @@ const App = () => {
                 <span className="text-xs md:text-sm font-semibold text-[#0D3B66]">ABOUT LOTUS POLYCLINIC</span>
               </div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#0D3B66] mb-4 md:mb-6 leading-tight">
-                Compassionate Care Meets <span className="text-[#E8A3B9]">Medical Excellence</span>
+                Built on the Foundation of <span className="text-[#E8A3B9]">Sri Sai Clinic</span>
               </h2>
               <p className="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed" style={{ fontFamily: "'Lora', serif" }}>
-                Founded in 2020 by Dr. Meena, Lotus Polyclinic has been at the forefront of providing 
-                comprehensive healthcare services to the Mangalore community. Our female-led team brings 
-                expertise, empathy, and excellence to every patient interaction.
+                Lotus Polyclinic at Ponmar, built upon the foundation of Sri Sai Clinic, established in 2020, 
+                with a vision to provide quality and affordable healthcare to the community.
               </p>
               <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 leading-relaxed" style={{ fontFamily: "'Lora', serif" }}>
-                Specializing in diabetology, obstetrics & gynecology, and general medicine, we've built 
-                a reputation for affordable, high-quality care that puts patients first.
+                Guided by compassion and commitment, we have grown into a multi-specialty clinic dedicated to 
+                patient-centered care. We combine medical expertise with empathy, ensuring personalized treatment.
               </p>
               
-              <div className="flex flex-wrap gap-2 md:gap-4">
-                <div className="bg-[#0D3B66] text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold flex items-center text-sm md:text-base">
-                  <Award size={16} className="mr-2" />
-                  Certified Specialists
-                </div>
-                <div className="bg-[#E8A3B9] text-[#0D3B66] px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold flex items-center text-sm md:text-base">
-                  <Heart size={16} className="mr-2" />
-                  Patient-Centered
-                </div>
+              {/* Dr. Meena Section from PPT */}
+              <div className="bg-white rounded-xl p-4 md:p-6 border border-[#E8A3B9]/20 shadow-lg">
+                <h3 className="text-lg md:text-xl font-bold text-[#0D3B66] mb-3 flex items-center">
+                  <Users size={20} className="mr-2 text-[#E8A3B9]" />
+                  Dr. Meena - Founder & Chief Consultant
+                </h3>
+                <p className="text-sm md:text-base text-gray-700 mb-3" style={{ fontFamily: "'Lora', serif" }}>
+                  <strong>MBBS, MD</strong> - 16+ years of clinical experience with specialized expertise in diabetes management and family medicine.
+                </p>
+                <p className="text-sm md:text-base text-gray-700" style={{ fontFamily: "'Lora', serif" }}>
+                  Known for compassionate approach, combining clinical excellence with genuine empathy.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-12 md:py-16 lg:py-20 bg-white px-4">
+      {/* Facilities Section - From PPT */}
+      <section id="facilities" className="py-12 md:py-16 lg:py-20 bg-white px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-8 md:mb-12 lg:mb-16">
             <div className="inline-flex items-center bg-[#F5CEDD]/20 rounded-full px-3 py-1 md:px-4 md:py-2 mb-3 md:mb-4">
-              <Briefcase size={14} className="md:w-4 md:h-4 text-[#0D3B66] mr-2" />
-              <span className="text-xs md:text-sm font-semibold text-[#0D3B66]">OUR SERVICES</span>
+              <Shield size={14} className="md:w-4 md:h-4 text-[#0D3B66] mr-2" />
+              <span className="text-xs md:text-sm font-semibold text-[#0D3B66]">OUR FACILITIES</span>
             </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#0D3B66] mb-3 md:mb-4">Comprehensive Healthcare Solutions</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#0D3B66] mb-3 md:mb-4">Comprehensive Healthcare Facilities</h2>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4" style={{ fontFamily: "'Lora', serif" }}>
-              From routine check-ups to specialized treatments, we offer a complete range of medical services
+              All your medical needs met under one roof with the highest standards of care
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-            {services.map((service, index) => (
-              <div 
-                key={index} 
-                className="bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#E8A3B9]/20 group hover:transform hover:-translate-y-1 md:hover:-translate-y-2"
-              >
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-lg md:rounded-xl flex items-center justify-center mb-3 md:mb-4 group-hover:scale-110 transition-transform">
-                  <service.icon size={20} className="md:w-6 md:h-6 text-[#E8A3B9]" />
+            {facilities.map((facility, index) => (
+              <div key={index} className="bg-white rounded-xl md:rounded-2xl p-6 md:p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#E8A3B9]/20 group">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <facility.icon size={24} className="md:w-8 md:h-8 text-[#E8A3B9]" />
                 </div>
-                <h3 className="text-lg md:text-xl font-bold text-[#0D3B66] mb-2 md:mb-3 group-hover:text-[#E8A3B9] transition-colors">
-                  {service.title}
-                </h3>
-                <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 leading-relaxed" style={{ fontFamily: "'Lora', serif" }}>
-                  {service.description}
+                <h3 className="text-lg md:text-xl font-bold text-[#0D3B66] mb-3">{facility.title}</h3>
+                <p className="text-sm md:text-base text-gray-600 leading-relaxed" style={{ fontFamily: "'Lora', serif" }}>
+                  {facility.description}
                 </p>
-                <div className="space-y-1 md:space-y-2">
-                  {service.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center text-xs md:text-sm text-gray-700">
-                      <CheckCircle size={14} className="md:w-4 md:h-4 text-[#E8A3B9] mr-1 md:mr-2" />
-                      {feature}
-                    </div>
-                  ))}
-                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Additional Services */}
-      <section className="py-8 md:py-12 lg:py-16 bg-gradient-to-br from-[#F5CEDD]/10 to-[#0D3B66]/5">
-        <div className="container mx-auto max-w-6xl px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+{/* Enhanced Blog Section */}
+<section id="blogs" className="py-12 md:py-16 lg:py-20 bg-gradient-to-br from-[#F5CEDD]/10 to-[#0D3B66]/5 px-4">
+  <div className="container mx-auto max-w-6xl">
+    <div className="text-center mb-8 md:mb-12 lg:mb-16">
+      <div className="inline-flex items-center bg-white rounded-full px-3 py-1 md:px-4 md:py-2 mb-3 md:mb-4 shadow-lg">
+        <FileText size={14} className="md:w-4 md:h-4 text-[#0D3B66] mr-2" />
+        <span className="text-xs md:text-sm font-semibold text-[#0D3B66]">HEALTH BLOG</span>
+      </div>
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#0D3B66] mb-3 md:mb-4">Health & Wellness Insights</h2>
+      <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4" style={{ fontFamily: "'Lora', serif" }}>
+        Expert medical advice, health tips, and wellness guidance from our healthcare professionals
+      </p>
+    </div>
+
+    {/* Featured Blog Post */}
+    <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden border border-[#E8A3B9]/20 mb-12 md:mb-16">
+      <div className="grid md:grid-cols-2 gap-0">
+        {/* Featured Image */}
+        <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] p-8 flex items-center justify-center relative overflow-hidden">
+          <div className="text-center text-white relative z-10">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+              <Activity size={32} className="text-[#E8A3B9]" />
+            </div>
+            <div className="inline-flex items-center bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 mb-4">
+              <Star size={12} className="text-[#E8A3B9] mr-1" />
+              <span className="text-xs font-semibold">FEATURED</span>
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">Diabetes Management Guide</h3>
+            <p className="text-white/90 mb-4">Comprehensive guide to living well with diabetes</p>
+            <div className="flex items-center justify-center text-white/80 text-sm">
+              <Calendar size={14} className="mr-2" />
+              <span>October 20, 2024</span>
+              <div className="w-1 h-1 bg-white/50 rounded-full mx-3"></div>
+              <Clock size={14} className="mr-2" />
+              <span>5 min read</span>
+            </div>
+          </div>
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-4 right-4 w-8 h-8 bg-[#E8A3B9] rounded-full"></div>
+            <div className="absolute bottom-4 left-4 w-12 h-12 bg-[#F5CEDD] rounded-full"></div>
+          </div>
+        </div>
+        
+        {/* Featured Content */}
+        <div className="p-6 md:p-8 lg:p-10">
+          <h3 className="text-xl md:text-2xl font-bold text-[#0D3B66] mb-4">Living Well with Diabetes: A Complete Guide</h3>
+          <p className="text-gray-700 mb-4 leading-relaxed" style={{ fontFamily: "'Lora', serif" }}>
+            Diabetes doesn't have to control your life. With proper management, you can live a full, active life. 
+            Our comprehensive guide covers everything from diet and exercise to medication management.
+          </p>
+          <div className="space-y-2 mb-6">
             {[
-              { icon: Activity, title: "In-House Laboratory", desc: "Quick and reliable diagnostic testing" },
-              { icon: Shield, title: "Pharmacy", desc: "Full-service medication and counseling" },
-              { icon: Calendar, title: "Health Check-ups", desc: "Preventive and comprehensive packages" },
-              { icon: MessageCircle, title: "Telemedicine", desc: "Online consultations for your convenience" }
-            ].map((service, index) => (
-              <div key={index} className="bg-white rounded-lg md:rounded-xl p-4 text-center shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-[#E8A3B9] rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <service.icon size={20} className="md:w-6 md:h-6 text-[#0D3B66]" />
-                </div>
-                <h4 className="font-bold text-[#0D3B66] mb-1 text-sm md:text-base">{service.title}</h4>
-                <p className="text-xs md:text-sm text-gray-600">{service.desc}</p>
+              "Understanding blood sugar levels",
+              "Healthy eating plans",
+              "Exercise routines",
+              "Medication management",
+              "Regular monitoring"
+            ].map((item, index) => (
+              <div key={index} className="flex items-center">
+                <CheckCircle size={16} className="text-green-500 mr-2 flex-shrink-0" />
+                <span className="text-sm text-gray-700">{item}</span>
               </div>
             ))}
           </div>
+          <button className="group bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-3 rounded-full font-semibold hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 flex items-center">
+            Read Full Article
+            <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+          </button>
         </div>
-      </section>
+      </div>
+    </div>
 
-      {/* Doctors Section */}
-      <section id="doctors" className="py-12 md:py-16 lg:py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-8 md:mb-12 lg:mb-16">
-            <div className="inline-flex items-center bg-[#F5CEDD]/20 rounded-full px-3 py-1 md:px-4 md:py-2 mb-3 md:mb-4">
-              <Users size={14} className="md:w-4 md:h-4 text-[#0D3B66] mr-2" />
-              <span className="text-xs md:text-sm font-semibold text-[#0D3B66]">MEET OUR EXPERTS</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#0D3B66] mb-3 md:mb-4">Our Medical Specialists</h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4" style={{ fontFamily: "'Lora', serif" }}>
-              Experienced doctors dedicated to providing the highest quality medical care
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-            {/* Dr. Meena */}
-            <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-2xl md:rounded-3xl p-6 md:p-8 text-white shadow-2xl transform hover:scale-[1.02] transition-all duration-500">
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
-                <div className="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 bg-white/20 rounded-full flex items-center justify-center border-4 border-[#E8A3B9] shadow-lg">
-                  <div className="text-2xl md:text-3xl font-bold text-white">M</div>
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                  <div className="flex items-center justify-center md:justify-start mb-2">
-                    <Award size={16} className="md:w-5 md:h-5 text-[#E8A3B9] mr-2" />
-                    <span className="text-xs md:text-sm font-semibold">FOUNDER & CHIEF CONSULTANT</span>
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-2">Dr. Meena</h3>
-                  <p className="text-[#E8A3B9] text-base md:text-lg font-semibold mb-3 md:mb-4">MBBS, MD - Diabetology & OB/GYN</p>
-                  
-                  <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
-                    <div className="flex items-center">
-                      <CheckCircle size={14} className="md:w-5 md:h-5 text-[#E8A3B9] mr-2 md:mr-3" />
-                      <span className="text-sm md:text-base">15+ Years Experience</span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle size={14} className="md:w-5 md:h-5 text-[#E8A3B9] mr-2 md:mr-3" />
-                      <span className="text-sm md:text-base">Specialist in Diabetology</span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle size={14} className="md:w-5 md:h-5 text-[#E8A3B9] mr-2 md:mr-3" />
-                      <span className="text-sm md:text-base">Expert in Obstetrics & Gynecology</span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-white/90 leading-relaxed text-sm md:text-base" style={{ fontFamily: "'Lora', serif" }}>
-                    Dr. Meena leads our team with compassion and expertise, specializing in comprehensive 
-                    women's healthcare and diabetes management with a patient-first approach.
-                  </p>
-                </div>
+    {/* Regular Blog Posts Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
+      {/* Blog Post 1 - Diabetes Management */}
+      <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#E8A3B9]/20 group hover:-translate-y-2 overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-[#0D3B66] to-[#4A90E2]"></div>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Activity size={20} className="text-[#E8A3B9]" />
               </div>
-            </div>
-
-            {/* Dr. Arjun */}
-            <div className="bg-gradient-to-br from-[#E8A3B9] to-[#F5CEDD] rounded-2xl md:rounded-3xl p-6 md:p-8 text-[#0D3B66] shadow-2xl transform hover:scale-[1.02] transition-all duration-500">
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6">
-                <div className="w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 bg-white/20 rounded-full flex items-center justify-center border-4 border-[#0D3B66] shadow-lg">
-                  <div className="text-2xl md:text-3xl font-bold text-[#0D3B66]">A</div>
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                  <div className="flex items-center justify-center md:justify-start mb-2">
-                    <Award size={16} className="md:w-5 md:h-5 text-[#0D3B66] mr-2" />
-                    <span className="text-xs md:text-sm font-semibold">CONSULTANT DERMATOLOGIST</span>
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-2">Dr. Arjun</h3>
-                  <p className="text-[#0D3B66] text-base md:text-lg font-semibold mb-3 md:mb-4">MD - Dermatology</p>
-                  
-                  <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
-                    <div className="flex items-center">
-                      <CheckCircle size={14} className="md:w-5 md:h-5 text-[#0D3B66] mr-2 md:mr-3" />
-                      <span className="text-sm md:text-base">10+ Years Experience</span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle size={14} className="md:w-5 md:h-5 text-[#0D3B66] mr-2 md:mr-3" />
-                      <span className="text-sm md:text-base">Skin & Hair Specialist</span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle size={14} className="md:w-5 md:h-5 text-[#0D3B66] mr-2 md:mr-3" />
-                      <span className="text-sm md:text-base">Advanced Dermatology Procedures</span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-[#0D3B66]/90 leading-relaxed text-sm md:text-base" style={{ fontFamily: "'Lora', serif" }}>
-                    Dr. Arjun brings extensive expertise in dermatology, offering advanced treatments 
-                    for skin conditions with a focus on personalized care and effective solutions.
-                  </p>
+              <div className="ml-3">
+                <div className="text-xs font-semibold text-[#0D3B66]">DIABETES CARE</div>
+                <div className="flex items-center text-xs text-gray-500">
+                  <Calendar size={10} className="mr-1" />
+                  Oct 15, 2024
                 </div>
               </div>
             </div>
           </div>
+          <h3 className="text-lg font-bold text-[#0D3B66] mb-3 leading-tight">Managing Diabetes: Daily Lifestyle Tips</h3>
+          <p className="text-gray-600 mb-4 leading-relaxed text-sm" style={{ fontFamily: "'Lora', serif" }}>
+            Practical advice for daily diabetes management, diet planning, exercise routines, and medication adherence to maintain healthy blood sugar levels.
+          </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-xs text-gray-500">
+              <Clock size={12} className="mr-1" />
+              <span>3 min read</span>
+            </div>
+            <button className="text-[#0D3B66] hover:text-[#E8A3B9] font-semibold text-sm flex items-center group">
+              Read More
+              <ArrowRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
         </div>
-      </section>
+      </div>
+
+      {/* Blog Post 2 - Women's Health */}
+      <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#E8A3B9]/20 group hover:-translate-y-2 overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-[#E8A3B9] to-[#F5CEDD]"></div>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#E8A3B9] to-[#F5CEDD] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Baby size={20} className="text-[#0D3B66]" />
+              </div>
+              <div className="ml-3">
+                <div className="text-xs font-semibold text-[#0D3B66]">WOMEN'S HEALTH</div>
+                <div className="flex items-center text-xs text-gray-500">
+                  <Calendar size={10} className="mr-1" />
+                  Oct 8, 2024
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 className="text-lg font-bold text-[#0D3B66] mb-3 leading-tight">Prenatal Care: Essential Guide</h3>
+          <p className="text-gray-600 mb-4 leading-relaxed text-sm" style={{ fontFamily: "'Lora', serif" }}>
+            Comprehensive guide to prenatal care, nutrition, wellness tips, and important check-ups for expecting mothers at every trimester.
+          </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-xs text-gray-500">
+              <Clock size={12} className="mr-1" />
+              <span>4 min read</span>
+            </div>
+            <button className="text-[#0D3B66] hover:text-[#E8A3B9] font-semibold text-sm flex items-center group">
+              Read More
+              <ArrowRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Blog Post 3 - General Health */}
+      <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-[#E8A3B9]/20 group hover:-translate-y-2 overflow-hidden">
+        <div className="h-2 bg-gradient-to-r from-[#0D3B66] to-[#E8A3B9]"></div>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Apple size={20} className="text-[#E8A3B9]" />
+              </div>
+              <div className="ml-3">
+                <div className="text-xs font-semibold text-[#0D3B66]">PREVENTIVE CARE</div>
+                <div className="flex items-center text-xs text-gray-500">
+                  <Calendar size={10} className="mr-1" />
+                  Oct 1, 2024
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 className="text-lg font-bold text-[#0D3B66] mb-3 leading-tight">Preventive Health Check-ups Guide</h3>
+          <p className="text-gray-600 mb-4 leading-relaxed text-sm" style={{ fontFamily: "'Lora', serif" }}>
+            Why regular health screenings are crucial and which tests you should consider based on your age, lifestyle, and family history.
+          </p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center text-xs text-gray-500">
+              <Clock size={12} className="mr-1" />
+              <span>5 min read</span>
+            </div>
+            <button className="text-[#0D3B66] hover:text-[#E8A3B9] font-semibold text-sm flex items-center group">
+              Read More
+              <ArrowRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* Testimonials Section */}
       <section id="testimonials" className="py-12 md:py-16 lg:py-20 bg-gradient-to-br from-[#0D3B66]/5 to-[#E8A3B9]/5 px-4">
@@ -640,313 +682,340 @@ const App = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-12 md:py-16 lg:py-20 px-4 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-8 md:mb-12 lg:mb-16">
-            <div className="inline-flex items-center bg-[#F5CEDD]/20 rounded-full px-3 py-1 md:px-4 md:py-2 mb-3 md:mb-4">
-              <Mail size={14} className="md:w-4 md:h-4 text-[#0D3B66] mr-2" />
-              <span className="text-xs md:text-sm font-semibold text-[#0D3B66]">GET IN TOUCH</span>
-            </div>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#0D3B66] mb-3 md:mb-4">Contact Us</h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4" style={{ fontFamily: "'Lora', serif" }}>
-              Ready to schedule your appointment? We're here to help with all your healthcare needs.
-            </p>
-          </div>
 
-          <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-            {/* Contact Info */}
-            <div>
-              <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-2xl md:rounded-3xl p-6 md:p-8 text-white shadow-2xl">
-                <h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Visit Our Clinic</h3>
-                
-                <div className="space-y-4 md:space-y-6">
-                  <div className="flex items-start">
-                    <div className="bg-[#E8A3B9] p-2 md:p-3 rounded-lg md:rounded-xl mr-3 md:mr-4">
-                      <MapPin size={20} className="md:w-6 md:h-6 text-[#0D3B66]" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-base md:text-lg mb-1">Address</h4>
-                      <p className="opacity-90 text-sm md:text-base">[Clinic Address, Mangalore]</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="bg-[#E8A3B9] p-2 md:p-3 rounded-lg md:rounded-xl mr-3 md:mr-4">
-                      <Phone size={20} className="md:w-6 md:h-6 text-[#0D3B66]" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-base md:text-lg mb-1">Phone</h4>
-                      <a href="tel:08201234567" className="opacity-90 hover:underline block text-sm md:text-base">
-                        820-0000000
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="bg-[#E8A3B9] p-2 md:p-3 rounded-lg md:rounded-xl mr-3 md:mr-4">
-                      <Mail size={20} className="md:w-6 md:h-6 text-[#0D3B66]" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-base md:text-lg mb-1">Email</h4>
-                      <a href="mailto:contact@lotuspolyclinic.com" className="opacity-90 hover:underline block text-sm md:text-base">
-                        contact@lotuspolyclinic.com
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="bg-[#E8A3B9] p-2 md:p-3 rounded-lg md:rounded-xl mr-3 md:mr-4">
-                      <Clock size={20} className="md:w-6 md:h-6 text-[#0D3B66]" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-base md:text-lg mb-1">Working Hours</h4>
-                      <p className="opacity-90 text-sm md:text-base">Monday - Sunday: 7:00 AM – 7:30 PM</p>
-                    </div>
-                  </div>
-                </div>
+{/* Contact Section - Compact Layout */}
+<section id="contact" className="py-12 md:py-16 lg:py-20 px-4 bg-white">
+  <div className="container mx-auto max-w-6xl">
+    <div className="text-center mb-8 md:mb-12 lg:mb-16">
+      <div className="inline-flex items-center bg-[#F5CEDD]/20 rounded-full px-3 py-1 md:px-4 md:py-2 mb-3 md:mb-4">
+        <Mail size={14} className="md:w-4 md:h-4 text-[#0D3B66] mr-2" />
+        <span className="text-xs md:text-sm font-semibold text-[#0D3B66]">CONTACT US</span>
+      </div>
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#0D3B66] mb-3 md:mb-4">Get In Touch</h2>
+      <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto px-4" style={{ fontFamily: "'Lora', serif" }}>
+        Ready to schedule your appointment? We're here to help with all your healthcare needs.
+      </p>
+    </div>
 
-                {/* WhatsApp CTA */}
-                <div className="mt-6 md:mt-8 bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-4 md:p-6 border border-white/20">
-                  <h4 className="font-bold text-base md:text-lg mb-2 flex items-center">
-                    <MessageCircle size={18} className="md:w-5 md:h-5 mr-2 text-[#E8A3B9]" />
-                    Quick Booking via WhatsApp
-                  </h4>
-                  <p className="mb-3 md:mb-4 opacity-90 text-sm md:text-base">Get instant responses and quick appointments</p>
-                  <a
-                    href="https://wa.me/918200000000"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center bg-green-500 text-white px-4 py-2 md:px-6 md:py-3 rounded-full font-semibold hover:bg-green-600 transition-all text-sm md:text-base"
-                  >
-                    <MessageCircle size={16} className="md:w-4 md:h-4 mr-2" />
-                    Message on WhatsApp
-                  </a>
-                </div>
+    <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
+      {/* Left Column - Contact Info & Google Maps */}
+      <div className="space-y-8">
+        {/* Contact Info Card */}
+        <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-2xl md:rounded-3xl p-6 md:p-8 text-white shadow-2xl">
+          <h3 className="text-xl md:text-2xl font-bold mb-6">Visit Our Clinic</h3>
+          
+          <div className="space-y-4">
+            <div className="flex items-start">
+              <div className="bg-[#E8A3B9] p-2 rounded-lg mr-3 flex-shrink-0">
+                <MapPin size={18} className="text-[#0D3B66]" />
+              </div>
+              <div>
+                <h4 className="font-bold text-base mb-1">Address</h4>
+                <p className="opacity-90 text-sm">Ponmar</p>
               </div>
             </div>
-
-            {/* Enhanced Appointment Form */}
-            <div>
-              <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 border border-[#E8A3B9]/20">
-                <div className="flex items-center mb-4 md:mb-6">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-xl flex items-center justify-center mr-3">
-                    <Calendar size={20} className="text-[#E8A3B9]" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-bold text-[#0D3B66]">Book an Appointment</h3>
-                    <p className="text-gray-600 text-sm md:text-base">Quick & easy booking process</p>
-                  </div>
-                </div>
-                
-                {formSubmitted ? (
-                  <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-6 md:px-6 md:py-8 rounded-xl md:rounded-2xl text-center">
-                    <CheckCircle size={40} className="mx-auto mb-3 md:mb-4 text-green-500" />
-                    <h4 className="text-lg md:text-xl font-bold mb-2">Appointment Request Sent!</h4>
-                    <p className="text-sm md:text-base mb-4">Thank you for choosing Lotus Polyclinic. We'll contact you within 30 minutes to confirm your appointment.</p>
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <a
-                        href="https://wa.me/918200000000"
-                        className="inline-flex items-center bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition-all"
-                      >
-                        <MessageCircle size={16} className="mr-2" />
-                        Chat on WhatsApp
-                      </a>
-                      <button
-                        onClick={() => setFormSubmitted(false)}
-                        className="inline-flex items-center bg-[#0D3B66] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#4A90E2] transition-all"
-                      >
-                        Book Another Appointment
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-                    {/* Personal Information */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          placeholder="Enter your full name"
-                          required
-                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Contact Number *</label>
-                        <input
-                          type="tel"
-                          name="contact"
-                          value={formData.contact}
-                          onChange={handleInputChange}
-                          placeholder="10-digit mobile number"
-                          required
-                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Service Selection */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Select Service *</label>
-                      <select
-                        name="service"
-                        value={formData.service}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base bg-white appearance-none"
-                      >
-                        <option value="">Choose a medical service...</option>
-                        <option value="Diabetology">Diabetology Consultation</option>
-                        <option value="OB/GYN">Obstetrics & Gynecology</option>
-                        <option value="General Medicine">General Medicine</option>
-                        <option value="Dermatology">Dermatology</option>
-                        <option value="Pediatrics">Pediatrics</option>
-                        <option value="Health Check-up">Preventive Health Check-up</option>
-                        <option value="Vaccination">Vaccination</option>
-                        <option value="Other">Other Service</option>
-                      </select>
-                    </div>
-
-                    {/* Preferred Doctor */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Doctor (Optional)</label>
-                      <select
-                        name="preferredDoctor"
-                        value={formData.preferredDoctor}
-                        onChange={handleInputChange}
-                        className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base bg-white appearance-none"
-                      >
-                        <option value="">Any Available Doctor</option>
-                        <option value="Dr. Meena">Dr. Meena (Diabetology & OB/GYN)</option>
-                        <option value="Dr. Arjun">Dr. Arjun (Dermatology)</option>
-                        <option value="No Preference">No Preference</option>
-                      </select>
-                    </div>
-                    
-                    {/* Date & Time */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Date *</label>
-                        <input
-                          type="date"
-                          name="date"
-                          value={formData.date}
-                          onChange={handleInputChange}
-                          min={new Date().toISOString().split('T')[0]}
-                          required
-                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Time *</label>
-                        <select
-                          name="time"
-                          value={formData.time}
-                          onChange={handleInputChange}
-                          required
-                          className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base bg-white appearance-none"
-                        >
-                          <option value="">Select time slot</option>
-                          <option value="07:00">7:00 AM - 8:00 AM</option>
-                          <option value="08:00">8:00 AM - 9:00 AM</option>
-                          <option value="09:00">9:00 AM - 10:00 AM</option>
-                          <option value="10:00">10:00 AM - 11:00 AM</option>
-                          <option value="11:00">11:00 AM - 12:00 PM</option>
-                          <option value="12:00">12:00 PM - 1:00 PM</option>
-                          <option value="13:00">1:00 PM - 2:00 PM</option>
-                          <option value="14:00">2:00 PM - 3:00 PM</option>
-                          <option value="15:00">3:00 PM - 4:00 PM</option>
-                          <option value="16:00">4:00 PM - 5:00 PM</option>
-                          <option value="17:00">5:00 PM - 6:00 PM</option>
-                          <option value="18:00">6:00 PM - 7:00 PM</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Additional Notes */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes (Optional)</label>
-                      <textarea
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleInputChange}
-                        placeholder="Any specific concerns, symptoms, or previous medical history you'd like to share..."
-                        rows="3"
-                        className="w-full p-3 md:p-4 border border-gray-300 rounded-lg md:rounded-xl focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm md:text-base resize-none"
-                      />
-                    </div>
-                    
-                    {/* Submit Button */}
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white py-3 md:py-4 rounded-lg md:rounded-xl font-bold hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 shadow-lg hover:shadow-xl text-sm md:text-base flex items-center justify-center transform hover:scale-105"
-                    >
-                      <Calendar size={20} className="mr-2" />
-                      Confirm Appointment Request
-                    </button>
-
-                    {/* Quick Contact Info */}
-                    <div className="text-center text-sm text-gray-500 pt-4 border-t border-gray-200">
-                      <p className="mb-2">📞 Prefer to call? <a href="tel:820-0000000" className="text-[#0D3B66] hover:underline font-medium">820-0000000</a></p>
-                      <p>💬 Quick response on <a href="https://wa.me/918200000000" className="text-green-600 hover:underline font-medium">WhatsApp</a></p>
-                    </div>
-                  </form>
-                )}
+            
+            <div className="flex items-start">
+              <div className="bg-[#E8A3B9] p-2 rounded-lg mr-3 flex-shrink-0">
+                <Phone size={18} className="text-[#0D3B66]" />
+              </div>
+              <div>
+                <h4 className="font-bold text-base mb-1">Phone</h4>
+                <a href="tel:08200000000" className="opacity-90 hover:underline block text-sm">
+                  0820-0000000
+                </a>
+              </div>
+            </div>
+            
+            <div className="flex items-start">
+              <div className="bg-[#E8A3B9] p-2 rounded-lg mr-3 flex-shrink-0">
+                <Mail size={18} className="text-[#0D3B66]" />
+              </div>
+              <div>
+                <h4 className="font-bold text-base mb-1">Email</h4>
+                <a href="mailto:contact@lotuspolyclinic.com" className="opacity-90 hover:underline block text-sm">
+                  contact@lotuspolyclinic.com
+                </a>
+              </div>
+            </div>
+            
+            <div className="flex items-start">
+              <div className="bg-[#E8A3B9] p-2 rounded-lg mr-3 flex-shrink-0">
+                <Clock size={18} className="text-[#0D3B66]" />
+              </div>
+              <div>
+                <h4 className="font-bold text-base mb-1">Working Hours</h4>
+                <p className="opacity-90 text-sm">Monday - Sunday: 7:00 AM – 7:30 PM</p>
               </div>
             </div>
           </div>
 
-          {/* Google Maps Embed - General Mangalore Area */}
-          <div className="mt-8 md:mt-12 lg:mt-16 rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border border-[#E8A3B9]/20">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d62276.05783643242!2d74.8207412!3d12.9141365!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba35a594c26a883%3A0xb08f0f5a0ae5dd6a!2sMangalore%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1710000000000"
-              width="100%"
-              height="400"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Lotus Polyclinic Location in Mangalore"
-              className="rounded-xl md:rounded-2xl lg:rounded-3xl"
-            ></iframe>
+          {/* WhatsApp CTA */}
+          <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+            <h4 className="font-bold text-sm mb-2 flex items-center">
+              <MessageCircle size={16} className="mr-2 text-[#E8A3B9]" />
+              Quick Booking via WhatsApp
+            </h4>
+            <p className="mb-3 opacity-90 text-xs">Get instant responses and quick appointments</p>
+            <a
+              href="https://wa.me/918200000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center bg-green-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-green-600 transition-all text-xs"
+            >
+              <MessageCircle size={14} className="mr-2" />
+              Book via WhatsApp
+            </a>
           </div>
         </div>
-      </section>
 
+        {/* Google Maps - Compact */}
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-[#E8A3B9]/20">
+          <div className="p-4">
+            <h3 className="text-lg font-bold text-[#0D3B66] mb-3 flex items-center">
+              <MapPin size={18} className="mr-2 text-[#E8A3B9]" />
+              Our Location
+            </h3>
+            <div className="rounded-lg overflow-hidden border border-gray-200">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15557.21526258401!2d80.1707662!3d12.8564248!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525976fe0fccb3%3A0x4a8e9a8c87836ac7!2sPonmar%2C%20Moolacheri%2C%20Tamil%20Nadu%20600127%2C%20India!5e0!3m2!1sen!2sin"
+                width="100%"
+                height="500"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Lotus Polyclinic Location "
+                className="block"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Column - Both Forms Stacked */}
+      <div className="space-y-8">
+        {/* Book Appointment Form */}
+        <div className="bg-white rounded-2xl shadow-2xl p-6 border border-[#E8A3B9]/20">
+          <div className="flex items-center mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-xl flex items-center justify-center mr-3">
+              <Calendar size={20} className="text-[#E8A3B9]" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-[#0D3B66]">Book Appointment</h3>
+              <p className="text-gray-600 text-sm">Quick and easy scheduling</p>
+            </div>
+          </div>
+          
+          <form className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+              <input
+                type="text"
+                placeholder="Your full name"
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                <input
+                  type="tel"
+                  placeholder="10-digit mobile number"
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Date *</label>
+                <input
+                  type="date"
+                  min={new Date().toISOString().split('T')[0]}
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Preferred Time *</label>
+                <select
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm bg-white appearance-none"
+                >
+                  <option value="">Select time</option>
+                  <option value="07:00">7:00 AM - 8:00 AM</option>
+                  <option value="08:00">8:00 AM - 9:00 AM</option>
+                  <option value="09:00">9:00 AM - 10:00 AM</option>
+                  <option value="10:00">10:00 AM - 11:00 AM</option>
+                  <option value="11:00">11:00 AM - 12:00 PM</option>
+                  <option value="12:00">12:00 PM - 1:00 PM</option>
+                  <option value="13:00">1:00 PM - 2:00 PM</option>
+                  <option value="14:00">2:00 PM - 3:00 PM</option>
+                  <option value="15:00">3:00 PM - 4:00 PM</option>
+                  <option value="16:00">4:00 PM - 5:00 PM</option>
+                  <option value="17:00">5:00 PM - 6:00 PM</option>
+                  <option value="18:00">6:00 PM - 7:00 PM</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Service Required *</label>
+              <select
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm bg-white appearance-none"
+              >
+                <option value="">Select service</option>
+                <option value="Diabetology">Diabetology Consultation</option>
+                <option value="OB/GYN">Obstetrics & Gynecology</option>
+                <option value="General Medicine">General Medicine</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Emergency Care">Emergency Care</option>
+                <option value="Health Check-up">Preventive Health Check-up</option>
+                <option value="Laboratory Test">Laboratory Test</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes (Optional)</label>
+              <textarea
+                placeholder="Any specific concerns or symptoms..."
+                rows="2"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm resize-none"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white py-3 rounded-lg font-bold hover:from-[#E8A3B9] hover:to-[#F5CEDD] hover:text-[#0D3B66] transition-all duration-300 shadow-lg hover:shadow-xl text-sm flex items-center justify-center transform hover:scale-105"
+            >
+              <Calendar size={18} className="mr-2" />
+              BOOK APPOINTMENT
+            </button>
+          </form>
+        </div>
+
+        {/* Message Us Form */}
+        <div className="bg-white rounded-2xl shadow-2xl p-6 border border-[#E8A3B9]/20">
+          <div className="flex items-center mb-6">
+            <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-xl flex items-center justify-center mr-3">
+              <Mail size={20} className="text-[#E8A3B9]" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-[#0D3B66]">Message Us</h3>
+              <p className="text-gray-600 text-sm">General inquiries and questions</p>
+            </div>
+          </div>
+          
+          <form className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">NAME *</label>
+                <input
+                  type="text"
+                  placeholder="Your full name"
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">MAIL ID *</label>
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">MOBILE NO *</label>
+                <input
+                  type="tel"
+                  placeholder="10-digit mobile number"
+                  required
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">SUBJECT</label>
+                <input
+                  type="text"
+                  placeholder="Subject of your message"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">YOUR MESSAGE *</label>
+              <textarea
+                placeholder="Your message or inquiry..."
+                rows="3"
+                required
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-sm resize-none"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-[#E8A3B9] to-[#F5CEDD] text-[#0D3B66] py-3 rounded-lg font-bold hover:from-[#0D3B66] hover:to-[#4A90E2] hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl text-sm flex items-center justify-center transform hover:scale-105"
+            >
+              <Mail size={18} className="mr-2" />
+              SUBMIT MESSAGE
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
       {/* Footer */}
       <footer className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white py-8 md:py-12 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
             <div>
-              {/* Footer Logo */}
-              <div className="flex items-center mb-3 md:mb-4">
-                <img 
-                  src="/logo.png" 
-                  alt="Lotus Polyclinic" 
-                  className="h-10 w-10 md:h-12 md:w-12 object-contain mr-3"
-                />
-                <span className="text-xl md:text-2xl font-bold">Lotus Polyclinic</span>
+              {/* Footer Logo - Text Only */}
+              <div className="mb-3 md:mb-4">
+                <div className="text-left">
+                  <span className="text-xl md:text-2xl font-bold text-white block leading-tight">
+                    LOTUS
+                  </span>
+                  <span className="text-xl md:text-2xl font-bold text-white block leading-tight -mt-2">
+                    POLYCLINIC
+                  </span>
+                </div>
               </div>
               <p className="text-white/80 leading-relaxed text-sm md:text-base" style={{ fontFamily: "'Lora', serif" }}>
-                Compassionate, community-focused healthcare since 2020. Your health is our priority.
+                "Caring beyond treatment" - Comprehensive healthcare provider committed to deliver compassionate, personalized and evidence based medical care.
               </p>
             </div>
             
             <div>
               <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Quick Links</h4>
               <div className="space-y-1 md:space-y-2">
-                {['home', 'about', 'services', 'doctors', 'contact'].map((item) => (
+                {['home', 'about', 'facilities', 'blogs', 'testimonials', 'feedback', 'contact'].map((item) => (
                   <button
                     key={item}
                     onClick={() => scrollToSection(item)}
                     className="block text-white/70 hover:text-[#E8A3B9] transition-colors capitalize text-sm md:text-base"
                   >
-                    {item}
+                    {item === 'about' ? 'About Us' : 
+                     item === 'contact' ? 'Contact Us' : item}
                   </button>
                 ))}
               </div>
@@ -955,8 +1024,8 @@ const App = () => {
             <div>
               <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Contact Info</h4>
               <div className="space-y-1 md:space-y-2 text-white/70 text-sm md:text-base">
-                <div>Mangalore, Karnataka</div>
-                <div>820-0000000</div>
+                <div>Ponmar</div>
+                <div>0820-0000000</div>
                 <div>contact@lotuspolyclinic.com</div>
                 <div>Mon-Sun: 7:00 AM - 7:30 PM</div>
               </div>
@@ -965,8 +1034,8 @@ const App = () => {
             <div>
               <h4 className="font-bold text-base md:text-lg mb-3 md:mb-4">Emergency</h4>
               <div className="space-y-1 md:space-y-2">
-                <div className="text-[#E8A3B9] font-semibold text-sm md:text-base">24/7 Support</div>
-                <a href="tel:08201234567" className="text-white/70 hover:text-[#E8A3B9] transition-colors block text-sm md:text-base">
+                <div className="text-[#E8A3B9] font-semibold text-sm md:text-base">24/7 Support Available</div>
+                <a href="tel:08200000000" className="text-white/70 hover:text-[#E8A3B9] transition-colors block text-sm md:text-base">
                   Emergency Helpline
                 </a>
                 <a href="https://wa.me/918200000000" className="text-white/70 hover:text-[#E8A3B9] transition-colors block text-sm md:text-base">
@@ -978,7 +1047,7 @@ const App = () => {
           
           <div className="border-t border-white/20 pt-6 md:pt-8 text-center">
             <p className="text-white/70 text-sm md:text-base" style={{ fontFamily: "'Lora', serif" }}>
-              © 2025 Lotus Polyclinic. All rights reserved. | Compassionate Care, Clinical Excellence
+              © 2025 Lotus Polyclinic. All rights reserved. | Built on the foundation of Sri Sai Clinic | Compassionate Care, Clinical Excellence
             </p>
           </div>
         </div>
