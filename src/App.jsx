@@ -176,23 +176,22 @@ const App = () => {
     }, 5000);
   };
 
-  const testimonials = [
-    {
-      name: "Sanjay K., 58",
-      text: "I have been living with diabetes for 10 years, and the care I receive at Lotus Polyclinic has truly transformed my health.",
-      rating: 5
-    },
-    {
-      name: "Anjali M., 29",
-      text: "The OB/GYN care I got from Lotus Polyclinic was outstanding - thorough in every check-up and so warm and reassuring.",
-      rating: 5
-    },
-    {
-      name: "Rahul D., 35",
-      text: "Dr. Arjun was very professional and kind. My skin problem cleared up in two weeks.",
-      rating: 5
-    }
-  ];
+const testimonials = [
+  {
+    name: "CHARLES C L",
+    
+    date: "2 months ago",
+    text: "Was very happy with the service and the results got. Very clean clinic, staff are very professional. Would definitely recommend for very economical treatment.",
+    rating: 5
+  },
+  {
+    name: "Arun Kumar",
+
+    date: "4 years ago",
+    text: "Had issue with my sugar level and had been referred by my colleague to Sri Sai Clinic. The treatment was good. I strongly recommend to visit the clinic for diabetes related issues.",
+    rating: 5
+  }
+];
 
   const stats = [
     { number: "5000+", label: "Patients Treated", icon: Users },
@@ -406,12 +405,12 @@ const App = () => {
     }
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [testimonials.length, activeTestimonial]);
+useEffect(() => {
+  const interval = setInterval(() => {
+    setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+  }, 5000);
+  return () => clearInterval(interval);
+}, [testimonials.length]);
 
   const BlogModal = ({ blog, onClose }) => (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -878,61 +877,66 @@ const App = () => {
         </section>
 
         {/* Testimonials Section */}
-        <section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
-          <div className="px-5 sm:px-6 max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-                <Star size={16} className="text-[#0D3B66] mr-2" />
-                <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
-              </div>
-              <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
-              <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
-                Real stories from our satisfied patients
-              </p>
-            </div>
+<section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
+  <div className="px-5 sm:px-6 max-w-4xl mx-auto">
+    <div className="text-center mb-12">
+      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+        <Star size={16} className="text-[#0D3B66] mr-2" />
+        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
+      </div>
+      <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
+      <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
+        Real stories from our satisfied patients
+      </p>
+    </div>
 
-            <div className="bg-white rounded-lg shadow-xl p-6 relative">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] rounded-t-lg"></div>
-              <div className="text-center">
-                <div className="flex justify-center mb-4">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star 
-                      key={star} 
-                      size={20} 
-                      className="text-yellow-400 fill-current mx-1" 
-                    />
-                  ))}
-                </div>
-                
-                <div className="min-h-[80px] mb-4">
-                  <p className="text-base leading-relaxed text-gray-800 italic">
-                    "{testimonials[activeTestimonial]?.text}"
-                  </p>
-                </div>
-                
-                <div className="font-semibold text-gray-900 text-xl md:text-2xl mb-2">
-                  {testimonials[activeTestimonial]?.name}
-                </div>
-                <div className="text-sm leading-relaxed text-gray-600 mb-6">Patient</div>
-                
-                <div className="flex justify-center space-x-2">
-                  {testimonials.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setActiveTestimonial(index)}
-                      className={`w-3 h-3 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] ${
-                        index === activeTestimonial 
-                          ? 'bg-[#E8A3B9] w-6' 
-                          : 'bg-gray-300 hover:bg-[#E8A3B9]'
-                      }`}
-                      aria-label={`View testimonial ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+    <div className="bg-white rounded-lg shadow-xl p-6 relative">
+      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] rounded-t-lg"></div>
+      <div className="text-center">
+        <div className="flex justify-center mb-4">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Star 
+              key={star} 
+              size={20} 
+              className="text-yellow-400 fill-current mx-1" 
+            />
+          ))}
+        </div>
+        
+        <div className="min-h-[120px] mb-4">
+          <p className="text-base leading-relaxed text-gray-800 italic">
+            "{testimonials[activeTestimonial]?.text}"
+          </p>
+        </div>
+        
+        <div className="font-semibold text-gray-900 text-xl md:text-2xl mb-2">
+          {testimonials[activeTestimonial]?.name}
+        </div>
+        <div className="text-sm leading-relaxed text-gray-600 mb-2">
+          {testimonials[activeTestimonial]?.role}
+        </div>
+        <div className="text-xs leading-relaxed text-gray-500 mb-6">
+          {testimonials[activeTestimonial]?.date}
+        </div>
+        
+        <div className="flex justify-center space-x-2">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveTestimonial(index)}
+              className={`w-3 h-3 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] ${
+                index === activeTestimonial 
+                  ? 'bg-[#E8A3B9] w-6' 
+                  : 'bg-gray-300 hover:bg-[#E8A3B9]'
+              }`}
+              aria-label={`View testimonial ${index + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* Blog Section */}
         <section id="blogs" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="blogs-heading">
