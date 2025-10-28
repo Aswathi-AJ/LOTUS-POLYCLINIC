@@ -743,65 +743,85 @@ useEffect(() => {
           </div>
         </section>
 
-        {/* About Section */}
-        <section id="about" className="py-12 md:py-20 px-5 bg-gradient-to-br from-[#F8D4E3] to-[#87CEEB]" aria-labelledby="about-heading">
-          <div className="px-5 sm:px-6 max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-2 gap-8 items-start">
-              <div className="max-w-2xl">
-                <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-                  <Info size={16} className="text-[#0D3B66] mr-2" />
-                  <span className="text-sm font-bold text-[#0D3B66] tracking-wide">ABOUT US</span>
-                </div>
-                <h2 id="about-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">
-                  Built on the Foundation of <span className="text-[#E8A3B9]">Sri Sai Clinic</span>
-                </h2>
-                <p className="text-base leading-relaxed text-gray-800 mb-6">
-                  Lotus Polyclinic at Ponmar, built upon the foundation of Sri Sai Clinic, established in 2020, with a vision to provide quality and affordable healthcare.
-                </p>
-                
-                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                  <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                    <Users size={24} className="mr-3 text-[#E8A3B9]" />
-                    Dr. Meena - Founder
-                  </h3>
-                  <p className="text-base leading-relaxed text-gray-800 mb-4">
-                    <strong>MBBS, MD</strong> - brings over 16 years of experience with specialized expertise in diabetes management.
-                  </p>
-                  <p className="text-base leading-relaxed text-gray-800">
-                    Known for her compassionate approach, combining clinical excellence with genuine empathy.
-                  </p>
-                </div>
-              </div>
+{/* About Section */}
+<section id="about" className="py-12 md:py-20 px-5 bg-gradient-to-br from-[#F8D4E3] to-[#87CEEB]" aria-labelledby="about-heading">
+  <div className="px-5 sm:px-6 max-w-6xl mx-auto">
+    
+    {/* NEW: Clean Announcement Banner */}
+    <div className="text-center mb-12">
+      {/* Announcement Heading */}
+      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4 border border-[#E8A3B9]">
+        <Sparkles size={16} className="text-[#0D3B66] mr-2" />
+        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">ANNOUNCEMENT</span>
+      </div>
+      
+      {/* Banner Image Only */}
+      <div>
+        <img 
+          src="/banner.png" 
+          alt="Sri Sai Clinic is now Lotus Polyclinic - Coming Soon"
+          className="mx-auto rounded-lg shadow-lg"
+          style={{ maxWidth: '400px', width: '100%', height: 'auto' }}
+        />
+      </div>
+    </div>
 
-              <div className="mt-8 lg:mt-0">
-                <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white rounded-lg p-6 shadow-xl">
-                  <div className="flex items-center mb-6">
-                    <Shield className="text-[#E8A3B9] mr-4" size={24} />
-                    <h3 className="text-xl md:text-2xl font-semibold leading-tight">Mission & Vision</h3>
-                  </div>
-                  <p className="text-base leading-relaxed mb-6 opacity-90">
-                    <strong>Vision:</strong> To deliver uncompromised, expert healthcare grounded in compassion and modern medical excellence.
-                  </p>
-                  <p className="text-base leading-relaxed mb-6 opacity-90">
-                    <strong>Mission:</strong> To provide accessible, high-quality healthcare to every patient.
-                  </p>
-                  <div className="space-y-3">
-                    {[
-                      "Evidence-based medical care",
-                      "Genuine human connections",
-                      "Healing environment"
-                    ].map((item, index) => (
-                      <div key={index} className="flex items-start">
-                        <CheckCircle size={20} className="text-[#E8A3B9] mr-3 mt-1 flex-shrink-0" />
-                        <span className="text-base leading-relaxed opacity-90">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div className="grid lg:grid-cols-2 gap-8 items-start">
+      <div className="max-w-2xl">
+        <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+          <Info size={16} className="text-[#0D3B66] mr-2" />
+          <span className="text-sm font-bold text-[#0D3B66] tracking-wide">ABOUT US</span>
+        </div>
+        <h2 id="about-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">
+          Built on the Foundation of <span className="text-[#E8A3B9]">Sri Sai Clinic</span>
+        </h2>
+        <p className="text-base leading-relaxed text-gray-800 mb-6">
+          Lotus Polyclinic at Ponmar, built upon the foundation of Sri Sai Clinic, established in 2020, with a vision to provide quality and affordable healthcare.
+        </p>
+        
+        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+          <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+            <Users size={24} className="mr-3 text-[#E8A3B9]" />
+            Dr. Meena - Founder
+          </h3>
+          <p className="text-base leading-relaxed text-gray-800 mb-4">
+            <strong>MBBS, MD</strong> - brings over 16 years of experience with specialized expertise in diabetes management.
+          </p>
+          <p className="text-base leading-relaxed text-gray-800">
+            Known for her compassionate approach, combining clinical excellence with genuine empathy.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-8 lg:mt-0">
+        <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white rounded-lg p-6 shadow-xl">
+          <div className="flex items-center mb-6">
+            <Shield className="text-[#E8A3B9] mr-4" size={24} />
+            <h3 className="text-xl md:text-2xl font-semibold leading-tight">Mission & Vision</h3>
           </div>
-        </section>
+          <p className="text-base leading-relaxed mb-6 opacity-90">
+            <strong>Vision:</strong> To deliver uncompromised, expert healthcare grounded in compassion and modern medical excellence.
+          </p>
+          <p className="text-base leading-relaxed mb-6 opacity-90">
+            <strong>Mission:</strong> To provide accessible, high-quality healthcare to every patient.
+          </p>
+          <div className="space-y-3">
+            {[
+              "Evidence-based medical care",
+              "Genuine human connections", 
+              "Healing environment"
+            ].map((item, index) => (
+              <div key={index} className="flex items-start">
+                <CheckCircle size={20} className="text-[#E8A3B9] mr-3 mt-1 flex-shrink-0" />
+                <span className="text-base leading-relaxed opacity-90">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* Services Section */}
         <section id="services" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="services-heading">
