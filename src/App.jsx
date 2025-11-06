@@ -95,7 +95,6 @@ const App = () => {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [selectedBlog, setSelectedBlog] = useState(null);
   const [showBookingSuccess, setShowBookingSuccess] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -146,41 +145,43 @@ const App = () => {
     };
   }, []);
 
-  const scrollToSection = (id) => {
-    let element;
-    let extraOffset = 0;
+const scrollToSection = (id) => {
+  let element;
+  let extraOffset = 0;
+  
+  if (id === 'about') {
+    element = document.getElementById('about-heading');
+    extraOffset = 100;
+  } else if (id === 'appointment') {
+    // First, try to find the booking form directly
+    element = document.querySelector('#contact .bg-white.rounded-lg.shadow-xl');
     
-    // Special case for about section - target the heading but with some extra offset
-    if (id === 'about') {
-      element = document.getElementById('about-heading');
-      extraOffset = 100; // Add some extra space above the heading
+    // If not found, fallback to contact section
+    if (!element) {
+      element = document.getElementById('contact');
+      extraOffset = 200; // Scroll further down to show the form
     } else {
-      element = document.getElementById(id);
+      extraOffset = 50; // Less offset when targeting form directly
     }
-    
-    if (element) {
-      const headerHeight = 80; // Adjust this value based on your header height
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerHeight - extraOffset;
+  } else {
+    element = document.getElementById(id);
+  }
+  
+  if (element) {
+    const headerHeight = 80;
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerHeight - extraOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-    setIsMenuOpen(false);
-  };
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+  }
+  setIsMenuOpen(false);
+};
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const openBlog = (blog) => {
-    setSelectedBlog(blog);
-  };
-
-  const closeBlog = () => {
-    setSelectedBlog(null);
   };
 
   const handleInputChange = (e) => {
@@ -192,54 +193,66 @@ const App = () => {
   };
 
   const handleBookingSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const templateParams = {
-  patient_name: formData.fullName,
-  patient_phone: formData.phone,
-  patient_email: formData.email,
-  appointment_date: formData.date,
-  appointment_time: formatTimeForDisplay(formData.time), // CHANGED THIS LINE
-  service_type: formData.service,
-  additional_notes: formData.notes || 'No additional notes',
-  submitted_on: new Date().toLocaleString(),
-  to_email: config.CLINIC_EMAIL
-};
+  e.preventDefault();
+  
+  // Phone number validation (10 digits for India)
+  const phoneRegex = /^[6-9]\d{9}$/;
+  if (!phoneRegex.test(formData.phone.replace(/\D/g, ''))) {
+    alert('Please enter a valid 10-digit Indian phone number starting with 6-9');
+    return;
+  }
 
-      console.log('Sending booking email with params:', templateParams);
-      console.log('Using EmailJS config:', {
-        serviceId: config.EMAILJS_SERVICE_ID,
-        templateId: config.EMAILJS_TEMPLATE_ID,
-        publicKey: config.EMAILJS_PUBLIC_KEY
+  // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (formData.email && !emailRegex.test(formData.email)) {
+    alert('Please enter a valid email address (e.g., name@domain.com)');
+    return;
+  }
+  
+  try {
+    const templateParams = {
+      patient_name: formData.fullName,
+      patient_phone: formData.phone,
+      patient_email: formData.email,
+      appointment_date: formData.date,
+      appointment_time: formatTimeForDisplay(formData.time),
+      service_type: formData.service,
+      additional_notes: formData.notes || 'No additional notes',
+      submitted_on: new Date().toLocaleString(),
+      to_email: config.CLINIC_EMAIL
+    };
+
+    console.log('Sending booking email with params:', templateParams);
+    console.log('Using EmailJS config:', {
+      serviceId: config.EMAILJS_SERVICE_ID,
+      templateId: config.EMAILJS_TEMPLATE_ID,
+      publicKey: config.EMAILJS_PUBLIC_KEY
+    });
+
+    // Send email using EmailJS
+    const result = await emailjs.send(
+      config.EMAILJS_SERVICE_ID,
+      config.EMAILJS_TEMPLATE_ID,
+      templateParams,
+      config.EMAILJS_PUBLIC_KEY
+    );
+
+    console.log('Email sent successfully:', result);
+
+    if (result.text === 'OK') {
+      setShowBookingSuccess(true);
+      setFormData({
+        fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
       });
-
-      // Send email using EmailJS
-      const result = await emailjs.send(
-        config.EMAILJS_SERVICE_ID,
-        config.EMAILJS_TEMPLATE_ID,
-        templateParams,
-        config.EMAILJS_PUBLIC_KEY
-      );
-
-      console.log('Email sent successfully:', result);
-
-      if (result.text === 'OK') {
-        setShowBookingSuccess(true);
-        setFormData({
-          fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
-        });
-        setTimeout(() => setShowBookingSuccess(false), 5000);
-      }
-    } catch (error) {
-      console.error('Failed to send email:', error);
-      console.error('Error details:', error);
-      // Fallback - still show success to user
-      console.error('❌ Failed to send email:', error);
+      setTimeout(() => setShowBookingSuccess(false), 5000);
+    }
+  } catch (error) {
+    console.error('Failed to send email:', error);
+    console.error('Error details:', error);
     
-// Fallback with proper time formatting
-const subject = `Appointment Booking Request - ${formData.fullName}`;
-const body = `
+    // Fallback with proper time formatting
+    const subject = `Appointment Booking Request - ${formData.fullName}`;
+    const body = `
 NEW APPOINTMENT REQUEST - LOTUS POLYCLINIC
 
 Patient Information:
@@ -264,17 +277,101 @@ This appointment request was submitted through the Lotus Polyclinic website.
 Please contact the patient to confirm the appointment.
 `.trim();
 
-// Open user's default email client
-const mailtoLink = `mailto:${config.CLINIC_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-window.open(mailtoLink, '_blank');
+    // Open user's default email client
+    const mailtoLink = `mailto:${config.CLINIC_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(mailtoLink, '_blank');
 
-// Show success message
-setShowBookingSuccess(true);
-setFormData({
-  fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
-});
-setTimeout(() => setShowBookingSuccess(false), 5000);
-    }
+    // Show success message
+    setShowBookingSuccess(true);
+    setFormData({
+      fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
+    });
+    setTimeout(() => setShowBookingSuccess(false), 5000);
+  }
+};
+
+  // Function to open blog in new window
+  const openBlogInNewWindow = (blog) => {
+    const blogHTML = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${blog.title} - Lotus Polyclinic</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+          body { font-family: 'Inter', sans-serif; }
+          .prose h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 1rem; color: #1f2937; }
+          .prose h2 { font-size: 1.875rem; font-weight: 600; margin-bottom: 0.75rem; color: #1f2937; }
+          .prose h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; color: #1f2937; }
+          .prose p { margin-bottom: 1rem; color: #374151; line-height: 1.6; }
+          .prose ul { margin-bottom: 1rem; padding-left: 1.5rem; }
+          .prose li { margin-bottom: 0.5rem; color: #374151; }
+          .prose strong { color: #1f2937; font-weight: 600; }
+        </style>
+      </head>
+      <body class="bg-gray-50 min-h-screen">
+        <div class="max-w-4xl mx-auto bg-white min-h-screen">
+          <!-- Header -->
+          <header class="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white py-6 px-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <h1 class="text-2xl font-bold">LOTUS POLYCLINIC</h1>
+                <p class="text-white/80 text-sm">Health & Wellness Blog</p>
+              </div>
+              <button onclick="window.close()" class="text-white/80 hover:text-white bg-white/20 px-4 py-2 rounded-lg transition-colors">
+                Close
+              </button>
+            </div>
+          </header>
+
+          <!-- Blog Content -->
+          <main class="p-6">
+            <div class="mb-6">
+              <div class="flex items-center mb-4">
+                <div class="bg-[#F8D4E3] rounded-full px-3 py-1">
+                  <span class="text-sm font-bold text-[#0D3B66]">${blog.category}</span>
+                </div>
+                <span class="ml-3 text-sm text-gray-600">${blog.date}</span>
+              </div>
+              
+              <div class="flex items-center mb-6 p-4 bg-gray-50 rounded-lg">
+                <div class="w-12 h-12 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-lg flex items-center justify-center mr-4">
+                  <span style="color: #E8A3B9; font-size: 24px;">●</span>
+                </div>
+                <div>
+                  <div class="font-semibold text-gray-900 text-base">${blog.author}</div>
+                  <div class="text-sm text-gray-600">${blog.authorRole}</div>
+                  <div class="flex items-center text-sm text-gray-600 mt-1">
+                    <span>${blog.readTime}</span>
+                  </div>
+                </div>
+              </div>
+
+              <h1 class="text-3xl font-bold text-gray-900 mb-6 leading-tight">${blog.title}</h1>
+              <p class="text-lg text-gray-700 mb-8 leading-relaxed">${blog.excerpt}</p>
+            </div>
+
+            <article class="prose prose-lg max-w-none">
+              ${blog.content}
+            </article>
+
+            <div class="mt-8 pt-6 border-t border-gray-200">
+              <button onclick="window.close()" class="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium">
+                Close Article
+              </button>
+            </div>
+          </main>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const blogWindow = window.open('', '_blank', 'width=800,height=900,scrollbars=yes');
+    blogWindow.document.write(blogHTML);
+    blogWindow.document.close();
   };
 
   const testimonials = [
@@ -393,116 +490,43 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
   ];
 
   const blogPostsData = [
-    {
-      id: 1,
-      title: "Comprehensive Diabetes Management: A Complete Guide to Living Well with Diabetes",
-      excerpt: "Expert insights on managing diabetes through lifestyle modifications, medication adherence, and regular monitoring for optimal health outcomes.",
-      category: "DIABETES CARE",
-      readTime: "25 min read",
-      date: "Nov 20, 2024",
-      icon: Activity,
-      author: "Dr. Meena",
-      authorRole: "Chief Diabetologist & Physician",
-      content: `
-        <h1>Understanding Diabetes: The Modern Epidemic</h1>
-        <p>Diabetes mellitus has emerged as one of the most significant health challenges of the 21st century, affecting over 537 million adults worldwide according to the International Diabetes Federation. At Lotus Polyclinic, we believe that comprehensive diabetes management goes beyond mere blood sugar control—it encompasses holistic care that addresses physical, emotional, and lifestyle factors to ensure optimal quality of life for our patients.</p>
-
-        <h2>Types of Diabetes: Comprehensive Understanding</h2>
-        <p><strong>Type 1 Diabetes:</strong> An autoimmune condition where the body's immune system mistakenly attacks and destroys insulin-producing beta cells in the pancreas. This type typically develops in childhood or adolescence and requires lifelong insulin therapy. The exact cause remains unknown, but genetic predisposition and environmental factors are believed to play significant roles.</p>
-        
-        <p><strong>Type 2 Diabetes:</strong> The most common form, accounting for approximately 90-95% of all diabetes cases. Characterized by insulin resistance and relative insulin deficiency, this condition develops gradually over years. Key risk factors include obesity, sedentary lifestyle, family history, and certain ethnic backgrounds. Unlike type 1 diabetes, type 2 is largely preventable through lifestyle modifications.</p>
-        
-        <p><strong>Gestational Diabetes:</strong> Develops during pregnancy and usually resolves after childbirth, though it increases future diabetes risk for both mother and child. This condition affects approximately 2-10% of pregnancies and requires careful monitoring to prevent complications for both mother and baby.</p>
-
-        <h2>Comprehensive Diagnostic Approach</h2>
-        <p>Accurate diagnosis forms the foundation of effective diabetes management. Our diagnostic protocol includes:</p>
-        <ul>
-          <li><strong>Fasting Plasma Glucose Test:</strong> Measures blood sugar after an 8-hour fast, with values ≥126 mg/dL indicating diabetes</li>
-          <li><strong>Oral Glucose Tolerance Test (OGTT):</strong> Assesses blood sugar response to glucose load, with 2-hour values ≥200 mg/dL diagnostic</li>
-          <li><strong>HbA1c Test:</strong> Provides 3-month average blood sugar levels, with values ≥6.5% indicating diabetes</li>
-          <li><strong>Random Blood Glucose Test:</strong> Values ≥200 mg/dL with classic symptoms confirm diagnosis</li>
-        </ul>
-
-        <h2>Advanced Management Strategies</h2>
-        
-        <h3>Medical Nutrition Therapy: Beyond Basic Diet</h3>
-        <p>Proper nutrition forms the cornerstone of diabetes management. Our approach includes sophisticated dietary strategies:</p>
-        <ul>
-          <li><strong>Carbohydrate Counting Mastery:</strong> Advanced techniques for balancing carbohydrate intake with insulin or medication requirements</li>
-          <li><strong>Glycemic Index Optimization:</strong> Understanding how different foods affect blood sugar levels and meal timing strategies</li>
-          <li><strong>Macronutrient Balancing:</strong> Optimal distribution of carbohydrates (45-65%), proteins (15-20%), and fats (20-35%)</li>
-          <li><strong>Portion Control Systems:</strong> Implementing consistent meal sizes and timing using advanced portion control methods</li>
-          <li><strong>Nutrient Timing Strategies:</strong> Strategic meal scheduling to optimize metabolic responses and medication efficacy</li>
-        </ul>
-
-        <p>At Lotus Polyclinic, we're committed to providing comprehensive, compassionate diabetes care that empowers individuals to live full, healthy lives. Our multidisciplinary team works together to create personalized management plans that address each patient's unique needs, goals, and lifestyle circumstances.</p>
-
-        <p><strong>Key Takeaway:</strong> Diabetes management is a dynamic, lifelong journey that requires partnership between patients and healthcare providers. With proper care, advanced technology, and continuous support, excellent quality of life and optimal health outcomes are absolutely achievable. Regular monitoring, lifestyle modifications, and proactive complication screening form the foundation of successful long-term diabetes management.</p>
-      `
-    },
-    {
-      id: 2,
-      title: "Comprehensive Prenatal Care: Ensuring Optimal Maternal and Fetal Health",
-      excerpt: "Complete evidence-based guide to prenatal care, advanced nutrition planning, exercise protocols, and comprehensive wellness practices for optimal pregnancy outcomes.",
-      category: "WOMEN'S HEALTH",
-      readTime: "28 min read",
-      date: "Nov 15, 2024",
-      icon: Baby,
-      author: "Dr. Meena",
-      authorRole: "OB/GYN Specialist & Physician",
-      content: `
-        <h1>Comprehensive Prenatal Care: A Journey of Transformation</h1>
-        <p>Pregnancy represents one of life's most profound physiological and emotional transformations. At Lotus Polyclinic, we provide comprehensive, evidence-based prenatal care designed to support both maternal and fetal well-being through every stage of this remarkable journey.</p>
-
-        <h2>Preconception Care: Laying the Foundation</h2>
-        <p>Optimal pregnancy outcomes begin before conception. Our comprehensive preconception program includes:</p>
-        <ul>
-          <li><strong>Comprehensive Health Assessment:</strong> Detailed medical history review, genetic screening, and risk factor evaluation</li>
-          <li><strong>Nutritional Optimization:</strong> Folic acid supplementation (400-800 mcg daily) initiated 3 months pre-conception</li>
-          <li><strong>Chronic Condition Management:</strong> Optimization of pre-existing conditions like diabetes, hypertension, or thyroid disorders</li>
-          <li><strong>Lifestyle Modification:</strong> Smoking cessation, alcohol avoidance, and healthy weight achievement</li>
-        </ul>
-
-        <h2>First Trimester: Critical Foundation Building</h2>
-        <p>The first prenatal appointment includes our comprehensive evaluation protocol with detailed medical history, dating ultrasound, and advanced laboratory panel to ensure the healthiest start for both mother and baby.</p>
-
-        <h2>Advanced Nutritional Science in Pregnancy</h2>
-        <p>Optimal nutritional support for maternal health and fetal development includes proper folic acid protocol, iron supplementation strategy, calcium optimization, and omega-3 fatty acids for fetal brain development.</p>
-
-        <p>At Lotus Polyclinic, we're committed to providing exceptional, evidence-based prenatal care that supports both physical health and emotional well-being. Our comprehensive approach ensures that every pregnancy receives the advanced medical expertise, personalized attention, and compassionate support it deserves.</p>
-
-        <p><strong>Key Takeaway:</strong> Optimal pregnancy outcomes result from comprehensive, personalized care that begins before conception and extends through the postpartum period. Regular prenatal visits, evidence-based interventions, and proactive complication screening form the foundation of successful pregnancy management.</p>
-      `
-    },
-    {
-      id: 3,
-      title: "Comprehensive Preventive Health: Advanced Strategies for Disease Prevention",
-      excerpt: "Evidence-based comprehensive guide to preventive health screenings, advanced lifestyle modifications, and cutting-edge early detection strategies for lifelong wellness.",
-      category: "PREVENTIVE CARE",
-      readTime: "30 min read",
-      date: "Nov 10, 2024",
-      icon: Shield,
-      author: "Dr. Meena",
-      authorRole: "Preventive Medicine Specialist & Physician",
-      content: `
-        <h1>Preventive Health: The Science of Proactive Wellness</h1>
-        <p>Preventive healthcare represents the most sophisticated and effective approach to maintaining long-term health, quality of life, and functional longevity. At Lotus Polyclinic, we emphasize proactive health management through comprehensive evidence-based screenings and advanced lifestyle interventions.</p>
-
-        <h2>The Scientific Foundation of Preventive Care</h2>
-        <p>Advanced preventive care operates across multiple scientific levels with sophisticated interventions including primordial prevention, primary prevention, secondary prevention, and tertiary prevention strategies tailored to individual risk profiles.</p>
-
-        <h2>Comprehensive Age-Specific Preventive Guidelines</h2>
-        <p>Our preventive care includes specialized protocols for young adults (18-39 years) focusing on foundation building, middle age (40-64 years) with enhanced surveillance, and senior adults (65+ years) with comprehensive geriatric assessment.</p>
-
-        <h2>Advanced Cancer Screening and Prevention</h2>
-        <p>We provide sophisticated multi-modal screening approaches for breast cancer, colorectal cancer, and prostate cancer with personalized risk assessment and advanced biomarker integration.</p>
-
-        <p>At Lotus Polyclinic, we believe that advanced preventive care is the foundation of long-term health, vitality, and functional longevity. Our comprehensive approach combines cutting-edge screening technologies with personalized lifestyle recommendations and continuous risk monitoring to help you maintain optimal health throughout your lifespan.</p>
-
-        <p><strong>Key Takeaway:</strong> The most sophisticated and effective approach to health is proactive prevention. Advanced preventive care, combined with healthy lifestyle choices and regular monitoring, can significantly reduce your risk of developing chronic diseases and help you maintain the highest possible quality of life.</p>
-      `
-    }
-  ];
+  {
+    id: 1,
+    title: "Comprehensive Diabetes Management: A Complete Guide to Living Well with Diabetes",
+    excerpt: "Expert insights on managing diabetes through lifestyle modifications, medication adherence, and regular monitoring for optimal health outcomes.",
+    category: "DIABETES CARE",
+    readTime: "25 min read",
+    date: "Nov 20, 2024",
+    icon: Activity,
+    author: "Dr. Meena",
+    authorRole: "Chief Diabetologist & Physician",
+    filePath: "/blog-diabetes.html"  // Add this line
+  },
+  {
+    id: 2,
+    title: "Comprehensive Prenatal Care: Ensuring Optimal Maternal and Fetal Health",
+    excerpt: "Complete evidence-based guide to prenatal care, advanced nutrition planning, exercise protocols, and comprehensive wellness practices for optimal pregnancy outcomes.",
+    category: "WOMEN'S HEALTH",
+    readTime: "28 min read",
+    date: "Nov 15, 2024",
+    icon: Baby,
+    author: "Dr. Meena",
+    authorRole: "OB/GYN Specialist & Physician",
+    filePath: "/blog-prenatal.html"  // Add this line
+  },
+  {
+    id: 3,
+    title: "Comprehensive Preventive Health: Advanced Strategies for Disease Prevention",
+    excerpt: "Evidence-based comprehensive guide to preventive health screenings, advanced lifestyle modifications, and cutting-edge early detection strategies for lifelong wellness.",
+    category: "PREVENTIVE CARE",
+    readTime: "30 min read",
+    date: "Nov 10, 2024",
+    icon: Shield,
+    author: "Dr. Meena",
+    authorRole: "Preventive Medicine Specialist & Physician",
+    filePath: "/blog-preventive.html"  // Add this line
+  }
+];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -510,61 +534,6 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
     }, 5000);
     return () => clearInterval(interval);
   }, [testimonials.length]);
-
-  const BlogModal = ({ blog, onClose }) => (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
-          <div>
-            <div className="flex items-center mb-3">
-              <div className="bg-[#F8D4E3] rounded-full px-3 py-1">
-                <span className="text-sm font-bold text-[#0D3B66]">{blog.category}</span>
-              </div>
-              <span className="ml-3 text-sm text-gray-600">{blog.date}</span>
-            </div>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-900 leading-tight">{blog.title}</h1>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9]"
-            aria-label="Close blog article"
-          >
-            <X size={24} />
-          </button>
-        </div>
-        
-        <div className="p-6">
-          <div className="flex items-center mb-6 p-4 bg-gray-50 rounded-lg">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-lg flex items-center justify-center mr-4">
-              <blog.icon size={24} className="text-[#E8A3B9]" />
-            </div>
-            <div>
-              <div className="font-semibold text-gray-900 text-base">{blog.author}</div>
-              <div className="text-sm text-gray-600">{blog.authorRole}</div>
-              <div className="flex items-center text-sm text-gray-600 mt-1">
-                <Clock size={14} className="mr-1" />
-                <span>{blog.readTime}</span>
-              </div>
-            </div>
-          </div>
-
-          <article 
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-800 prose-li:text-gray-800 prose-strong:text-gray-900 prose-headings:mb-4 prose-p:mb-4 prose-headings:font-semibold"
-            dangerouslySetInnerHTML={{ __html: blog.content }}
-          />
-          
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <button
-              onClick={onClose}
-              className="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2]"
-            >
-              Close Article
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   // Success Message Component
   const BookingSuccessMessage = () => (
@@ -609,9 +578,8 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
       
-      {/* Blog Modal */}
-      {selectedBlog && <BlogModal blog={selectedBlog} onClose={closeBlog} />}
-
+         {/* ADD THIS LINE FOR BROWSER TAB FAVICON */}
+    <link rel="icon" type="image/png" href="/favicon.png" />
       {/* Booking Success Message */}
       {showBookingSuccess && <BookingSuccessMessage />}
 
@@ -640,20 +608,20 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
       {/* Header */}
       <header className={`fixed w-full top-0 z-40 bg-white shadow-md border-b border-gray-200 transition-all duration-300 ${isScrolled ? 'py-3' : 'py-4'}`}>
         <div className="px-5 sm:px-6 max-w-7xl mx-auto flex justify-between items-center">
-          <button 
-            onClick={() => scrollToSection('home')} 
-            className="flex items-center group focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2 rounded-lg"
-            aria-label="Lotus Polyclinic Home"
-          >
-            {/* Logo with Image from Public Folder - Large Size */}
-            <div className="flex items-center space-x-3">
-              <img 
-                src="/logo.png" 
-                alt="Lotus Polyclinic Logo" 
-                className="w-20 h-20 md:w-24 md:h-24 object-contain group-hover:scale-105 transition-transform"
-              />
-            </div>
-          </button>
+ <button 
+  onClick={() => scrollToSection('home')} 
+  className="flex items-center rounded-lg focus:outline-none"
+  aria-label="Lotus Polyclinic Home"
+>
+  {/* Logo with Image from Public Folder - Large Size */}
+  <div className="flex items-center space-x-3">
+    <img 
+      src="/logo.png" 
+      alt="Lotus Polyclinic Logo" 
+      className="w-20 h-20 md:w-24 md:h-24 object-contain"
+    />
+  </div>
+</button>
 
           <nav className="hidden lg:flex items-center space-x-3" aria-label="Main navigation">
             {[
@@ -679,13 +647,13 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
 
           <div className="flex items-center space-x-4">
             <button
-              onClick={() => scrollToSection('contact')}
-              className="hidden md:flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-5 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all shadow-lg font-medium text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
-              aria-label="Book an appointment at Lotus Polyclinic"
-            >
-              <Calendar size={18} className="mr-2" />
-              Book Now
-            </button>
+  onClick={() => scrollToSection('appointment')}
+  className="hidden md:flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-5 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all shadow-lg font-medium text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
+  aria-label="Book an appointment at Lotus Polyclinic"
+>
+  <Calendar size={18} className="mr-2" />
+  Book Now
+</button>
 
             <button
               className="lg:hidden text-gray-800 p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
@@ -723,12 +691,12 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
                 </button>
               ))}
               <button
-                onClick={() => scrollToSection('contact')}
-                className="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium text-center mt-4 text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
-                aria-label="Book an appointment at Lotus Polyclinic"
-              >
-                Book Appointment
-              </button>
+  onClick={() => scrollToSection('appointment')}
+  className="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium text-center mt-4 text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
+  aria-label="Book an appointment at Lotus Polyclinic"
+>
+  Book Appointment
+</button>
             </div>
           </nav>
         )}
@@ -773,15 +741,15 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] text-[#0D3B66] px-6 py-3 rounded-lg hover:shadow-2xl transition-all hover:scale-105 flex items-center justify-center w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] focus:ring-offset-2 text-base font-medium"
-                aria-label="Book an appointment at Lotus Polyclinic"
-              >
-                <Calendar size={20} className="mr-2" />
-                Book Appointment
-                <ArrowRight size={20} className="ml-2" />
-              </button>
+             <button
+  onClick={() => scrollToSection('appointment')}
+  className="bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] text-[#0D3B66] px-6 py-3 rounded-lg hover:shadow-2xl transition-all hover:scale-105 flex items-center justify-center w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] focus:ring-offset-2 text-base font-medium"
+  aria-label="Book an appointment at Lotus Polyclinic"
+>
+  <Calendar size={20} className="mr-2" />
+  Book Appointment
+  <ArrowRight size={20} className="ml-2" />
+</button>
               <button
                 onClick={() => scrollToSection('facilities')}
                 className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-[#0D3B66] transition-all w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 text-base font-medium"
@@ -1051,76 +1019,65 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
           </div>
         </section>
 
-        {/* Blog Section */}
-        <section id="blogs" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="blogs-heading">
-          <div className="px-5 sm:px-6 max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-                <FileText size={16} className="text-[#0D3B66] mr-2" />
-                <span className="text-sm font-bold text-[#0D3B66] tracking-wide">HEALTH BLOG</span>
+{/* Blog Section */}
+<section id="blogs" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="blogs-heading">
+  <div className="px-5 sm:px-6 max-w-7xl mx-auto">
+    <div className="text-center mb-12">
+      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+        <FileText size={16} className="text-[#0D3B66] mr-2" />
+        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">HEALTH BLOG</span>
+      </div>
+      <h2 id="blogs-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">Health & Wellness Insights</h2>
+      <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
+        Expert medical advice and comprehensive health guides from our specialist team
+      </p>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {blogPostsData.map((post) => (
+        <article key={post.id} className="bg-white rounded-lg shadow-lg hover:shadow-2xl transition-all border border-gray-100 hover:-translate-y-1 overflow-hidden group focus:outline-none focus:ring-2 focus:ring-[#E8A3B9]">
+          <div className="h-2 bg-gradient-to-r from-[#0D3B66] to-[#4A90E2]"></div>
+          <div className="p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-lg flex items-center justify-center">
+                <post.icon size={20} className="text-[#E8A3B9]" />
               </div>
-              <h2 id="blogs-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">Health & Wellness Insights</h2>
-              <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
-                Expert medical advice and comprehensive health guides from our specialist team
-              </p>
+              <div className="ml-3">
+                <div className="text-sm font-semibold text-[#0D3B66]">{post.category}</div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <Calendar size={14} className="mr-1" />
+                  {post.date}
+                </div>
+              </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blogPostsData.map((post) => (
-                <article key={post.id} className="bg-white rounded-lg shadow-lg hover:shadow-2xl transition-all border border-gray-100 hover:-translate-y-1 overflow-hidden group focus:outline-none focus:ring-2 focus:ring-[#E8A3B9]">
-                  <div className="h-2 bg-gradient-to-r from-[#0D3B66] to-[#4A90E2]"></div>
-                  <div className="p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-lg flex items-center justify-center">
-                        <post.icon size={20} className="text-[#E8A3B9]" />
-                      </div>
-                      <div className="ml-3">
-                        <div className="text-sm font-semibold text-[#0D3B66]">{post.category}</div>
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Calendar size={14} className="mr-1" />
-                          {post.date}
-                        </div>
-                      </div>
-                    </div>
-                    <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#E8A3B9] transition-colors line-clamp-2 leading-tight break-words">
-                      {post.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-gray-700 mb-4 line-clamp-3 break-words">
-                      {post.excerpt}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Clock size={14} className="mr-1" />
-                        <span>{post.readTime}</span>
-                      </div>
-                      <button 
-                        onClick={() => openBlog(post)}
-                        className="text-[#0D3B66] hover:text-[#E8A3B9] font-medium text-sm flex items-center focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
-                        aria-label={`Read full article: ${post.title}`}
-                      >
-                        Read Full Article
-                        <ExternalLink size={14} className="ml-1" />
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            <div className="text-center mt-12">
-              <p className="text-base leading-relaxed text-gray-700 mb-6">
-                Looking for specific health information?
-              </p>
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
-                aria-label="Consult our medical specialists"
+            <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#E8A3B9] transition-colors line-clamp-2 leading-tight break-words">
+              {post.title}
+            </h3>
+            <p className="text-sm leading-relaxed text-gray-700 mb-4 line-clamp-3 break-words">
+              {post.excerpt}
+            </p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center text-sm text-gray-600">
+                <Clock size={14} className="mr-1" />
+                <span>{post.readTime}</span>
+              </div>
+              <a 
+                href={post.filePath}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#0D3B66] hover:text-[#E8A3B9] font-medium text-sm flex items-center focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+                aria-label={`Read full article: ${post.title} (opens in new tab)`}
               >
-                Consult Our Specialists
-              </button>
+                Read Full Article
+                <ExternalLink size={14} className="ml-1" />
+              </a>
             </div>
           </div>
-        </section>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
 
         {/* Contact Section */}
         <section id="contact" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="contact-heading">
@@ -1257,28 +1214,48 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-semibold text-gray-800 mb-3">Phone Number *</label>
-                        <input
-                          id="phone"
-                          type="tel"
-                          placeholder="10-digit mobile"
-                          required
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
-                        />
-                      </div>
+  <label htmlFor="phone" className="block text-sm font-semibold text-gray-800 mb-3">
+    Phone Number *
+    <span className="text-xs text-gray-600 ml-2"></span>
+  </label>
+  <input
+    id="phone"
+    type="tel"
+    placeholder="Enter 10-digit mobile number"
+    required
+    value={formData.phone}
+    onChange={handleInputChange}
+    pattern="[6-9]\d{9}"
+    title="Please enter a valid 10-digit Indian phone number starting with 6,7,8,9"
+    maxLength="10"
+    className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
+  />
+  {formData.phone && !/^[6-9]\d{9}$/.test(formData.phone) && (
+    <p className="text-red-500 text-xs mt-1">
+      Please enter a valid 10-digit number starting with 6-9
+    </p>
+  )}
+</div>
                       <div>
-                        <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-3">Email</label>
-                        <input
-                          id="email"
-                          type="email"
-                          placeholder="Your email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
-                        />
-                      </div>
+  <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-3">
+    Email <span className="text-xs text-gray-600"></span>
+  </label>
+  <input
+    id="email"
+    type="email"
+    placeholder="your.email@example.com"
+    value={formData.email}
+    onChange={handleInputChange}
+    pattern="[^\\s@]+@[^\\s@]+\\.[^\\s@]+"
+    title="Please enter a valid email address (e.g., name@domain.com)"
+    className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
+  />
+  {formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+    <p className="text-red-500 text-xs mt-1">
+      Please enter a valid email address (e.g., name@domain.com)
+    </p>
+  )}
+</div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -1366,111 +1343,138 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white py-12 px-5" role="contentinfo">
-        <div className="px-5 sm:px-6 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            <div>
-              <div className="flex items-center space-x-3 mb-6">
-                <div>
-                  <div className="text-xl font-bold">LOTUS</div>
-                  <div className="text-sm font-medium -mt-1 opacity-90">POLYCLINIC</div>
-                </div>
-              </div>
-              <p className="text-sm leading-relaxed mb-6 opacity-90">
-                "Caring beyond treatment" - Comprehensive healthcare provider committed to compassionate care.
-              </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2" aria-label="WhatsApp">
-                  <MessageCircle size={20} />
-                </a>
-                <a href="#" className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2" aria-label="Phone">
-                  <Phone size={20} />
-                </a>
-                <a href="#" className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2" aria-label="Email">
-                  <Mail size={20} />
-                </a>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-lg mb-6">Quick Links</h4>
-              <div className="space-y-3">
-                {['home', 'about', 'services', 'facilities', 'blogs', 'testimonials', 'contact'].map((item) => (
-                  <button
-                    key={item}
-                    onClick={() => scrollToSection(item)}
-                    className="block text-white/80 hover:text-[#E8A3B9] transition-colors capitalize text-sm text-left focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
-                    aria-label={`Navigate to ${item} section`}
-                  >
-                    {item === 'about' ? 'About Us' : 
-                     item === 'contact' ? 'Contact Us' : 
-                     item.charAt(0).toUpperCase() + item.slice(1)}
-                  </button>
-                ))}
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-lg mb-6">Contact Info</h4>
-              <div className="space-y-3 text-white/80 text-sm">
-                <div className="flex items-start">
-                  <MapPin size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
-                  <span>Ponmar, Chennai</span>
-                </div>
-                <div className="flex items-center">
-                  <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
-                  <span>{config.CLINIC_PHONE}</span>
-                </div>
-                <div className="flex items-start">
-                  <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
-                  <span className="break-words">{config.CLINIC_EMAIL}</span>
-                </div>
-                <div className="flex items-center">
-                  <Clock size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
-                  <span>Mon-Sun: 7AM - 7:30PM</span>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-lg mb-6">Emergency</h4>
-              <div className="space-y-3">
-                <div className="text-[#E8A3B9] font-medium text-sm">24/7 Support Available</div>
-                <a href={`tel:${config.CLINIC_PHONE}`} className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1">
-                  Emergency Helpline
-                </a>
-                <a 
-  href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Emergency%20Assistance%20Required%20-%20Lotus%20Polyclinic`}
-  className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
->
-  WhatsApp Emergency
-</a>
-                <button
-                  onClick={() => scrollToSection('contact')}
-                  className="bg-[#E8A3B9] text-[#0D3B66] px-4 py-3 rounded-lg hover:bg-[#F8D4E3] transition-all text-sm mt-4 focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] focus:ring-offset-2 focus:ring-offset-[#0D3B66]"
-                  aria-label="Book an appointment"
-                >
-                  Book Now
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t border-white/20 pt-8 text-center mt-8">
-            <p className="text-white/80 text-sm leading-relaxed mb-4">
-              © 2025 Lotus Polyclinic. All rights reserved. | Built on the foundation of Sri Sai Clinic
-            </p>
-            <button
-              onClick={scrollToTop}
-              className="text-white/70 hover:text-[#E8A3B9] transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
-              aria-label="Scroll back to top of the page"
-            >
-              Back to Top ↑
-            </button>
+{/* Footer */}
+<footer className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white py-12 px-5" role="contentinfo">
+  <div className="px-5 sm:px-6 max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+      <div>
+        <div className="flex items-center space-x-3 mb-6">
+          <div>
+            <div className="text-xl font-bold">LOTUS</div>
+            <div className="text-sm font-medium -mt-1 opacity-90">POLYCLINIC</div>
           </div>
         </div>
-      </footer>
+        <p className="text-sm leading-relaxed mb-6 opacity-90">
+          "Caring beyond treatment" - Comprehensive healthcare provider committed to compassionate care.
+        </p>
+        <div className="flex space-x-4">
+          <a 
+            href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Hello%20Lotus%20Polyclinic,%20I%20would%20like%20to%20get%20more%20information`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
+            aria-label="Contact us on WhatsApp"
+          >
+            <MessageCircle size={20} />
+          </a>
+          <a 
+            href={`tel:${config.CLINIC_PHONE || '+919876543210'}`}
+            className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
+            aria-label="Call us"
+          >
+            <Phone size={20} />
+          </a>
+          <a 
+            href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
+            aria-label="Email us via Gmail"
+          >
+            <Mail size={20} />
+          </a>
+        </div>
+      </div>
+      
+      <div>
+        <h4 className="font-semibold text-lg mb-6">Quick Links</h4>
+        <div className="space-y-3">
+          {['home', 'about', 'services', 'facilities', 'blogs', 'testimonials', 'contact'].map((item) => (
+            <button
+              key={item}
+              onClick={() => scrollToSection(item)}
+              className="block text-white/80 hover:text-[#E8A3B9] transition-colors capitalize text-sm text-left focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+              aria-label={`Navigate to ${item} section`}
+            >
+              {item === 'about' ? 'About Us' : 
+               item === 'contact' ? 'Contact Us' : 
+               item.charAt(0).toUpperCase() + item.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div>
+        <h4 className="font-semibold text-lg mb-6">Contact Info</h4>
+        <div className="space-y-3 text-white/80 text-sm">
+          <div className="flex items-start">
+            <MapPin size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
+            <span>Ponmar, Chennai</span>
+          </div>
+          <div className="flex items-center">
+            <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
+            <a 
+              href={`tel:${config.CLINIC_PHONE || '+919876543210'}`}
+              className="hover:text-[#E8A3B9] transition-colors hover:underline"
+            >
+              {config.CLINIC_PHONE}
+            </a>
+          </div>
+          <div className="flex items-start">
+            <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
+            <a 
+              href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#E8A3B9] transition-colors hover:underline break-words"
+            >
+              {config.CLINIC_EMAIL}
+            </a>
+          </div>
+          <div className="flex items-center">
+            <Clock size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
+            <span>Mon-Sun: 7AM - 7:30PM</span>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h4 className="font-semibold text-lg mb-6">Emergency</h4>
+        <div className="space-y-3">
+          <div className="text-[#E8A3B9] font-medium text-sm">24/7 Support Available</div>
+          <a 
+            href={`tel:${config.CLINIC_PHONE || '+919876543210'}`}
+            className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+          >
+            Emergency Helpline
+          </a>
+          <a 
+            href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Emergency%20Assistance%20Required%20-%20Lotus%20Polyclinic`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+          >
+            WhatsApp Emergency
+          </a>
+          
+        </div>
+      </div>
+    </div>
+    
+    <div className="border-t border-white/20 pt-8 text-center mt-8">
+      <p className="text-white/80 text-sm leading-relaxed mb-4">
+        © 2025 Lotus Polyclinic. All rights reserved. | Built on the foundation of Sri Sai Clinic
+      </p>
+      <button
+        onClick={scrollToTop}
+        className="text-white/70 hover:text-[#E8A3B9] transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+        aria-label="Scroll back to top of the page"
+      >
+        Back to Top ↑
+      </button>
+    </div>
+  </div>
+</footer>
     </div>
   );
 };
