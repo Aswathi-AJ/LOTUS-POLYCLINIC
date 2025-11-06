@@ -617,14 +617,14 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
 
       {/* WhatsApp Floating Button */}
       <a
-        href={`https://wa.me/${config.CLINIC_PHONE || '91XXXXXXXXXX'}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-        aria-label="Chat on WhatsApp for medical appointments and inquiries"
-      >
-        <MessageCircle size={24} />
-      </a>
+  href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Hello%20Lotus%20Polyclinic,%20I%20would%20like%20to%20book%20an%20appointment`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+  aria-label="Chat on WhatsApp for medical appointments and inquiries"
+>
+  <MessageCircle size={24} />
+</a>
 
       {/* Back to Top Button */}
       {showBackToTop && (
@@ -1193,15 +1193,15 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
                       Quick Booking via WhatsApp
                     </h4>
                     <a
-                      href={`https://wa.me/${config.CLINIC_PHONE}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 transition-all text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                      aria-label="Book appointment via WhatsApp"
-                    >
-                      <MessageCircle size={18} className="mr-2" />
-                      Book via WhatsApp
-                    </a>
+  href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Hello%20Lotus%20Polyclinic,%20I%20would%20like%20to%20book%20an%20appointment`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 transition-all text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+  aria-label="Book appointment via WhatsApp"
+>
+  <MessageCircle size={18} className="mr-2" />
+  Book via WhatsApp
+</a>
                   </div>
                 </div>
 
@@ -1440,9 +1440,12 @@ setTimeout(() => setShowBookingSuccess(false), 5000);
                 <a href={`tel:${config.CLINIC_PHONE}`} className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1">
                   Emergency Helpline
                 </a>
-                <a href={`https://wa.me/${config.CLINIC_PHONE}`} className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1">
-                  WhatsApp Emergency
-                </a>
+                <a 
+  href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Emergency%20Assistance%20Required%20-%20Lotus%20Polyclinic`}
+  className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+>
+  WhatsApp Emergency
+</a>
                 <button
                   onClick={() => scrollToSection('contact')}
                   className="bg-[#E8A3B9] text-[#0D3B66] px-4 py-3 rounded-lg hover:bg-[#F8D4E3] transition-all text-sm mt-4 focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] focus:ring-offset-2 focus:ring-offset-[#0D3B66]"
