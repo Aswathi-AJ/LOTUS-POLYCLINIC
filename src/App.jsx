@@ -123,11 +123,21 @@ const App = () => {
   }, []);
 
 const scrollToSection = (id) => {
-  const element = document.getElementById(id);
+  let element;
+  let extraOffset = 0;
+  
+  // Special case for about section - target the heading but with some extra offset
+  if (id === 'about') {
+    element = document.getElementById('about-heading');
+    extraOffset = 100; // Add some extra space above the heading
+  } else {
+    element = document.getElementById(id);
+  }
+  
   if (element) {
     const headerHeight = 80; // Adjust this value based on your header height
     const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+    const offsetPosition = elementPosition + window.pageYOffset - headerHeight - extraOffset;
 
     window.scrollTo({
       top: offsetPosition,
@@ -136,7 +146,6 @@ const scrollToSection = (id) => {
   }
   setIsMenuOpen(false);
 };
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
