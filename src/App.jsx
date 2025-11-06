@@ -1,3 +1,4 @@
+import emailjs from '@emailjs/browser';
 import React, { useState, useEffect } from 'react';
 import {
   Phone, Mail, MapPin, Clock, MessageCircle, Menu, X,
@@ -8,6 +9,7 @@ import {
   Thermometer, Pill, Microscope, Scissors
 } from 'lucide-react';
 
+import config from './config';
 // CSS Variables for consistency
 const globalStyles = `
   :root {
@@ -105,6 +107,28 @@ const App = () => {
     notes: ''
   });
 
+  const formatTimeForDisplay = (timeValue) => {
+  if (!timeValue) return '';
+  
+  if (timeValue.includes('-')) {
+    // Handle time range like "14:00-15:00"
+    return timeValue.split('-').map(time => {
+      const [hours, minutes] = time.split(':');
+      const hour = parseInt(hours);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayHour = hour % 12 || 12;
+      return `${displayHour}:${minutes} ${ampm}`;
+    }).join(' - ');
+  } else {
+    // Handle single time like "14:00"
+    const [hours, minutes] = timeValue.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
+  }
+};
+
   useEffect(() => {
     // Add global styles
     const styleSheet = document.createElement("style");
@@ -122,30 +146,31 @@ const App = () => {
     };
   }, []);
 
-const scrollToSection = (id) => {
-  let element;
-  let extraOffset = 0;
-  
-  // Special case for about section - target the heading but with some extra offset
-  if (id === 'about') {
-    element = document.getElementById('about-heading');
-    extraOffset = 100; // Add some extra space above the heading
-  } else {
-    element = document.getElementById(id);
-  }
-  
-  if (element) {
-    const headerHeight = 80; // Adjust this value based on your header height
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - headerHeight - extraOffset;
+  const scrollToSection = (id) => {
+    let element;
+    let extraOffset = 0;
+    
+    // Special case for about section - target the heading but with some extra offset
+    if (id === 'about') {
+      element = document.getElementById('about-heading');
+      extraOffset = 100; // Add some extra space above the heading
+    } else {
+      element = document.getElementById(id);
+    }
+    
+    if (element) {
+      const headerHeight = 80; // Adjust this value based on your header height
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight - extraOffset;
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
-  }
-  setIsMenuOpen(false);
-};
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    setIsMenuOpen(false);
+  };
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -166,48 +191,106 @@ const scrollToSection = (id) => {
     }));
   };
 
-  const handleBookingSubmit = (e) => {
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
     
-    // Here you would typically send the data to your backend
-    console.log('Booking submitted:', formData);
+    try {
+      const templateParams = {
+  patient_name: formData.fullName,
+  patient_phone: formData.phone,
+  patient_email: formData.email,
+  appointment_date: formData.date,
+  appointment_time: formatTimeForDisplay(formData.time), // CHANGED THIS LINE
+  service_type: formData.service,
+  additional_notes: formData.notes || 'No additional notes',
+  submitted_on: new Date().toLocaleString(),
+  to_email: config.CLINIC_EMAIL
+};
+
+      console.log('Sending booking email with params:', templateParams);
+      console.log('Using EmailJS config:', {
+        serviceId: config.EMAILJS_SERVICE_ID,
+        templateId: config.EMAILJS_TEMPLATE_ID,
+        publicKey: config.EMAILJS_PUBLIC_KEY
+      });
+
+      // Send email using EmailJS
+      const result = await emailjs.send(
+        config.EMAILJS_SERVICE_ID,
+        config.EMAILJS_TEMPLATE_ID,
+        templateParams,
+        config.EMAILJS_PUBLIC_KEY
+      );
+
+      console.log('Email sent successfully:', result);
+
+      if (result.text === 'OK') {
+        setShowBookingSuccess(true);
+        setFormData({
+          fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
+        });
+        setTimeout(() => setShowBookingSuccess(false), 5000);
+      }
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      console.error('Error details:', error);
+      // Fallback - still show success to user
+      console.error('❌ Failed to send email:', error);
     
-    // Show success message
-    setShowBookingSuccess(true);
-    
-    // Reset form
-    setFormData({
-      fullName: '',
-      phone: '',
-      email: '',
-      date: '',
-      time: '',
-      service: '',
-      notes: ''
-    });
-    
-    // Hide success message after 5 seconds
-    setTimeout(() => {
-      setShowBookingSuccess(false);
-    }, 5000);
+// Fallback with proper time formatting
+const subject = `Appointment Booking Request - ${formData.fullName}`;
+const body = `
+NEW APPOINTMENT REQUEST - LOTUS POLYCLINIC
+
+Patient Information:
+──────────────────
+👤 Name: ${formData.fullName}
+📞 Phone: ${formData.phone}
+📧 Email: ${formData.email}
+
+Appointment Details:
+──────────────────
+📅 Preferred Date: ${formData.date}
+⏰ Preferred Time: ${formatTimeForDisplay(formData.time)}
+🏥 Service Required: ${formData.service}
+
+Additional Notes:
+${formData.notes || 'No additional notes provided'}
+
+📋 Submitted on: ${new Date().toLocaleString()}
+
+───
+This appointment request was submitted through the Lotus Polyclinic website.
+Please contact the patient to confirm the appointment.
+`.trim();
+
+// Open user's default email client
+const mailtoLink = `mailto:${config.CLINIC_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+window.open(mailtoLink, '_blank');
+
+// Show success message
+setShowBookingSuccess(true);
+setFormData({
+  fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
+});
+setTimeout(() => setShowBookingSuccess(false), 5000);
+    }
   };
 
-const testimonials = [
-  {
-    name: "CHARLES C L",
-    
-    date: "2 months ago",
-    text: "Was very happy with the service and the results got. Very clean clinic, staff are very professional. Would definitely recommend for very economical treatment.",
-    rating: 5
-  },
-  {
-    name: "Arun Kumar",
-
-    date: "4 years ago",
-    text: "Had issue with my sugar level and had been referred by my colleague to Sri Sai Clinic. The treatment was good. I strongly recommend to visit the clinic for diabetes related issues.",
-    rating: 5
-  }
-];
+  const testimonials = [
+    {
+      name: "CHARLES C L",
+      date: "2 months ago",
+      text: "Was very happy with the service and the results got. Very clean clinic, staff are very professional. Would definitely recommend for very economical treatment.",
+      rating: 5
+    },
+    {
+      name: "Arun Kumar",
+      date: "4 years ago",
+      text: "Had issue with my sugar level and had been referred by my colleague to Sri Sai Clinic. The treatment was good. I strongly recommend to visit the clinic for diabetes related issues.",
+      rating: 5
+    }
+  ];
 
   const stats = [
     { number: "5000+", label: "Patients Treated", icon: Users },
@@ -421,12 +504,12 @@ const testimonials = [
     }
   ];
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
-  }, 5000);
-  return () => clearInterval(interval);
-}, [testimonials.length]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [testimonials.length]);
 
   const BlogModal = ({ blog, onClose }) => (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -534,7 +617,7 @@ useEffect(() => {
 
       {/* WhatsApp Floating Button */}
       <a
-        href="https://wa.me/918200000000"
+        href={`https://wa.me/${config.CLINIC_PHONE || '91XXXXXXXXXX'}`}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
@@ -554,26 +637,23 @@ useEffect(() => {
         </button>
       )}
 
-{/* Header */}
-<header className={`fixed w-full top-0 z-40 bg-white shadow-md border-b border-gray-200 transition-all duration-300 ${isScrolled ? 'py-3' : 'py-4'}`}>
-  <div className="px-5 sm:px-6 max-w-7xl mx-auto flex justify-between items-center">
-    <button 
-      onClick={() => scrollToSection('home')} 
-      className="flex items-center group focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2 rounded-lg"
-      aria-label="Lotus Polyclinic Home"
-    >
-      {/* Logo with Image from Public Folder - Large Size */}
-      <div className="flex items-center space-x-3">
-        <img 
-          src="/logo.png" 
-          alt="Lotus Polyclinic Logo" 
-          className="w-20 h-20 md:w-24 md:h-24 object-contain group-hover:scale-105 transition-transform"
-        />
-       
-      </div>
-    </button>
-
-    {/* Rest of header code remains the same... */}
+      {/* Header */}
+      <header className={`fixed w-full top-0 z-40 bg-white shadow-md border-b border-gray-200 transition-all duration-300 ${isScrolled ? 'py-3' : 'py-4'}`}>
+        <div className="px-5 sm:px-6 max-w-7xl mx-auto flex justify-between items-center">
+          <button 
+            onClick={() => scrollToSection('home')} 
+            className="flex items-center group focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2 rounded-lg"
+            aria-label="Lotus Polyclinic Home"
+          >
+            {/* Logo with Image from Public Folder - Large Size */}
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/logo.png" 
+                alt="Lotus Polyclinic Logo" 
+                className="w-20 h-20 md:w-24 md:h-24 object-contain group-hover:scale-105 transition-transform"
+              />
+            </div>
+          </button>
 
           <nav className="hidden lg:flex items-center space-x-3" aria-label="Main navigation">
             {[
@@ -666,18 +746,15 @@ useEffect(() => {
             <div className="mb-6">
               {/* Hero Logo */}
               <div className="flex justify-center mb-4">
-              
-                  <div className="flex items-center space-x-4">
-                    
-                    <div className="text-center">
-                      <h1 id="hero-heading" className="text-4xl md:text-5xl font-bold leading-tight">
-                        LOTUS
-                      </h1>
-                      <h1 className="text-4xl md:text-5xl font-bold leading-tight -mt-2">
-                        POLYCLINIC
-                      </h1>
-                    </div>
-                  
+                <div className="flex items-center space-x-4">
+                  <div className="text-center">
+                    <h1 id="hero-heading" className="text-4xl md:text-5xl font-bold leading-tight">
+                      LOTUS
+                    </h1>
+                    <h1 className="text-4xl md:text-5xl font-bold leading-tight -mt-2">
+                      POLYCLINIC
+                    </h1>
+                  </div>
                 </div>
               </div>
             </div>
@@ -759,85 +836,85 @@ useEffect(() => {
           </div>
         </section>
 
-{/* About Section */}
-<section id="about" className="py-12 md:py-20 px-5 bg-gradient-to-br from-[#F8D4E3] to-[#87CEEB]" aria-labelledby="about-heading">
-  <div className="px-5 sm:px-6 max-w-6xl mx-auto">
-    
-    {/* NEW: Clean Announcement Banner */}
-    <div className="text-center mb-12">
-      {/* Announcement Heading */}
-      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4 border border-[#E8A3B9]">
-        <Sparkles size={16} className="text-[#0D3B66] mr-2" />
-        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">ANNOUNCEMENT</span>
-      </div>
-      
-      {/* Banner Image Only */}
-      <div>
-        <img 
-          src="/banner.png" 
-          alt="Sri Sai Clinic is now Lotus Polyclinic - Coming Soon"
-          className="mx-auto rounded-lg shadow-lg"
-          style={{ maxWidth: '400px', width: '100%', height: 'auto' }}
-        />
-      </div>
-    </div>
-
-    <div className="grid lg:grid-cols-2 gap-8 items-start">
-      <div className="max-w-2xl">
-        <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-          <Info size={16} className="text-[#0D3B66] mr-2" />
-          <span className="text-sm font-bold text-[#0D3B66] tracking-wide">ABOUT US</span>
-        </div>
-        <h2 id="about-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">
-          Built on the Foundation of <span className="text-[#E8A3B9]">Sri Sai Clinic</span>
-        </h2>
-        <p className="text-base leading-relaxed text-gray-800 mb-6">
-          Lotus Polyclinic at Ponmar, built upon the foundation of Sri Sai Clinic, established in 2020, with a vision to provide quality and affordable healthcare.
-        </p>
-        
-        <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-          <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-            <Users size={24} className="mr-3 text-[#E8A3B9]" />
-            Dr. Meena - Founder
-          </h3>
-          <p className="text-base leading-relaxed text-gray-800 mb-4">
-            <strong>MBBS, MD</strong> - brings over 16 years of experience with specialized expertise in diabetes management.
-          </p>
-          <p className="text-base leading-relaxed text-gray-800">
-            Known for her compassionate approach, combining clinical excellence with genuine empathy.
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-8 lg:mt-0">
-        <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white rounded-lg p-6 shadow-xl">
-          <div className="flex items-center mb-6">
-            <Shield className="text-[#E8A3B9] mr-4" size={24} />
-            <h3 className="text-xl md:text-2xl font-semibold leading-tight">Mission & Vision</h3>
-          </div>
-          <p className="text-base leading-relaxed mb-6 opacity-90">
-            <strong>Vision:</strong> To deliver uncompromised, expert healthcare grounded in compassion and modern medical excellence.
-          </p>
-          <p className="text-base leading-relaxed mb-6 opacity-90">
-            <strong>Mission:</strong> To provide accessible, high-quality healthcare to every patient.
-          </p>
-          <div className="space-y-3">
-            {[
-              "Evidence-based medical care",
-              "Genuine human connections", 
-              "Healing environment"
-            ].map((item, index) => (
-              <div key={index} className="flex items-start">
-                <CheckCircle size={20} className="text-[#E8A3B9] mr-3 mt-1 flex-shrink-0" />
-                <span className="text-base leading-relaxed opacity-90">{item}</span>
+        {/* About Section */}
+        <section id="about" className="py-12 md:py-20 px-5 bg-gradient-to-br from-[#F8D4E3] to-[#87CEEB]" aria-labelledby="about-heading">
+          <div className="px-5 sm:px-6 max-w-6xl mx-auto">
+            
+            {/* NEW: Clean Announcement Banner */}
+            <div className="text-center mb-12">
+              {/* Announcement Heading */}
+              <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4 border border-[#E8A3B9]">
+                <Sparkles size={16} className="text-[#0D3B66] mr-2" />
+                <span className="text-sm font-bold text-[#0D3B66] tracking-wide">ANNOUNCEMENT</span>
               </div>
-            ))}
+              
+              {/* Banner Image Only */}
+              <div>
+                <img 
+                  src="/banner.png" 
+                  alt="Sri Sai Clinic is now Lotus Polyclinic - Coming Soon"
+                  className="mx-auto rounded-lg shadow-lg"
+                  style={{ maxWidth: '400px', width: '100%', height: 'auto' }}
+                />
+              </div>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-8 items-start">
+              <div className="max-w-2xl">
+                <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+                  <Info size={16} className="text-[#0D3B66] mr-2" />
+                  <span className="text-sm font-bold text-[#0D3B66] tracking-wide">ABOUT US</span>
+                </div>
+                <h2 id="about-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">
+                  Built on the Foundation of <span className="text-[#E8A3B9]">Sri Sai Clinic</span>
+                </h2>
+                <p className="text-base leading-relaxed text-gray-800 mb-6">
+                  Lotus Polyclinic at Ponmar, built upon the foundation of Sri Sai Clinic, established in 2020, with a vision to provide quality and affordable healthcare.
+                </p>
+                
+                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
+                  <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                    <Users size={24} className="mr-3 text-[#E8A3B9]" />
+                    Dr. Meena - Founder
+                  </h3>
+                  <p className="text-base leading-relaxed text-gray-800 mb-4">
+                    <strong>MBBS, MD</strong> - brings over 16 years of experience with specialized expertise in diabetes management.
+                  </p>
+                  <p className="text-base leading-relaxed text-gray-800">
+                    Known for her compassionate approach, combining clinical excellence with genuine empathy.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-8 lg:mt-0">
+                <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white rounded-lg p-6 shadow-xl">
+                  <div className="flex items-center mb-6">
+                    <Shield className="text-[#E8A3B9] mr-4" size={24} />
+                    <h3 className="text-xl md:text-2xl font-semibold leading-tight">Mission & Vision</h3>
+                  </div>
+                  <p className="text-base leading-relaxed mb-6 opacity-90">
+                    <strong>Vision:</strong> To deliver uncompromised, expert healthcare grounded in compassion and modern medical excellence.
+                  </p>
+                  <p className="text-base leading-relaxed mb-6 opacity-90">
+                    <strong>Mission:</strong> To provide accessible, high-quality healthcare to every patient.
+                  </p>
+                  <div className="space-y-3">
+                    {[
+                      "Evidence-based medical care",
+                      "Genuine human connections", 
+                      "Healing environment"
+                    ].map((item, index) => (
+                      <div key={index} className="flex items-start">
+                        <CheckCircle size={20} className="text-[#E8A3B9] mr-3 mt-1 flex-shrink-0" />
+                        <span className="text-base leading-relaxed opacity-90">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        </section>
 
         {/* Services Section */}
         <section id="services" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="services-heading">
@@ -913,66 +990,66 @@ useEffect(() => {
         </section>
 
         {/* Testimonials Section */}
-<section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
-  <div className="px-5 sm:px-6 max-w-4xl mx-auto">
-    <div className="text-center mb-12">
-      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-        <Star size={16} className="text-[#0D3B66] mr-2" />
-        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
-      </div>
-      <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
-      <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
-        Real stories from our satisfied patients
-      </p>
-    </div>
+        <section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
+          <div className="px-5 sm:px-6 max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+                <Star size={16} className="text-[#0D3B66] mr-2" />
+                <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
+              </div>
+              <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
+              <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
+                Real stories from our satisfied patients
+              </p>
+            </div>
 
-    <div className="bg-white rounded-lg shadow-xl p-6 relative">
-      <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] rounded-t-lg"></div>
-      <div className="text-center">
-        <div className="flex justify-center mb-4">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Star 
-              key={star} 
-              size={20} 
-              className="text-yellow-400 fill-current mx-1" 
-            />
-          ))}
-        </div>
-        
-        <div className="min-h-[120px] mb-4">
-          <p className="text-base leading-relaxed text-gray-800 italic">
-            "{testimonials[activeTestimonial]?.text}"
-          </p>
-        </div>
-        
-        <div className="font-semibold text-gray-900 text-xl md:text-2xl mb-2">
-          {testimonials[activeTestimonial]?.name}
-        </div>
-        <div className="text-sm leading-relaxed text-gray-600 mb-2">
-          {testimonials[activeTestimonial]?.role}
-        </div>
-        <div className="text-xs leading-relaxed text-gray-500 mb-6">
-          {testimonials[activeTestimonial]?.date}
-        </div>
-        
-        <div className="flex justify-center space-x-2">
-          {testimonials.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveTestimonial(index)}
-              className={`w-3 h-3 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] ${
-                index === activeTestimonial 
-                  ? 'bg-[#E8A3B9] w-6' 
-                  : 'bg-gray-300 hover:bg-[#E8A3B9]'
-              }`}
-              aria-label={`View testimonial ${index + 1}`}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            <div className="bg-white rounded-lg shadow-xl p-6 relative">
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] rounded-t-lg"></div>
+              <div className="text-center">
+                <div className="flex justify-center mb-4">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star 
+                      key={star} 
+                      size={20} 
+                      className="text-yellow-400 fill-current mx-1" 
+                    />
+                  ))}
+                </div>
+                
+                <div className="min-h-[120px] mb-4">
+                  <p className="text-base leading-relaxed text-gray-800 italic">
+                    "{testimonials[activeTestimonial]?.text}"
+                  </p>
+                </div>
+                
+                <div className="font-semibold text-gray-900 text-xl md:text-2xl mb-2">
+                  {testimonials[activeTestimonial]?.name}
+                </div>
+                <div className="text-sm leading-relaxed text-gray-600 mb-2">
+                  {testimonials[activeTestimonial]?.role}
+                </div>
+                <div className="text-xs leading-relaxed text-gray-500 mb-6">
+                  {testimonials[activeTestimonial]?.date}
+                </div>
+                
+                <div className="flex justify-center space-x-2">
+                  {testimonials.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveTestimonial(index)}
+                      className={`w-3 h-3 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] ${
+                        index === activeTestimonial 
+                          ? 'bg-[#E8A3B9] w-6' 
+                          : 'bg-gray-300 hover:bg-[#E8A3B9]'
+                      }`}
+                      aria-label={`View testimonial ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Blog Section */}
         <section id="blogs" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="blogs-heading">
@@ -1081,8 +1158,8 @@ useEffect(() => {
                       </div>
                       <div>
                         <h4 className="font-semibold text-base mb-2">Phone</h4>
-                        <a href="tel:08200000000" className="hover:underline text-base opacity-90">
-                          0820-0000000
+                        <a href={`tel:${config.CLINIC_PHONE}`} className="hover:underline text-base opacity-90">
+                          {config.CLINIC_PHONE}
                         </a>
                       </div>
                     </div>
@@ -1093,8 +1170,8 @@ useEffect(() => {
                       </div>
                       <div>
                         <h4 className="font-semibold text-base mb-2">Email</h4>
-                        <a href="mailto:contact@lotuspolyclinic.com" className="hover:underline text-base opacity-90 break-all">
-                          contact@lotuspolyclinic.com
+                        <a href={`mailto:${config.CLINIC_EMAIL}`} className="hover:underline text-base opacity-90 break-all">
+                          {config.CLINIC_EMAIL}
                         </a>
                       </div>
                     </div>
@@ -1116,7 +1193,7 @@ useEffect(() => {
                       Quick Booking via WhatsApp
                     </h4>
                     <a
-                      href="https://wa.me/918200000000"
+                      href={`https://wa.me/${config.CLINIC_PHONE}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 transition-all text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
@@ -1219,26 +1296,26 @@ useEffect(() => {
                       <div>
                         <label htmlFor="time" className="block text-sm font-semibold text-gray-800 mb-3">Time *</label>
                         <select
-                          id="time"
-                          required
-                          value={formData.time}
-                          onChange={handleInputChange}
-                          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base bg-white focus:outline-none"
-                        >
-                          <option value="">Select time</option>
-                          <option value="07:00">7:00 AM - 8:00 AM</option>
-                          <option value="08:00">8:00 AM - 9:00 AM</option>
-                          <option value="09:00">9:00 AM - 10:00 AM</option>
-                          <option value="10:00">10:00 AM - 11:00 AM</option>
-                          <option value="11:00">11:00 AM - 12:00 PM</option>
-                          <option value="12:00">12:00 PM - 1:00 PM</option>
-                          <option value="13:00">1:00 PM - 2:00 PM</option>
-                          <option value="14:00">2:00 PM - 3:00 PM</option>
-                          <option value="15:00">3:00 PM - 4:00 PM</option>
-                          <option value="16:00">4:00 PM - 5:00 PM</option>
-                          <option value="17:00">5:00 PM - 6:00 PM</option>
-                          <option value="18:00">6:00 PM - 7:00 PM</option>
-                        </select>
+  id="time"
+  required
+  value={formData.time}
+  onChange={handleInputChange}
+  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base bg-white focus:outline-none"
+>
+  <option value="">Select time</option>
+  <option value="07:00-08:00">7:00 AM - 8:00 AM</option>
+  <option value="08:00-09:00">8:00 AM - 9:00 AM</option>
+  <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
+  <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+  <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+  <option value="12:00-13:00">12:00 PM - 1:00 PM</option>
+  <option value="13:00-14:00">1:00 PM - 2:00 PM</option>
+  <option value="14:00-15:00">2:00 PM - 3:00 PM</option>
+  <option value="15:00-16:00">3:00 PM - 4:00 PM</option>
+  <option value="16:00-17:00">4:00 PM - 5:00 PM</option>
+  <option value="17:00-18:00">5:00 PM - 6:00 PM</option>
+  <option value="18:00-19:00">6:00 PM - 7:00 PM</option>
+</select>
                       </div>
                     </div>
 
@@ -1295,7 +1372,6 @@ useEffect(() => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             <div>
               <div className="flex items-center space-x-3 mb-6">
-
                 <div>
                   <div className="text-xl font-bold">LOTUS</div>
                   <div className="text-sm font-medium -mt-1 opacity-90">POLYCLINIC</div>
@@ -1344,11 +1420,11 @@ useEffect(() => {
                 </div>
                 <div className="flex items-center">
                   <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
-                  <span>0820-0000000</span>
+                  <span>{config.CLINIC_PHONE}</span>
                 </div>
                 <div className="flex items-start">
                   <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
-                  <span className="break-words">contact@lotuspolyclinic.com</span>
+                  <span className="break-words">{config.CLINIC_EMAIL}</span>
                 </div>
                 <div className="flex items-center">
                   <Clock size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
@@ -1361,10 +1437,10 @@ useEffect(() => {
               <h4 className="font-semibold text-lg mb-6">Emergency</h4>
               <div className="space-y-3">
                 <div className="text-[#E8A3B9] font-medium text-sm">24/7 Support Available</div>
-                <a href="tel:08200000000" className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1">
+                <a href={`tel:${config.CLINIC_PHONE}`} className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1">
                   Emergency Helpline
                 </a>
-                <a href="https://wa.me/918200000000" className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1">
+                <a href={`https://wa.me/${config.CLINIC_PHONE}`} className="text-white/80 hover:text-[#E8A3B9] transition-colors block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1">
                   WhatsApp Emergency
                 </a>
                 <button
