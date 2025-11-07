@@ -1366,14 +1366,14 @@ Please contact the patient to confirm the appointment.
           "Caring beyond treatment" - Comprehensive healthcare provider committed to compassionate care.
         </p>
         <div className="flex space-x-4">
-{/* WhatsApp Floating Button */}
-<a
-  href={getWhatsAppUrl()}
-  className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-  aria-label="Chat on WhatsApp for medical appointments and inquiries"
->
-  <MessageCircle size={24} />
-</a>
+          {/* CORRECTED: Regular WhatsApp icon for footer, not floating button */}
+          <a 
+            href={getWhatsAppUrl('Hello Lotus Polyclinic, I would like to get more information about your services')}
+            className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
+            aria-label="Contact us on WhatsApp"
+          >
+            <MessageCircle size={20} />
+          </a>
           <a 
             href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
             className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
@@ -1459,8 +1459,6 @@ Please contact the patient to confirm the appointment.
           </a>
           <a 
             href={getWhatsAppUrl('Emergency Assistance Required - Lotus Polyclinic')}
-            target="_blank"
-            rel="noopener noreferrer"
             className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
           >
             WhatsApp Emergency
