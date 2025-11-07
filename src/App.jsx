@@ -106,14 +106,7 @@ const App = () => {
     notes: ''
   });
 
-// WhatsApp URL helper function — opens direct chat
-const getWhatsAppUrl = (message = 'Hello Lotus Polyclinic, I would like to book an appointment') => {
-  const countryCode = '91';
-  const phoneNumber = '9840398908';
-  const fullNumber = countryCode + phoneNumber;
-  const encodedMessage = encodeURIComponent(message.trim());
-  return `https://wa.me/${fullNumber}?text=${encodedMessage}`;
-};
+
 
   const formatTimeForDisplay = (timeValue) => {
   if (!timeValue) return '';
@@ -592,16 +585,7 @@ Please contact the patient to confirm the appointment.
       {/* Booking Success Message */}
       {showBookingSuccess && <BookingSuccessMessage />}
 
-      {/* WhatsApp Floating Button */}
-      <a
-  href={getWhatsAppUrl()}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-  aria-label="Chat on WhatsApp for medical appointments and inquiries"
->
-  <MessageCircle size={24} />
-</a>
+  
 
       {/* Back to Top Button */}
       {showBackToTop && (
@@ -1161,20 +1145,7 @@ Please contact the patient to confirm the appointment.
                     </div>
                   </div>
 
-                  <div className="mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                    <h4 className="font-semibold text-base mb-3 flex items-center">
-                      <MessageCircle size={18} className="mr-2 text-[#E8A3B9]" />
-                      Quick Booking via WhatsApp
-                    </h4>
-<a
-  href={getWhatsAppUrl()}
-  className="inline-flex items-center bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 transition-all text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-  aria-label="Book appointment via WhatsApp"
->
-  <MessageCircle size={18} className="mr-2" />
-  Book via WhatsApp
-</a>
-                  </div>
+                 
                 </div>
 
                 <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
@@ -1366,14 +1337,7 @@ Please contact the patient to confirm the appointment.
           "Caring beyond treatment" - Comprehensive healthcare provider committed to compassionate care.
         </p>
         <div className="flex space-x-4">
-          {/* CORRECTED: Regular WhatsApp icon for footer, not floating button */}
-          <a 
-            href={getWhatsAppUrl('Hello Lotus Polyclinic, I would like to get more information about your services')}
-            className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
-            aria-label="Contact us on WhatsApp"
-          >
-            <MessageCircle size={20} />
-          </a>
+        
           <a 
             href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
             className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
@@ -1457,12 +1421,7 @@ Please contact the patient to confirm the appointment.
           >
             Emergency Helpline
           </a>
-          <a 
-            href={getWhatsAppUrl('Emergency Assistance Required - Lotus Polyclinic')}
-            className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
-          >
-            WhatsApp Emergency
-          </a>
+
         </div>
       </div>
     </div>
