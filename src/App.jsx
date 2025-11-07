@@ -192,7 +192,7 @@ const scrollToSection = (id) => {
     }));
   };
 
-  const handleBookingSubmit = async (e) => {
+const handleBookingSubmit = async (e) => {
   e.preventDefault();
   
   // Phone number validation (10 digits for India)
@@ -202,11 +202,15 @@ const scrollToSection = (id) => {
     return;
   }
 
-  // Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (formData.email && !emailRegex.test(formData.email)) {
-    alert('Please enter a valid email address (e.g., name@domain.com)');
-    return;
+  // Comprehensive Email validation - accepts all valid domains
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  
+  // Check if email is provided and valid
+  if (formData.email) {
+    if (!emailRegex.test(formData.email)) {
+      alert('Please enter a valid email address (e.g., name@domain.com, name@domain.in, name@domain.co.uk)');
+      return; // Prevent form submission
+    }
   }
   
   try {
@@ -248,7 +252,6 @@ const scrollToSection = (id) => {
     }
   } catch (error) {
     console.error('Failed to send email:', error);
-    console.error('Error details:', error);
     
     // Fallback with proper time formatting
     const subject = `Appointment Booking Request - ${formData.fullName}`;
@@ -1236,9 +1239,9 @@ Please contact the patient to confirm the appointment.
     </p>
   )}
 </div>
-                      <div>
+<div>
   <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-3">
-    Email <span className="text-xs text-gray-600"></span>
+    Email <span className="text-xs text-gray-600">(optional)</span>
   </label>
   <input
     id="email"
@@ -1246,13 +1249,11 @@ Please contact the patient to confirm the appointment.
     placeholder="your.email@example.com"
     value={formData.email}
     onChange={handleInputChange}
-    pattern="[^\\s@]+@[^\\s@]+\\.[^\\s@]+"
-    title="Please enter a valid email address (e.g., name@domain.com)"
     className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
   />
-  {formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
+  {formData.email && !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(formData.email) && (
     <p className="text-red-500 text-xs mt-1">
-      Please enter a valid email address (e.g., name@domain.com)
+      Please enter a valid email address (e.g., name@domain.com, name@domain.in, name@domain.co.uk)
     </p>
   )}
 </div>
