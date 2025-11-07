@@ -106,6 +106,15 @@ const App = () => {
     notes: ''
   });
 
+// WhatsApp URL helper function — opens direct chat
+const getWhatsAppUrl = (message = 'Hello Lotus Polyclinic, I would like to book an appointment') => {
+  const countryCode = '91';
+  const phoneNumber = '9840398908';
+  const fullNumber = countryCode + phoneNumber;
+  const encodedMessage = encodeURIComponent(message.trim());
+  return `https://wa.me/${fullNumber}?text=${encodedMessage}`;
+};
+
   const formatTimeForDisplay = (timeValue) => {
   if (!timeValue) return '';
   
@@ -585,7 +594,7 @@ Please contact the patient to confirm the appointment.
 
       {/* WhatsApp Floating Button */}
       <a
-  href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Hello%20Lotus%20Polyclinic,%20I%20would%20like%20to%20book%20an%20appointment`}
+  href={getWhatsAppUrl()}
   target="_blank"
   rel="noopener noreferrer"
   className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
@@ -1157,10 +1166,8 @@ Please contact the patient to confirm the appointment.
                       <MessageCircle size={18} className="mr-2 text-[#E8A3B9]" />
                       Quick Booking via WhatsApp
                     </h4>
-                    <a
-  href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Hello%20Lotus%20Polyclinic,%20I%20would%20like%20to%20book%20an%20appointment`}
-  target="_blank"
-  rel="noopener noreferrer"
+<a
+  href={getWhatsAppUrl()}
   className="inline-flex items-center bg-green-500 text-white px-4 py-3 rounded-lg hover:bg-green-600 transition-all text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
   aria-label="Book appointment via WhatsApp"
 >
@@ -1359,17 +1366,16 @@ Please contact the patient to confirm the appointment.
           "Caring beyond treatment" - Comprehensive healthcare provider committed to compassionate care.
         </p>
         <div className="flex space-x-4">
+{/* WhatsApp Floating Button */}
+<a
+  href={getWhatsAppUrl()}
+  className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+  aria-label="Chat on WhatsApp for medical appointments and inquiries"
+>
+  <MessageCircle size={24} />
+</a>
           <a 
-            href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Hello%20Lotus%20Polyclinic,%20I%20would%20like%20to%20get%20more%20information`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
-            aria-label="Contact us on WhatsApp"
-          >
-            <MessageCircle size={20} />
-          </a>
-          <a 
-            href={`tel:${config.CLINIC_PHONE || '+91 9876543210'}`}
+            href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
             className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
             aria-label="Call us"
           >
@@ -1415,31 +1421,25 @@ Please contact the patient to confirm the appointment.
           <div className="flex items-center">
             <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
             <a 
-              href={`tel:${config.CLINIC_PHONE || '+91 9876543210'}`}
+              href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
               className="hover:text-[#E8A3B9] transition-colors hover:underline"
             >
               {config.CLINIC_PHONE}
             </a>
           </div>
           <div className="flex items-start">
-  <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
-  <div>
-    {/* Simple mailto link for better mobile compatibility */}
-<a 
-  href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="hover:text-[#E8A3B9] transition-colors hover:underline break-words text-sm block mb-1"
->
-  {config.CLINIC_EMAIL}
-</a>
-    <span className="text-xs text-white/60 block">
-      
-    </span>
-  
-    
-  </div>
-</div>
+            <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
+            <div>
+              <a 
+                href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#E8A3B9] transition-colors hover:underline break-words text-sm block mb-1"
+              >
+                {config.CLINIC_EMAIL}
+              </a>
+            </div>
+          </div>
           <div className="flex items-center">
             <Clock size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
             <span>Mon-Sun: 7AM - 7:30PM</span>
@@ -1452,20 +1452,19 @@ Please contact the patient to confirm the appointment.
         <div className="space-y-3">
           <div className="text-[#E8A3B9] font-medium text-sm">24/7 Support Available</div>
           <a 
-            href={`tel:${config.CLINIC_PHONE || '+919876543210'}`}
+            href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
             className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
           >
             Emergency Helpline
           </a>
           <a 
-            href={`https://wa.me/${config.CLINIC_PHONE || '919876543210'}?text=Emergency%20Assistance%20Required%20-%20Lotus%20Polyclinic`}
+            href={getWhatsAppUrl('Emergency Assistance Required - Lotus Polyclinic')}
             target="_blank"
             rel="noopener noreferrer"
             className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
           >
             WhatsApp Emergency
           </a>
-          
         </div>
       </div>
     </div>
