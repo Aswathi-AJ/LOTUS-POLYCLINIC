@@ -192,7 +192,7 @@ const scrollToSection = (id) => {
     }));
   };
 
-  const handleBookingSubmit = async (e) => {
+const handleBookingSubmit = async (e) => {
   e.preventDefault();
   
   // Phone number validation (10 digits for India)
@@ -249,7 +249,6 @@ if (formData.email && !emailRegex.test(formData.email)) {
     }
   } catch (error) {
     console.error('Failed to send email:', error);
-    console.error('Error details:', error);
     
     // Fallback with proper time formatting
     const subject = `Appointment Booking Request - ${formData.fullName}`;
@@ -1245,7 +1244,7 @@ Please contact the patient to confirm the appointment.
     </p>
   )}
 </div>
-                      <div>
+<div>
   <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-3">
     Email <span className="text-xs text-gray-600">(optional)</span>
   </label>
