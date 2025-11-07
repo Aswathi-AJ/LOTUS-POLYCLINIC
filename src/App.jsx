@@ -202,12 +202,13 @@ const scrollToSection = (id) => {
     return;
   }
 
-  // Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (formData.email && !emailRegex.test(formData.email)) {
-    alert('Please enter a valid email address (e.g., name@domain.com)');
-    return;
-  }
+
+// Comprehensive Email validation
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+if (formData.email && !emailRegex.test(formData.email)) {
+  alert('Please enter a valid email address with proper domain extension (e.g., name@gmail.com, name@yahoo.co.in, name@domain.org)');
+  return;
+}
   
   try {
     const templateParams = {
@@ -1122,16 +1123,24 @@ Please contact the patient to confirm the appointment.
                     </div>
                     
                     <div className="flex items-start">
-                      <div className="bg-[#E8A3B9] p-3 rounded-lg mr-4 flex-shrink-0">
-                        <Mail size={20} className="text-[#0D3B66]" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-base mb-2">Email</h4>
-                        <a href={`mailto:${config.CLINIC_EMAIL}`} className="hover:underline text-base opacity-90 break-all">
-                          {config.CLINIC_EMAIL}
-                        </a>
-                      </div>
-                    </div>
+  <div className="bg-[#E8A3B9] p-3 rounded-lg mr-4 flex-shrink-0">
+    <Mail size={20} className="text-[#0D3B66]" />
+  </div>
+  <div>
+    <h4 className="font-semibold text-base mb-2">Email</h4>
+    <a 
+  href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:underline text-base opacity-90 break-all block"
+>
+  {config.CLINIC_EMAIL}
+</a>
+    <span className="text-sm text-white/70 mt-1 block">
+      
+    </span>
+  </div>
+</div>
                     
                     <div className="flex items-start">
                       <div className="bg-[#E8A3B9] p-3 rounded-lg mr-4 flex-shrink-0">
@@ -1238,7 +1247,7 @@ Please contact the patient to confirm the appointment.
 </div>
                       <div>
   <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-3">
-    Email <span className="text-xs text-gray-600"></span>
+    Email <span className="text-xs text-gray-600">(optional)</span>
   </label>
   <input
     id="email"
@@ -1246,15 +1255,8 @@ Please contact the patient to confirm the appointment.
     placeholder="your.email@example.com"
     value={formData.email}
     onChange={handleInputChange}
-    pattern="[^\\s@]+@[^\\s@]+\\.[^\\s@]+"
-    title="Please enter a valid email address (e.g., name@domain.com)"
     className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
   />
-  {formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) && (
-    <p className="text-red-500 text-xs mt-1">
-      Please enter a valid email address (e.g., name@domain.com)
-    </p>
-  )}
 </div>
                     </div>
 
@@ -1368,7 +1370,7 @@ Please contact the patient to confirm the appointment.
             <MessageCircle size={20} />
           </a>
           <a 
-            href={`tel:${config.CLINIC_PHONE || '+919876543210'}`}
+            href={`tel:${config.CLINIC_PHONE || '+91 9876543210'}`}
             className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
             aria-label="Call us"
           >
@@ -1414,23 +1416,31 @@ Please contact the patient to confirm the appointment.
           <div className="flex items-center">
             <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
             <a 
-              href={`tel:${config.CLINIC_PHONE || '+919876543210'}`}
+              href={`tel:${config.CLINIC_PHONE || '+91 9876543210'}`}
               className="hover:text-[#E8A3B9] transition-colors hover:underline"
             >
               {config.CLINIC_PHONE}
             </a>
           </div>
           <div className="flex items-start">
-            <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
-            <a 
-              href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-[#E8A3B9] transition-colors hover:underline break-words"
-            >
-              {config.CLINIC_EMAIL}
-            </a>
-          </div>
+  <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
+  <div>
+    {/* Simple mailto link for better mobile compatibility */}
+<a 
+  href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="hover:text-[#E8A3B9] transition-colors hover:underline break-words text-sm block mb-1"
+>
+  {config.CLINIC_EMAIL}
+</a>
+    <span className="text-xs text-white/60 block">
+      
+    </span>
+  
+    
+  </div>
+</div>
           <div className="flex items-center">
             <Clock size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
             <span>Mon-Sun: 7AM - 7:30PM</span>
@@ -1463,7 +1473,7 @@ Please contact the patient to confirm the appointment.
     
     <div className="border-t border-white/20 pt-8 text-center mt-8">
       <p className="text-white/80 text-sm leading-relaxed mb-4">
-        © 2025 Lotus Polyclinic. All rights reserved. | Built on the foundation of Sri Sai Clinic
+        © 2025 Lotus Polyclinic. | Built on the foundation of Sri Sai Clinic
       </p>
       <button
         onClick={scrollToTop}
