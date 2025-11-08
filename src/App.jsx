@@ -204,13 +204,12 @@ const handleBookingSubmit = async (e) => {
     return;
   }
 
-
-// Comprehensive Email validation
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-if (formData.email && !emailRegex.test(formData.email)) {
-  alert('Please enter a valid email address with proper domain extension (e.g., name@gmail.com, name@yahoo.co.in, name@domain.org)');
-  return;
-}
+  // Email validation (now required)
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!formData.email || !emailRegex.test(formData.email)) {
+    alert('Please enter a valid email address with proper domain extension (e.g., name@gmail.com, name@yahoo.co.in, name@domain.org)');
+    return;
+  }
   
   try {
     const templateParams = {
@@ -1098,7 +1097,9 @@ Please contact the patient to confirm the appointment.
                       </div>
                       <div>
                         <h4 className="font-semibold text-base mb-2">Address</h4>
-                        <p className="text-base opacity-90">Ponmar, Chennai</p>
+                        <p className="text-base opacity-90">
+No 1/285, ASM Complex, Vedhagiri Nagar,
+Ponmar, Chennai - 600127</p>
                       </div>
                     </div>
                     
@@ -1224,16 +1225,23 @@ Please contact the patient to confirm the appointment.
 </div>
 <div>
   <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-3">
-    Email <span className="text-xs text-gray-600">(optional)</span>
+    Email *
+    <span className="text-xs text-gray-600 ml-2"></span>
   </label>
   <input
     id="email"
     type="email"
     placeholder="your.email@example.com"
+    required
     value={formData.email}
     onChange={handleInputChange}
     className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
   />
+  {formData.email && !emailRegex.test(formData.email) && (
+    <p className="text-red-500 text-xs mt-1">
+      Please enter a valid email address
+    </p>
+  )}
 </div>
                     </div>
 
@@ -1380,7 +1388,9 @@ Please contact the patient to confirm the appointment.
         <div className="space-y-3 text-white/80 text-sm">
           <div className="flex items-start">
             <MapPin size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
-            <span>Ponmar, Chennai</span>
+            <span>
+No 1/285, ASM Complex, Vedhagiri Nagar,
+Ponmar, Chennai - 600127</span>
           </div>
           <div className="flex items-center">
             <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
