@@ -393,7 +393,7 @@ Please contact the patient to confirm the appointment.
   const stats = [
     { number: "5000+", label: "Patients Treated", icon: Users },
     { number: "16+", label: "Years Experience", icon: Award },
-    { number: "24/7", label: "Medical Care", icon: Clock },
+    { number: "95%", label: " Primary Care ", icon: Clock },
     { number: "98%", label: "Patient Satisfaction", icon: Heart }
   ];
 
@@ -427,19 +427,19 @@ Please contact the patient to confirm the appointment.
   const facilitiesData = [
     {
       icon: Clock,
-      title: "24/7 Medical Care",
+      title: "Primary Care",
       description: "Round-the-clock healthcare services ensuring continuous access to quality medical care for your entire family.",
       gradient: "from-[#0D3B66] to-[#4A90E2]"
     },
     {
       icon: Shield,
-      title: "Emergency Services",
+      title: " Day Care Services",
       description: "Modern emergency care facilities ready to handle urgent situations promptly and efficiently.",
       gradient: "from-[#E8A3B9] to-[#F8D4E3]"
     },
     {
       icon: Pill,
-      title: "24/7 Pharmacy",
+      title: " Pharmacy",
       description: "Fully-stocked on-site pharmacy operating round-the-clock for immediate access to prescribed medications.",
       gradient: "from-[#4A90E2] to-[#E8A3B9]"
     },
@@ -1424,12 +1424,12 @@ Ponmar, Chennai - 600127</span>
       <div>
         <h4 className="font-semibold text-lg mb-6">Emergency</h4>
         <div className="space-y-3">
-          <div className="text-[#E8A3B9] font-medium text-sm">24/7 Support Available</div>
+          <div className="text-[#E8A3B9] font-medium text-sm"> Support Available</div>
           <a 
             href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
             className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
           >
-            Emergency Helpline
+            Day Care Helpline
           </a>
 
         </div>
