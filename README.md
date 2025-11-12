@@ -1,6 +1,6 @@
 # 🏥 Lotus Polyclinic - Healthcare Excellence
 
-A modern, responsive healthcare website for Lotus Polyclinic, Mangalore. Built with React and designed to provide an exceptional user experience for patients seeking quality medical care.
+A modern, responsive healthcare website for Lotus Polyclinic, Ponmar. Built with React and designed to provide an exceptional user experience for patients seeking quality medical care.
 
 ## ✨ Features
 
@@ -83,7 +83,11 @@ npm run lint
 ```
 lotus-polyclinic/
 ├── public/
-│   └── logo.png              # Clinic logo
+│   └── logo.png            # Clinic logo
+|   └── favicon.png
+|   └── banner.png
+|   └── Charles.png        # Review of clinic
+|   └── Arun.png           # Review of clinic
 ├── src/
 │   ├── App.jsx               # Main application component
 │   ├── main.jsx              # Application entry point
@@ -153,10 +157,10 @@ This project is proprietary and confidential. All rights reserved by Lotus Polyc
 ## 📞 Support
 
 For any questions or support, please contact:
-- **Email**: contact@lotuspolyclinic.com
-- **Phone**: 0820-XXXXXXX
-- **WhatsApp**: +91 820 123 4567
+- **Email**: lotuspolyclinicponmar.com
+- **Phone**: 9840398908
+- **WhatsApp**: +91 9840398908
 
 ---
 
-**Built with ❤️ for Lotus Polyclinic, Mangalore**
+**Built with ❤️ for Lotus Polyclinic, Ponamr**
