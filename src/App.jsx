@@ -106,7 +106,15 @@ const App = () => {
     notes: ''
   });
 
+    // ADD THIS LINE TO FIX THE ERROR
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+
+const isSunday = (dateString) => {
+  if (!dateString) return false;
+  const date = new Date(dateString);
+  return date.getDay() === 0; // 0 is Sunday
+};
 
   const formatTimeForDisplay = (timeValue) => {
   if (!timeValue) return '';
@@ -186,13 +194,35 @@ const scrollToSection = (id) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
-  };
+ const handleInputChange = (e) => {
+  const { id, value } = e.target;
+  
+  // If date is being changed and it's Sunday, clear the time if it's after 4 PM
+  if (id === 'date') {
+    const newDate = value;
+    const currentlySelectedTime = formData.time;
+    
+    // If switching to Sunday and current time is after 4 PM, clear the time
+    if (isSunday(newDate) && currentlySelectedTime) {
+      const timeValue = currentlySelectedTime.split('-')[0]; // Get start time
+      const hour = parseInt(timeValue.split(':')[0]);
+      
+      if (hour >= 16) { // 4 PM or later
+        setFormData(prev => ({
+          ...prev,
+          [id]: value,
+          time: '' // Clear time selection
+        }));
+        return;
+      }
+    }
+  }
+  
+  setFormData(prev => ({
+    ...prev,
+    [id]: value
+  }));
+};
 
 const handleBookingSubmit = async (e) => {
   e.preventDefault();
@@ -205,7 +235,6 @@ const handleBookingSubmit = async (e) => {
   }
 
   // Email validation (now required)
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!formData.email || !emailRegex.test(formData.email)) {
     alert('Please enter a valid email address with proper domain extension (e.g., name@gmail.com, name@yahoo.co.in, name@domain.org)');
     return;
@@ -376,19 +405,23 @@ Please contact the patient to confirm the appointment.
   };
 
   const testimonials = [
-    {
-      name: "CHARLES C L",
-      date: "2 months ago",
-      text: "Was very happy with the service and the results got. Very clean clinic, staff are very professional. Would definitely recommend for very economical treatment.",
-      rating: 5
-    },
-    {
-      name: "Arun Kumar",
-      date: "4 years ago",
-      text: "Had issue with my sugar level and had been referred by my colleague to Sri Sai Clinic. The treatment was good. I strongly recommend to visit the clinic for diabetes related issues.",
-      rating: 5
-    }
-  ];
+  {
+    name: "CHARLES C L",
+    date: "2 months ago",
+    text: "Was very happy with the service and the results got. Very clean clinic, staff are very professional. Would definitely recommend for very economical treatment.",
+    rating: 5,
+    role: "Local Guide · 94 reviews · 84 photos",
+    image: "Charles.png" // Add this line
+  },
+  {
+    name: "Arun Kumar",
+    date: "4 years ago", 
+    text: "Had issue with my sugar level and had been referred by my colleague to Sri Sai Clinic. The treatment was good. I strongly recommend to visit the clinic for diabetes related issues.",
+    rating: 5,
+    role: "4 reviews",
+    image: "Arun.png" // Add this line
+  }
+];
 
   const stats = [
     { number: "5000+", label: "Patients Treated", icon: Users },
@@ -428,19 +461,19 @@ Please contact the patient to confirm the appointment.
     {
       icon: Clock,
       title: "Primary Care",
-      description: "Round-the-clock healthcare services ensuring continuous access to quality medical care for your entire family.",
+      description: "Comprehensive healthcare services for your entire family with extended operating hours for your convenience",
       gradient: "from-[#0D3B66] to-[#4A90E2]"
     },
     {
       icon: Shield,
       title: " Day Care Services",
-      description: "Modern emergency care facilities ready to handle urgent situations promptly and efficiently.",
+      description: "Medical day care facilities for procedures and treatments requiring extended observation and care.",
       gradient: "from-[#E8A3B9] to-[#F8D4E3]"
     },
     {
       icon: Pill,
       title: " Pharmacy",
-      description: "Fully-stocked on-site pharmacy operating round-the-clock for immediate access to prescribed medications.",
+      description: "Well-stocked on-site pharmacy providing immediate access to prescribed medications during clinic hours.",
       gradient: "from-[#4A90E2] to-[#E8A3B9]"
     },
     {
@@ -596,6 +629,17 @@ Please contact the patient to confirm the appointment.
           <ArrowUp size={24} />
         </button>
       )}
+     
+{/* Floating WhatsApp Button - api.whatsapp.com */}
+<a
+  href={`https://api.whatsapp.com/send?phone=${config.CLINIC_PHONE.replace(/\D/g, '')}&text=Hello%20Lotus%20Polyclinic%2C%20I%20want%20to%20book%20an%20appointment`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+  aria-label="Contact us on WhatsApp"
+>
+  <MessageCircle size={24} />
+</a>
 
       {/* Header */}
       <header className={`fixed w-full top-0 z-40 bg-white shadow-md border-b border-gray-200 transition-all duration-300 ${isScrolled ? 'py-3' : 'py-4'}`}>
@@ -949,67 +993,45 @@ Please contact the patient to confirm the appointment.
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
-          <div className="px-5 sm:px-6 max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-                <Star size={16} className="text-[#0D3B66] mr-2" />
-                <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
-              </div>
-              <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
-              <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
-                Real stories from our satisfied patients
-              </p>
-            </div>
+{/* Testimonials Section - Rectangular Images */}
+<section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
+  <div className="px-5 sm:px-6 max-w-6xl mx-auto">
+    <div className="text-center mb-12">
+      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+        <Star size={16} className="text-[#0D3B66] mr-2" />
+        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
+      </div>
+      <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
+      <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
+        Real stories from our satisfied patients
+      </p>
+    </div>
 
-            <div className="bg-white rounded-lg shadow-xl p-6 relative">
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] rounded-t-lg"></div>
-              <div className="text-center">
-                <div className="flex justify-center mb-4">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star 
-                      key={star} 
-                      size={20} 
-                      className="text-yellow-400 fill-current mx-1" 
-                    />
-                  ))}
-                </div>
-                
-                <div className="min-h-[120px] mb-4">
-                  <p className="text-base leading-relaxed text-gray-800 italic">
-                    "{testimonials[activeTestimonial]?.text}"
-                  </p>
-                </div>
-                
-                <div className="font-semibold text-gray-900 text-xl md:text-2xl mb-2">
-                  {testimonials[activeTestimonial]?.name}
-                </div>
-                <div className="text-sm leading-relaxed text-gray-600 mb-2">
-                  {testimonials[activeTestimonial]?.role}
-                </div>
-                <div className="text-xs leading-relaxed text-gray-500 mb-6">
-                  {testimonials[activeTestimonial]?.date}
-                </div>
-                
-                <div className="flex justify-center space-x-2">
-                  {testimonials.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setActiveTestimonial(index)}
-                      className={`w-3 h-3 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] ${
-                        index === activeTestimonial 
-                          ? 'bg-[#E8A3B9] w-6' 
-                          : 'bg-gray-300 hover:bg-[#E8A3B9]'
-                      }`}
-                      aria-label={`View testimonial ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Charles Review */}
+      <div className="bg-white rounded-lg shadow-xl p-6 border-2 border-[#F8D4E3]">
+        <div className="text-center">
+          <img 
+            src="/Charles.png"
+            alt="Charles C L Google Review"
+            className="w-full h-auto rounded-lg shadow-sm mx-auto max-w-md"
+          />
+        </div>
+      </div>
+
+      {/* Arun Review */}
+      <div className="bg-white rounded-lg shadow-xl p-6 border-2 border-[#F8D4E3]">
+        <div className="text-center">
+          <img 
+            src="/Arun.png"
+            alt="Arun Kumar Google Review"
+            className="w-full h-auto rounded-lg shadow-sm mx-auto max-w-md"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 {/* Blog Section */}
 <section id="blogs" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="blogs-heading">
@@ -1141,7 +1163,9 @@ Ponmar, Chennai - 600127</p>
                       </div>
                       <div>
                         <h4 className="font-semibold text-base mb-2">Working Hours</h4>
-                        <p className="text-base opacity-90">Monday - Sunday: 7:00 AM – 7:30 PM</p>
+                        <p className="text-base opacity-90">Monday - Saturday: 9:00 AM – 9:00 PM</p>
+                        <p className="text-base opacity-90">Sunday: 9:00 AM – 4:00 PM</p>
+
                       </div>
                     </div>
                   </div>
@@ -1151,24 +1175,40 @@ Ponmar, Chennai - 600127</p>
 
                 <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
                   <div className="p-6">
-                    <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                      <MapPin size={24} className="mr-3 text-[#E8A3B9]" />
-                      Our Location
-                    </h3>
-                    <div className="rounded-lg overflow-hidden border border-gray-200 bg-gray-100 aspect-video">
-                      <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15557.21526258401!2d80.1707662!3d12.8564248!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a525976fe0fccb3%3A0x4a8e9a8c87836ac7!2sPonmar%2C%20Chennai!5e0!3m2!1sen!2sin"
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allowFullScreen=""
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title="Lotus Polyclinic Location in Ponmar, Chennai"
-                        className="w-full h-full"
-                        aria-label="Interactive map showing Lotus Polyclinic location in Ponmar, Chennai"
-                      ></iframe>
-                    </div>
+                    
+                    <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+  <div className="p-6">
+    <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+      <MapPin size={24} className="mr-3 text-[#E8A3B9]" />
+      Our Location
+    </h3>
+    
+    {/* Embedded Map with Red Pin - No "View larger map" option */}
+    <div className="relative rounded-lg overflow-hidden border border-gray-200 bg-gray-100 aspect-video mb-4">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.207359106582!2d80.1759338!3d12.8669939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDUyJzAxLjIiTiA4MMKwMTAnMzMuNCJF!5e0!3m2!1sen!2sin!4v1733400000000&markers=color:red%7Csize:large%7C12.8669939,80.1759338&zoom=19&output=embed"
+        width="100%"
+        height="100%"
+        style={{ border: 0 }}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        title="Lotus Polyclinic Location in Ponmar, Chennai"
+        className="w-full h-full"
+      />
+    </div>
+    
+    {/* Custom Google Maps Link */}
+    <a
+      href="https://www.google.com/maps/search/?api=1&query=12.8669939,80.1759338"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-4 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium"
+    >
+      <MapPin size={16} className="mr-2" />
+      Open in Google Maps with location pin
+    </a>
+  </div>
+</div>
                   </div>
                 </div>
               </div>
@@ -1267,8 +1307,6 @@ Ponmar, Chennai - 600127</p>
   className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base bg-white focus:outline-none"
 >
   <option value="">Select time</option>
-  <option value="07:00-08:00">7:00 AM - 8:00 AM</option>
-  <option value="08:00-09:00">8:00 AM - 9:00 AM</option>
   <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
   <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
   <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
@@ -1276,9 +1314,17 @@ Ponmar, Chennai - 600127</p>
   <option value="13:00-14:00">1:00 PM - 2:00 PM</option>
   <option value="14:00-15:00">2:00 PM - 3:00 PM</option>
   <option value="15:00-16:00">3:00 PM - 4:00 PM</option>
-  <option value="16:00-17:00">4:00 PM - 5:00 PM</option>
-  <option value="17:00-18:00">5:00 PM - 6:00 PM</option>
-  <option value="18:00-19:00">6:00 PM - 7:00 PM</option>
+  
+  {/* Show these slots only if NOT Sunday */}
+  {!isSunday(formData.date) && (
+    <>
+      <option value="16:00-17:00">4:00 PM - 5:00 PM</option>
+      <option value="17:00-18:00">5:00 PM - 6:00 PM</option>
+      <option value="18:00-19:00">6:00 PM - 7:00 PM</option>
+      <option value="19:00-20:00">7:00 PM - 8:00 PM</option>
+      <option value="20:00-21:00">8:00 PM - 9:00 PM</option>
+    </>
+  )}
 </select>
                       </div>
                     </div>
@@ -1416,7 +1462,7 @@ Ponmar, Chennai - 600127</span>
           </div>
           <div className="flex items-center">
             <Clock size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
-            <span>Mon-Sun: 7AM - 7:30PM</span>
+            <span>Mon-Sat: 9AM - 9PM <br />Sun: 9AM - 4PM</span>
           </div>
         </div>
       </div>
@@ -1455,3 +1501,4 @@ Ponmar, Chennai - 600127</span>
 };
 
 export default App;
+
