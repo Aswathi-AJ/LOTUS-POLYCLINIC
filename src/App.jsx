@@ -1119,9 +1119,7 @@ Please contact the patient to confirm the appointment.
                       </div>
                       <div>
                         <h4 className="font-semibold text-base mb-2">Address</h4>
-                        <p className="text-base opacity-90">
-No 1/285, ASM Complex, Vedhagiri Nagar,
-Ponmar, Chennai - 600127</p>
+                        <p className="text-base opacity-90">No 1/285, ASM Complex, Vedhagiri Nagar,Ponmar,<br /> Chennai - 600127</p>
                       </div>
                     </div>
                     
@@ -1434,9 +1432,7 @@ Ponmar, Chennai - 600127</p>
         <div className="space-y-3 text-white/80 text-sm">
           <div className="flex items-start">
             <MapPin size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
-            <span>
-No 1/285, ASM Complex, Vedhagiri Nagar,
-Ponmar, Chennai - 600127</span>
+            <span>No 1/285, ASM Complex, <br /> Vedhagiri Nagar,Ponmar,<br />  Chennai - 600127</span>
           </div>
           <div className="flex items-center">
             <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
