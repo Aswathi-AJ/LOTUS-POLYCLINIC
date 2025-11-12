@@ -163,4 +163,4 @@ For any questions or support, please contact:
 
 ---
 
-**Built with ❤️ for Lotus Polyclinic, Ponamr**
+**Built with ❤️ for Lotus Polyclinic, Ponmar**
