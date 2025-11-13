@@ -109,6 +109,46 @@ const App = () => {
     // ADD THIS LINE TO FIX THE ERROR
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+// Add this state near your other state declarations
+const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+// Add this testimonials data array near your other data arrays
+const testimonialsData = [
+  { id: 1, name: "Charles", file: "/Charles.png" },
+  { id: 2, name: "Arunkumar", file: "/Arunkumar.png" },
+  { id: 3, name: "Karthic", file: "/Karthic.png" },
+  { id: 4, name: "Muthu", file: "/Muthu.png" },
+  { id: 5, name: "Parinitha", file: "/Parinitha.png" },
+  { id: 6, name: "Raja", file: "/Raja.png" },
+  { id: 7, name: "Rajkumar", file: "/Rajkumar.png" },
+  { id: 8, name: "Saravana", file: "/Saravana.png" },
+  { id: 9, name: "Saravanan", file: "/Saravanan.png" },
+  { id: 10, name: "selva", file: "/selva.png" },
+  { id: 11, name: "Veenavani", file: "/Veenavani.png" },
+  { id: 12, name: "venkatesh", file: "/venkatesh.png" }
+];
+
+// Add these functions to handle navigation
+const goToNextTestimonial = () => {
+  setCurrentTestimonial((prev) => (prev + 1) % testimonialsData.length);
+};
+
+const goToPreviousTestimonial = () => {
+  setCurrentTestimonial((prev) => (prev - 1 + testimonialsData.length) % testimonialsData.length);
+};
+
+const handleTestimonialClick = (index) => {
+  setCurrentTestimonial(index);
+};
+
+// Optional: Auto-advance slideshow (add this useEffect)
+useEffect(() => {
+  const interval = setInterval(() => {
+    goToNextTestimonial();
+  }, 5000); // Change slide every 5 seconds
+
+  return () => clearInterval(interval);
+}, []);
 
 const isSunday = (dateString) => {
   if (!dateString) return false;
@@ -993,12 +1033,14 @@ Please contact the patient to confirm the appointment.
           </div>
         </section>
 
-{/* Testimonials Section - Rectangular Images */}
+{/* Testimonials Section - Fixed Height Card */}
 <section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
   <div className="px-5 sm:px-6 max-w-6xl mx-auto">
     <div className="text-center mb-12">
       <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-        <Star size={16} className="text-[#0D3B66] mr-2" />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#0D3B66] mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
         <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
       </div>
       <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
@@ -1007,27 +1049,60 @@ Please contact the patient to confirm the appointment.
       </p>
     </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Charles Review */}
-      <div className="bg-white rounded-lg shadow-xl p-6 border-2 border-[#F8D4E3]">
-        <div className="text-center">
-          <img 
-            src="/Charles.png"
-            alt="Charles C L Google Review"
-            className="w-full h-auto rounded-lg shadow-sm mx-auto max-w-md"
-          />
+    {/* Fixed Height Card Container */}
+    <div className="bg-white rounded-xl shadow-lg border-2 border-[#F8D4E3] p-4 md:p-6 min-h-[500px] flex flex-col">
+      <div className="flex flex-col lg:flex-row items-start gap-6 flex-1">
+        {/* Main Image - Fixed Height Container */}
+        <div className="flex-1 w-full">
+            <img 
+              src={testimonialsData[currentTestimonial].file}
+              alt={`${testimonialsData[currentTestimonial].name} testimonial`}
+              className="w-full h-full object-contain max-h-72"
+            />
+          
         </div>
+
+       
       </div>
 
-      {/* Arun Review */}
-      <div className="bg-white rounded-lg shadow-xl p-6 border-2 border-[#F8D4E3]">
-        <div className="text-center">
-          <img 
-            src="/Arun.png"
-            alt="Arun Kumar Google Review"
-            className="w-full h-auto rounded-lg shadow-sm mx-auto max-w-md"
-          />
+      {/* Compact Navigation Controls */}
+      <div className="flex flex-col sm:flex-row items-center justify-between mt-6 pt-4 border-t border-gray-200 gap-3">
+        <button 
+          onClick={goToPreviousTestimonial}
+          className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-50 text-sm"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Previous
+        </button>
+        <div className="flex items-center space-x-3">
+          <span className="text-xs font-medium text-gray-600">
+            <span className="text-[#0D3B66] font-bold">{currentTestimonial + 1}</span> / <span className="text-gray-800 font-bold">{testimonialsData.length}</span>
+          </span>
+          <div className="flex space-x-1">
+            {testimonialsData.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleTestimonialClick(index)}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${
+                  index === currentTestimonial ? 'bg-[#0D3B66] scale-125' : 'bg-gray-300 hover:bg-gray-400'
+                }`}
+                aria-label={`Go to review ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
+
+        <button 
+          onClick={goToNextTestimonial}
+          className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-50 text-sm"
+        >
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
