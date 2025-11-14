@@ -501,13 +501,13 @@ Please contact the patient to confirm the appointment.
     {
       icon: Clock,
       title: "Primary Care",
-      description: "Comprehensive healthcare services for your entire family with extended operating hours for your convenience",
+      description: "Complete family healthcare for all ages, from children to seniors, with personalized medical attention.",
       gradient: "from-[#0D3B66] to-[#4A90E2]"
     },
     {
       icon: Shield,
-      title: " Day Care Services",
-      description: "Medical day care facilities for procedures and treatments requiring extended observation and care.",
+      title: " Day Care ",
+      description: "Comfortable medical day care for procedures that require several hours of monitoring and recovery.",
       gradient: "from-[#E8A3B9] to-[#F8D4E3]"
     },
     {
