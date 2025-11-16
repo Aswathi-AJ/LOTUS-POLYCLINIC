@@ -110,36 +110,6 @@ const App = () => {
   // ADD THIS LINE TO FIX THE ERROR
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  // Add gallery state near your other state declarations
-  const [currentGalleryIndex, setCurrentGalleryIndex] = useState(0);
-
-  // Add gallery images data
-  const galleryImages = [
-    { src: "public/image1.jpg" },
-    { src: "public/image5.jpg" },
-    { src: "public/image3.jpg" },
-    { src: "public/image6.jpg" },
-    { src: "public/image4.jpg" },
-    { src: "public/image2.jpg" },
-  ];
-
-  // Add gallery navigation functions
-  const goToNextGallery = () => {
-    setCurrentGalleryIndex((prev) => (prev + 1) % galleryImages.length);
-  };
-
-  const goToPreviousGallery = () => {
-    setCurrentGalleryIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
-  };
-
-  // Optional: Auto-advance gallery
-  useEffect(() => {
-    const interval = setInterval(() => {
-      goToNextGallery();
-    }, 6000); // Change every 6 seconds
-
-    return () => clearInterval(interval);
-  }, []);
 
   // Add this state near your other state declarations
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -1064,66 +1034,32 @@ Please contact the patient to confirm the appointment.
           </div>
         </section>
 
-        {/* Gallery Section - Add this after Core Values section */}
-        <section className="py-12 md:py-16 px-5 bg-white" aria-labelledby="gallery-heading">
-          <div className="px-5 sm:px-6 max-w-6xl mx-auto">
-            <div className="text-center mb-10">
-              <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-                <Users size={16} className="text-[#0D3B66] mr-2" />
-                <span className="text-sm font-bold text-[#0D3B66] tracking-wide">OUR CLINIC</span>
-              </div>
-              <h2 id="gallery-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">
-                Our Care in Action
-              </h2>
-              <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
-                
-              </p>
-            </div>
+        {/* Clinic Gallery Collage - Add this after Core Values section */}
+<section className="py-12 md:py-16 px-5 bg-white" aria-labelledby="gallery-heading">
+  <div className="px-5 sm:px-6 max-w-6xl mx-auto">
+    <div className="text-center mb-10">
+      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+        <Users size={16} className="text-[#0D3B66] mr-2" />
+        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">OUR CLINIC</span>
+      </div>
+      <h2 id="gallery-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">
+        Our Healthcare Environment
+      </h2>
+      <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
+        Modern facilities, compassionate care, and healing spaces at Lotus Polyclinic
+      </p>
+    </div>
 
-            {/* Image Carousel */}
-            <div className="relative">
-              {/* Main Image Display */}
-              <div className="flex justify-center mb-6">
-                <img 
-                  src={galleryImages[currentGalleryIndex].src}
-                  alt={galleryImages[currentGalleryIndex].alt}
-                  className="w-full max-w-2xl h-64 md:h-80 object-cover rounded-lg shadow-md"
-                />
-              </div>
-
-              {/* Navigation Controls */}
-              <div className="flex justify-between items-center px-4">
-                <button 
-                  onClick={goToPreviousGallery}
-                  className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] transition-colors font-medium px-4 py-2 rounded-lg hover:bg-gray-50"
-                  aria-label="Previous image"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  Previous
-                </button>
-                
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium text-gray-600">
-                    <span className="text-[#0D3B66] font-bold">{currentGalleryIndex + 1}</span> / {galleryImages.length}
-                  </span>
-                </div>
-
-                <button 
-                  onClick={goToNextGallery}
-                  className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] transition-colors font-medium px-4 py-2 rounded-lg hover:bg-gray-50"
-                  aria-label="Next image"
-                >
-                  Next
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
+    {/* Single Collage Image */}
+    <div className="flex justify-center">
+      <img 
+        src="/photos.jpg" 
+        alt="Lotus Polyclinic - Modern healthcare facilities, doctor consultations, and patient care services"
+        className="w-full max-w-4xl rounded-xl shadow-lg border-2 border-[#F8D4E3]"
+      />
+    </div>
+  </div>
+</section>
 
         {/* Testimonials Section - Fixed Height Card */}
         <section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
