@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 import config from './config';
+
 // CSS Variables for consistency
 const globalStyles = `
   :root {
@@ -106,77 +107,78 @@ const App = () => {
     notes: ''
   });
 
-    // ADD THIS LINE TO FIX THE ERROR
+  // ADD THIS LINE TO FIX THE ERROR
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-// Add this state near your other state declarations
-const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-// Add this testimonials data array near your other data arrays
-const testimonialsData = [
-  { id: 1, name: "Charles", file: "/Charles.png" },
-  { id: 2, name: "Arunkumar", file: "/Arunkumar.png" },
-  { id: 3, name: "Karthic", file: "/Karthic.png" },
-  { id: 4, name: "Muthu", file: "/Muthu.png" },
-  { id: 5, name: "Parinitha", file: "/Parinitha.png" },
-  { id: 6, name: "Raja", file: "/Raja.png" },
-  { id: 7, name: "Rajkumar", file: "/Rajkumar.png" },
-  { id: 8, name: "Saravana", file: "/Saravana.png" },
-  { id: 9, name: "Saravanan", file: "/Saravanan.png" },
-  { id: 10, name: "selva", file: "/selva.png" },
-  { id: 11, name: "Veenavani", file: "/Veenavani.png" },
-  { id: 12, name: "venkatesh", file: "/venkatesh.png" }
-];
+  // Add this state near your other state declarations
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-// Add these functions to handle navigation
-const goToNextTestimonial = () => {
-  setCurrentTestimonial((prev) => (prev + 1) % testimonialsData.length);
-};
+  // Add this testimonials data array near your other data arrays
+  const testimonialsData = [
+    { id: 1, name: "Charles", file: "/Charles.png" },
+    { id: 2, name: "Arunkumar", file: "/Arunkumar.png" },
+    { id: 3, name: "Karthic", file: "/Karthic.png" },
+    { id: 4, name: "Muthu", file: "/Muthu.png" },
+    { id: 5, name: "Parinitha", file: "/Parinitha.png" },
+    { id: 6, name: "Raja", file: "/Raja.png" },
+    { id: 7, name: "Rajkumar", file: "/Rajkumar.png" },
+    { id: 8, name: "Saravana", file: "/Saravana.png" },
+    { id: 9, name: "Saravanan", file: "/Saravanan.png" },
+    { id: 10, name: "selva", file: "/selva.png" },
+    { id: 11, name: "Veenavani", file: "/Veenavani.png" },
+    { id: 12, name: "venkatesh", file: "/venkatesh.png" }
+  ];
 
-const goToPreviousTestimonial = () => {
-  setCurrentTestimonial((prev) => (prev - 1 + testimonialsData.length) % testimonialsData.length);
-};
+  // Add these functions to handle navigation
+  const goToNextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonialsData.length);
+  };
 
-const handleTestimonialClick = (index) => {
-  setCurrentTestimonial(index);
-};
+  const goToPreviousTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + testimonialsData.length) % testimonialsData.length);
+  };
 
-// Optional: Auto-advance slideshow (add this useEffect)
-useEffect(() => {
-  const interval = setInterval(() => {
-    goToNextTestimonial();
-  }, 5000); // Change slide every 5 seconds
+  const handleTestimonialClick = (index) => {
+    setCurrentTestimonial(index);
+  };
 
-  return () => clearInterval(interval);
-}, []);
+  // Optional: Auto-advance slideshow (add this useEffect)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      goToNextTestimonial();
+    }, 5000); // Change slide every 5 seconds
 
-const isSunday = (dateString) => {
-  if (!dateString) return false;
-  const date = new Date(dateString);
-  return date.getDay() === 0; // 0 is Sunday
-};
+    return () => clearInterval(interval);
+  }, []);
+
+  const isSunday = (dateString) => {
+    if (!dateString) return false;
+    const date = new Date(dateString);
+    return date.getDay() === 0; // 0 is Sunday
+  };
 
   const formatTimeForDisplay = (timeValue) => {
-  if (!timeValue) return '';
-  
-  if (timeValue.includes('-')) {
-    // Handle time range like "14:00-15:00"
-    return timeValue.split('-').map(time => {
-      const [hours, minutes] = time.split(':');
+    if (!timeValue) return '';
+    
+    if (timeValue.includes('-')) {
+      // Handle time range like "14:00-15:00"
+      return timeValue.split('-').map(time => {
+        const [hours, minutes] = time.split(':');
+        const hour = parseInt(hours);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour % 12 || 12;
+        return `${displayHour}:${minutes} ${ampm}`;
+      }).join(' - ');
+    } else {
+      // Handle single time like "14:00"
+      const [hours, minutes] = timeValue.split(':');
       const hour = parseInt(hours);
       const ampm = hour >= 12 ? 'PM' : 'AM';
       const displayHour = hour % 12 || 12;
       return `${displayHour}:${minutes} ${ampm}`;
-    }).join(' - ');
-  } else {
-    // Handle single time like "14:00"
-    const [hours, minutes] = timeValue.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
-  }
-};
+    }
+  };
 
   useEffect(() => {
     // Add global styles
@@ -195,134 +197,134 @@ const isSunday = (dateString) => {
     };
   }, []);
 
-const scrollToSection = (id) => {
-  let element;
-  let extraOffset = 0;
-  
-  if (id === 'about') {
-    element = document.getElementById('about-heading');
-    extraOffset = 100;
-  } else if (id === 'appointment') {
-    // First, try to find the booking form directly
-    element = document.querySelector('#contact .bg-white.rounded-lg.shadow-xl');
+  const scrollToSection = (id) => {
+    let element;
+    let extraOffset = 0;
     
-    // If not found, fallback to contact section
-    if (!element) {
-      element = document.getElementById('contact');
-      extraOffset = 200; // Scroll further down to show the form
+    if (id === 'about') {
+      element = document.getElementById('about-heading');
+      extraOffset = 100;
+    } else if (id === 'appointment') {
+      // First, try to find the booking form directly
+      element = document.querySelector('#contact .bg-white.rounded-lg.shadow-xl');
+      
+      // If not found, fallback to contact section
+      if (!element) {
+        element = document.getElementById('contact');
+        extraOffset = 200; // Scroll further down to show the form
+      } else {
+        extraOffset = 50; // Less offset when targeting form directly
+      }
     } else {
-      extraOffset = 50; // Less offset when targeting form directly
+      element = document.getElementById(id);
     }
-  } else {
-    element = document.getElementById(id);
-  }
-  
-  if (element) {
-    const headerHeight = 80;
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - headerHeight - extraOffset;
+    
+    if (element) {
+      const headerHeight = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight - extraOffset;
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
-  }
-  setIsMenuOpen(false);
-};
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    setIsMenuOpen(false);
+  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
- const handleInputChange = (e) => {
-  const { id, value } = e.target;
-  
-  // If date is being changed and it's Sunday, clear the time if it's after 4 PM
-  if (id === 'date') {
-    const newDate = value;
-    const currentlySelectedTime = formData.time;
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
     
-    // If switching to Sunday and current time is after 4 PM, clear the time
-    if (isSunday(newDate) && currentlySelectedTime) {
-      const timeValue = currentlySelectedTime.split('-')[0]; // Get start time
-      const hour = parseInt(timeValue.split(':')[0]);
+    // If date is being changed and it's Sunday, clear the time if it's after 4 PM
+    if (id === 'date') {
+      const newDate = value;
+      const currentlySelectedTime = formData.time;
       
-      if (hour >= 16) { // 4 PM or later
-        setFormData(prev => ({
-          ...prev,
-          [id]: value,
-          time: '' // Clear time selection
-        }));
-        return;
+      // If switching to Sunday and current time is after 4 PM, clear the time
+      if (isSunday(newDate) && currentlySelectedTime) {
+        const timeValue = currentlySelectedTime.split('-')[0]; // Get start time
+        const hour = parseInt(timeValue.split(':')[0]);
+        
+        if (hour >= 16) { // 4 PM or later
+          setFormData(prev => ({
+            ...prev,
+            [id]: value,
+            time: '' // Clear time selection
+          }));
+          return;
+        }
       }
     }
-  }
-  
-  setFormData(prev => ({
-    ...prev,
-    [id]: value
-  }));
-};
-
-const handleBookingSubmit = async (e) => {
-  e.preventDefault();
-  
-  // Phone number validation (10 digits for India)
-  const phoneRegex = /^[6-9]\d{9}$/;
-  if (!phoneRegex.test(formData.phone.replace(/\D/g, ''))) {
-    alert('Please enter a valid 10-digit Indian phone number starting with 6-9');
-    return;
-  }
-
-  // Email validation (now required)
-  if (!formData.email || !emailRegex.test(formData.email)) {
-    alert('Please enter a valid email address with proper domain extension (e.g., name@gmail.com, name@yahoo.co.in, name@domain.org)');
-    return;
-  }
-  
-  try {
-    const templateParams = {
-      patient_name: formData.fullName,
-      patient_phone: formData.phone,
-      patient_email: formData.email,
-      appointment_date: formData.date,
-      appointment_time: formatTimeForDisplay(formData.time),
-      service_type: formData.service,
-      additional_notes: formData.notes || 'No additional notes',
-      submitted_on: new Date().toLocaleString(),
-      to_email: config.CLINIC_EMAIL
-    };
-
-    console.log('Sending booking email with params:', templateParams);
-    console.log('Using EmailJS config:', {
-      serviceId: config.EMAILJS_SERVICE_ID,
-      templateId: config.EMAILJS_TEMPLATE_ID,
-      publicKey: config.EMAILJS_PUBLIC_KEY
-    });
-
-    // Send email using EmailJS
-    const result = await emailjs.send(
-      config.EMAILJS_SERVICE_ID,
-      config.EMAILJS_TEMPLATE_ID,
-      templateParams,
-      config.EMAILJS_PUBLIC_KEY
-    );
-
-    console.log('Email sent successfully:', result);
-
-    if (result.text === 'OK') {
-      setShowBookingSuccess(true);
-      setFormData({
-        fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
-      });
-      setTimeout(() => setShowBookingSuccess(false), 5000);
-    }
-  } catch (error) {
-    console.error('Failed to send email:', error);
     
-    // Fallback with proper time formatting
-    const subject = `Appointment Booking Request - ${formData.fullName}`;
-    const body = `
+    setFormData(prev => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Phone number validation (10 digits for India)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\D/g, ''))) {
+      alert('Please enter a valid 10-digit Indian phone number starting with 6-9');
+      return;
+    }
+
+    // Email validation (now required)
+    if (!formData.email || !emailRegex.test(formData.email)) {
+      alert('Please enter a valid email address with proper domain extension (e.g., name@gmail.com, name@yahoo.co.in, name@domain.org)');
+      return;
+    }
+    
+    try {
+      const templateParams = {
+        patient_name: formData.fullName,
+        patient_phone: formData.phone,
+        patient_email: formData.email,
+        appointment_date: formData.date,
+        appointment_time: formatTimeForDisplay(formData.time),
+        service_type: formData.service,
+        additional_notes: formData.notes || 'No additional notes',
+        submitted_on: new Date().toLocaleString(),
+        to_email: config.CLINIC_EMAIL
+      };
+
+      console.log('Sending booking email with params:', templateParams);
+      console.log('Using EmailJS config:', {
+        serviceId: config.EMAILJS_SERVICE_ID,
+        templateId: config.EMAILJS_TEMPLATE_ID,
+        publicKey: config.EMAILJS_PUBLIC_KEY
+      });
+
+      // Send email using EmailJS
+      const result = await emailjs.send(
+        config.EMAILJS_SERVICE_ID,
+        config.EMAILJS_TEMPLATE_ID,
+        templateParams,
+        config.EMAILJS_PUBLIC_KEY
+      );
+
+      console.log('Email sent successfully:', result);
+
+      if (result.text === 'OK') {
+        setShowBookingSuccess(true);
+        setFormData({
+          fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
+        });
+        setTimeout(() => setShowBookingSuccess(false), 5000);
+      }
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      
+      // Fallback with proper time formatting
+      const subject = `Appointment Booking Request - ${formData.fullName}`;
+      const body = `
 NEW APPOINTMENT REQUEST - LOTUS POLYCLINIC
 
 Patient Information:
@@ -347,18 +349,18 @@ This appointment request was submitted through the Lotus Polyclinic website.
 Please contact the patient to confirm the appointment.
 `.trim();
 
-    // Open user's default email client
-    const mailtoLink = `mailto:${config.CLINIC_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.open(mailtoLink, '_blank');
+      // Open user's default email client
+      const mailtoLink = `mailto:${config.CLINIC_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.open(mailtoLink, '_blank');
 
-    // Show success message
-    setShowBookingSuccess(true);
-    setFormData({
-      fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
-    });
-    setTimeout(() => setShowBookingSuccess(false), 5000);
-  }
-};
+      // Show success message
+      setShowBookingSuccess(true);
+      setFormData({
+        fullName: '', phone: '', email: '', date: '', time: '', service: '', notes: ''
+      });
+      setTimeout(() => setShowBookingSuccess(false), 5000);
+    }
+  };
 
   // Function to open blog in new window
   const openBlogInNewWindow = (blog) => {
@@ -445,23 +447,23 @@ Please contact the patient to confirm the appointment.
   };
 
   const testimonials = [
-  {
-    name: "CHARLES C L",
-    date: "2 months ago",
-    text: "Was very happy with the service and the results got. Very clean clinic, staff are very professional. Would definitely recommend for very economical treatment.",
-    rating: 5,
-    role: "Local Guide · 94 reviews · 84 photos",
-    image: "Charles.png" // Add this line
-  },
-  {
-    name: "Arun Kumar",
-    date: "4 years ago", 
-    text: "Had issue with my sugar level and had been referred by my colleague to Sri Sai Clinic. The treatment was good. I strongly recommend to visit the clinic for diabetes related issues.",
-    rating: 5,
-    role: "4 reviews",
-    image: "Arun.png" // Add this line
-  }
-];
+    {
+      name: "CHARLES C L",
+      date: "2 months ago",
+      text: "Was very happy with the service and the results got. Very clean clinic, staff are very professional. Would definitely recommend for very economical treatment.",
+      rating: 5,
+      role: "Local Guide · 94 reviews · 84 photos",
+      image: "Charles.png" // Add this line
+    },
+    {
+      name: "Arun Kumar",
+      date: "4 years ago", 
+      text: "Had issue with my sugar level and had been referred by my colleague to Sri Sai Clinic. The treatment was good. I strongly recommend to visit the clinic for diabetes related issues.",
+      rating: 5,
+      role: "4 reviews",
+      image: "Arun.png" // Add this line
+    }
+  ];
 
   const stats = [
     { number: "5000+", label: "Patients Treated", icon: Users },
@@ -564,43 +566,43 @@ Please contact the patient to confirm the appointment.
   ];
 
   const blogPostsData = [
-  {
-    id: 1,
-    title: "Comprehensive Diabetes Management: A Complete Guide to Living Well with Diabetes",
-    excerpt: "Expert insights on managing diabetes through lifestyle modifications, medication adherence, and regular monitoring for optimal health outcomes.",
-    category: "DIABETES CARE",
-    readTime: "25 min read",
-    date: "Nov 20, 2024",
-    icon: Activity,
-    author: "Dr. Meena",
-    authorRole: "Chief Diabetologist & Physician",
-    filePath: "/blog-diabetes.html"  // Add this line
-  },
-  {
-    id: 2,
-    title: "Comprehensive Prenatal Care: Ensuring Optimal Maternal and Fetal Health",
-    excerpt: "Complete evidence-based guide to prenatal care, advanced nutrition planning, exercise protocols, and comprehensive wellness practices for optimal pregnancy outcomes.",
-    category: "WOMEN'S HEALTH",
-    readTime: "28 min read",
-    date: "Nov 15, 2024",
-    icon: Baby,
-    author: "Dr. Meena",
-    authorRole: "OB/GYN Specialist & Physician",
-    filePath: "/blog-prenatal.html"  // Add this line
-  },
-  {
-    id: 3,
-    title: "Comprehensive Preventive Health: Advanced Strategies for Disease Prevention",
-    excerpt: "Evidence-based comprehensive guide to preventive health screenings, advanced lifestyle modifications, and cutting-edge early detection strategies for lifelong wellness.",
-    category: "PREVENTIVE CARE",
-    readTime: "30 min read",
-    date: "Nov 10, 2024",
-    icon: Shield,
-    author: "Dr. Meena",
-    authorRole: "Preventive Medicine Specialist & Physician",
-    filePath: "/blog-preventive.html"  // Add this line
-  }
-];
+    {
+      id: 1,
+      title: "Comprehensive Diabetes Management: A Complete Guide to Living Well with Diabetes",
+      excerpt: "Expert insights on managing diabetes through lifestyle modifications, medication adherence, and regular monitoring for optimal health outcomes.",
+      category: "DIABETES CARE",
+      readTime: "25 min read",
+      date: "Nov 20, 2024",
+      icon: Activity,
+      author: "Dr. Meena",
+      authorRole: "Chief Diabetologist & Physician",
+      filePath: "/blog-diabetes.html"  // Add this line
+    },
+    {
+      id: 2,
+      title: "Comprehensive Prenatal Care: Ensuring Optimal Maternal and Fetal Health",
+      excerpt: "Complete evidence-based guide to prenatal care, advanced nutrition planning, exercise protocols, and comprehensive wellness practices for optimal pregnancy outcomes.",
+      category: "WOMEN'S HEALTH",
+      readTime: "28 min read",
+      date: "Nov 15, 2024",
+      icon: Baby,
+      author: "Dr. Meena",
+      authorRole: "OB/GYN Specialist & Physician",
+      filePath: "/blog-prenatal.html"  // Add this line
+    },
+    {
+      id: 3,
+      title: "Comprehensive Preventive Health: Advanced Strategies for Disease Prevention",
+      excerpt: "Evidence-based comprehensive guide to preventive health screenings, advanced lifestyle modifications, and cutting-edge early detection strategies for lifelong wellness.",
+      category: "PREVENTIVE CARE",
+      readTime: "30 min read",
+      date: "Nov 10, 2024",
+      icon: Shield,
+      author: "Dr. Meena",
+      authorRole: "Preventive Medicine Specialist & Physician",
+      filePath: "/blog-preventive.html"  // Add this line
+    }
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -652,12 +654,11 @@ Please contact the patient to confirm the appointment.
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
       
-         {/* ADD THIS LINE FOR BROWSER TAB FAVICON */}
-    <link rel="icon" type="image/png" href="/favicon.png" />
+      {/* ADD THIS LINE FOR BROWSER TAB FAVICON */}
+      <link rel="icon" type="image/png" href="/favicon.png" />
+      
       {/* Booking Success Message */}
       {showBookingSuccess && <BookingSuccessMessage />}
-
-  
 
       {/* Back to Top Button */}
       {showBackToTop && (
@@ -670,34 +671,34 @@ Please contact the patient to confirm the appointment.
         </button>
       )}
      
-{/* Floating WhatsApp Button - api.whatsapp.com */}
-<a
-  href={`https://api.whatsapp.com/send?phone=${config.CLINIC_PHONE.replace(/\D/g, '')}&text=Hello%20Lotus%20Polyclinic%2C%20I%20want%20to%20book%20an%20appointment`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-  aria-label="Contact us on WhatsApp"
->
-  <MessageCircle size={24} />
-</a>
+      {/* Floating WhatsApp Button - api.whatsapp.com */}
+      <a
+        href={`https://api.whatsapp.com/send?phone=${config.CLINIC_PHONE.replace(/\D/g, '')}&text=Hello%20Lotus%20Polyclinic%2C%20I%20want%20to%20book%20an%20appointment`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+        aria-label="Contact us on WhatsApp"
+      >
+        <MessageCircle size={24} />
+      </a>
 
       {/* Header */}
       <header className={`fixed w-full top-0 z-40 bg-white shadow-md border-b border-gray-200 transition-all duration-300 ${isScrolled ? 'py-3' : 'py-4'}`}>
         <div className="px-5 sm:px-6 max-w-7xl mx-auto flex justify-between items-center">
- <button 
-  onClick={() => scrollToSection('home')} 
-  className="flex items-center rounded-lg focus:outline-none"
-  aria-label="Lotus Polyclinic Home"
->
-  {/* Logo with Image from Public Folder - Large Size */}
-  <div className="flex items-center space-x-3">
-    <img 
-      src="/logo.png" 
-      alt="Lotus Polyclinic Logo" 
-      className="w-20 h-20 md:w-24 md:h-24 object-contain"
-    />
-  </div>
-</button>
+          <button 
+            onClick={() => scrollToSection('home')} 
+            className="flex items-center rounded-lg focus:outline-none"
+            aria-label="Lotus Polyclinic Home"
+          >
+            {/* Logo with Image from Public Folder - Large Size */}
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/logo.png" 
+                alt="Lotus Polyclinic Logo" 
+                className="w-20 h-20 md:w-24 md:h-24 object-contain"
+              />
+            </div>
+          </button>
 
           <nav className="hidden lg:flex items-center space-x-3" aria-label="Main navigation">
             {[
@@ -705,8 +706,8 @@ Please contact the patient to confirm the appointment.
               { id: 'about', label: 'About', icon: Info },
               { id: 'services', label: 'Services', icon: Stethoscope },
               { id: 'facilities', label: 'Facilities', icon: Shield },
-              { id: 'blogs', label: 'Blog', icon: FileText },
               { id: 'testimonials', label: 'Testimonials', icon: Star },
+              { id: 'blogs', label: 'Blog', icon: FileText },
               { id: 'contact', label: 'Contact', icon: Mail }
             ].map((item) => (
               <button
@@ -723,13 +724,13 @@ Please contact the patient to confirm the appointment.
 
           <div className="flex items-center space-x-4">
             <button
-  onClick={() => scrollToSection('appointment')}
-  className="hidden md:flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-5 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all shadow-lg font-medium text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
-  aria-label="Book an appointment at Lotus Polyclinic"
->
-  <Calendar size={18} className="mr-2" />
-  Book Now
-</button>
+              onClick={() => scrollToSection('appointment')}
+              className="hidden md:flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-5 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all shadow-lg font-medium text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
+              aria-label="Book an appointment at Lotus Polyclinic"
+            >
+              <Calendar size={18} className="mr-2" />
+              Book Now
+            </button>
 
             <button
               className="lg:hidden text-gray-800 p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
@@ -767,12 +768,12 @@ Please contact the patient to confirm the appointment.
                 </button>
               ))}
               <button
-  onClick={() => scrollToSection('appointment')}
-  className="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium text-center mt-4 text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
-  aria-label="Book an appointment at Lotus Polyclinic"
->
-  Book Appointment
-</button>
+                onClick={() => scrollToSection('appointment')}
+                className="bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-6 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium text-center mt-4 text-base focus:outline-none focus:ring-2 focus:ring-[#4A90E2] focus:ring-offset-2"
+                aria-label="Book an appointment at Lotus Polyclinic"
+              >
+                Book Appointment
+              </button>
             </div>
           </nav>
         )}
@@ -817,15 +818,15 @@ Please contact the patient to confirm the appointment.
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
-             <button
-  onClick={() => scrollToSection('appointment')}
-  className="bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] text-[#0D3B66] px-6 py-3 rounded-lg hover:shadow-2xl transition-all hover:scale-105 flex items-center justify-center w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] focus:ring-offset-2 text-base font-medium"
-  aria-label="Book an appointment at Lotus Polyclinic"
->
-  <Calendar size={20} className="mr-2" />
-  Book Appointment
-  <ArrowRight size={20} className="ml-2" />
-</button>
+              <button
+                onClick={() => scrollToSection('appointment')}
+                className="bg-gradient-to-r from-[#E8A3B9] to-[#F8D4E3] text-[#0D3B66] px-6 py-3 rounded-lg hover:shadow-2xl transition-all hover:scale-105 flex items-center justify-center w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] focus:ring-offset-2 text-base font-medium"
+                aria-label="Book an appointment at Lotus Polyclinic"
+              >
+                <Calendar size={20} className="mr-2" />
+                Book Appointment
+                <ArrowRight size={20} className="ml-2" />
+              </button>
               <button
                 onClick={() => scrollToSection('facilities')}
                 className="border-2 border-white text-white px-6 py-3 rounded-lg hover:bg-white hover:text-[#0D3B66] transition-all w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 text-base font-medium"
@@ -880,7 +881,7 @@ Please contact the patient to confirm the appointment.
           </div>
         </section>
 
-        {/* About Section */}
+                        {/* About Section */}
         <section id="about" className="py-12 md:py-20 px-5 bg-gradient-to-br from-[#F8D4E3] to-[#87CEEB]" aria-labelledby="about-heading">
           <div className="px-5 sm:px-6 max-w-6xl mx-auto">
             
@@ -916,21 +917,28 @@ Please contact the patient to confirm the appointment.
                   Lotus Polyclinic at Ponmar, built upon the foundation of Sri Sai Clinic, established in 2020, with a vision to provide quality and affordable healthcare.
                 </p>
                 
-                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm">
-                  <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-                    <Users size={24} className="mr-3 text-[#E8A3B9]" />
-                    Dr. Meena - Founder
-                  </h3>
-                  <p className="text-base leading-relaxed text-gray-800 mb-4">
-                    <strong>MBBS, MD</strong> - brings over 16 years of experience with specialized expertise in diabetes management.
-                  </p>
-                  <p className="text-base leading-relaxed text-gray-800">
-                    Known for her compassionate approach, combining clinical excellence with genuine empathy.
-                  </p>
+                <div className="bg-white rounded-lg p-6 border border-gray-200 shadow-sm flex items-start gap-4">
+                  {/* Replaced Users icon with precisely cropped round profile image */}
+                  <img 
+                    src="/face_4.jpg" 
+                    alt="Dr. Meena - Founder of Lotus Polyclinic"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-[#E8A3B9] flex-shrink-0"
+                  />
+                  <div>
+                    <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-2">
+                      Dr. Meena - Founder
+                    </h3>
+                    <p className="text-base leading-relaxed text-gray-800 mb-4">
+                      <strong>MBBS, MD</strong> - brings over 16 years of experience with specialized expertise in diabetes management.
+                    </p>
+                    <p className="text-base leading-relaxed text-gray-800">
+                      Known for her compassionate approach, combining clinical excellence with genuine empathy.
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-8 lg:mt-0">
+              <div className="mt-8 lg:mt-0 space-y-6">
                 <div className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white rounded-lg p-6 shadow-xl">
                   <div className="flex items-center mb-6">
                     <Shield className="text-[#E8A3B9] mr-4" size={24} />
@@ -955,12 +963,19 @@ Please contact the patient to confirm the appointment.
                     ))}
                   </div>
                 </div>
+                
+                {/* New face_1.jpg image matching Mission & Vision card size */}
+                <img 
+                  src="/face_1.jpg" 
+                  alt="Lotus Polyclinic Healthcare Team"
+                  className="w-full h-64 object-cover rounded-lg shadow-lg border-2 border-[#F8D4E3]"
+                />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Services Section */}
+                {/* Services Section */}
         <section id="services" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="services-heading">
           <div className="px-5 sm:px-6 max-w-7xl mx-auto">
             <div className="text-center mb-12">
@@ -972,6 +987,15 @@ Please contact the patient to confirm the appointment.
               <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
                 Expert medical care across multiple specialties
               </p>
+            </div>
+
+            {/* New face_2.png image in Services section */}
+            <div className="flex justify-center mb-12">
+              <img 
+                src="/face_2.png" 
+                alt="Advanced Medical Services at Lotus Polyclinic"
+                className="w-full max-w-2xl h-64 object-cover rounded-xl shadow-lg border-2 border-[#F8D4E3]"
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1033,140 +1057,142 @@ Please contact the patient to confirm the appointment.
           </div>
         </section>
 
-{/* Testimonials Section - Fixed Height Card */}
-<section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
-  <div className="px-5 sm:px-6 max-w-6xl mx-auto">
-    <div className="text-center mb-12">
-      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#0D3B66] mr-2" viewBox="0 0 20 20" fill="currentColor">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
-      </div>
-      <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
-      <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
-        Real stories from our satisfied patients
-      </p>
-    </div>
-
-    {/* Fixed Height Card Container */}
-    <div className="bg-white rounded-xl shadow-lg border-2 border-[#F8D4E3] p-4 md:p-6 min-h-[500px] flex flex-col">
-      <div className="flex flex-col lg:flex-row items-start gap-6 flex-1">
-        {/* Main Image - Fixed Height Container */}
-        <div className="flex-1 w-full">
-            <img 
-              src={testimonialsData[currentTestimonial].file}
-              alt={`${testimonialsData[currentTestimonial].name} testimonial`}
-              className="w-full h-full object-contain max-h-72"
-            />
-          
-        </div>
-
-       
-      </div>
-
-      {/* Compact Navigation Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between mt-6 pt-4 border-t border-gray-200 gap-3">
-        <button 
-          onClick={goToPreviousTestimonial}
-          className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-50 text-sm"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Previous
-        </button>
-        <div className="flex items-center space-x-3">
-          <span className="text-xs font-medium text-gray-600">
-            <span className="text-[#0D3B66] font-bold">{currentTestimonial + 1}</span> / <span className="text-gray-800 font-bold">{testimonialsData.length}</span>
-          </span>
-          <div className="flex space-x-1">
-            {testimonialsData.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => handleTestimonialClick(index)}
-                className={`w-1.5 h-1.5 rounded-full transition-all ${
-                  index === currentTestimonial ? 'bg-[#0D3B66] scale-125' : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-                aria-label={`Go to review ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        <button 
-          onClick={goToNextTestimonial}
-          className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-50 text-sm"
-        >
-          Next
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
+        {/* Clinic Gallery Collage - Add this after Core Values section */}
+<section className="py-12 md:py-16 px-5 bg-white" aria-labelledby="gallery-heading">
+  
 </section>
 
-{/* Blog Section */}
-<section id="blogs" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="blogs-heading">
-  <div className="px-5 sm:px-6 max-w-7xl mx-auto">
-    <div className="text-center mb-12">
-      <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
-        <FileText size={16} className="text-[#0D3B66] mr-2" />
-        <span className="text-sm font-bold text-[#0D3B66] tracking-wide">HEALTH BLOG</span>
-      </div>
-      <h2 id="blogs-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">Health & Wellness Insights</h2>
-      <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
-        Expert medical advice and comprehensive health guides from our specialist team
-      </p>
-    </div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {blogPostsData.map((post) => (
-        <article key={post.id} className="bg-white rounded-lg shadow-lg hover:shadow-2xl transition-all border border-gray-100 hover:-translate-y-1 overflow-hidden group focus:outline-none focus:ring-2 focus:ring-[#E8A3B9]">
-          <div className="h-2 bg-gradient-to-r from-[#0D3B66] to-[#4A90E2]"></div>
-          <div className="p-6">
-            <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-lg flex items-center justify-center">
-                <post.icon size={20} className="text-[#E8A3B9]" />
+        {/* Testimonials Section - Fixed Height Card */}
+        <section id="testimonials" className="py-12 md:py-20 px-5 bg-gradient-to-b from-white to-gray-50" aria-labelledby="testimonials-heading">
+          <div className="px-5 sm:px-6 max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#0D3B66] mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="text-sm font-bold text-[#0D3B66] tracking-wide">TESTIMONIALS</span>
               </div>
-              <div className="ml-3">
-                <div className="text-sm font-semibold text-[#0D3B66]">{post.category}</div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Calendar size={14} className="mr-1" />
-                  {post.date}
+              <h2 id="testimonials-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">What Our Patients Say</h2>
+              <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
+                Real stories from our satisfied patients
+              </p>
+            </div>
+
+            {/* Fixed Height Card Container */}
+            <div className="bg-white rounded-xl shadow-lg border-2 border-[#F8D4E3] p-4 md:p-6 min-h-[500px] flex flex-col">
+              <div className="flex flex-col lg:flex-row items-start gap-6 flex-1">
+                {/* Main Image - Fixed Height Container */}
+                <div className="flex-1 w-full">
+                  <img 
+                    src={testimonialsData[currentTestimonial].file}
+                    alt={`${testimonialsData[currentTestimonial].name} testimonial`}
+                    className="w-full h-full object-contain max-h-72"
+                  />
                 </div>
               </div>
-            </div>
-            <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#E8A3B9] transition-colors line-clamp-2 leading-tight break-words">
-              {post.title}
-            </h3>
-            <p className="text-sm leading-relaxed text-gray-700 mb-4 line-clamp-3 break-words">
-              {post.excerpt}
-            </p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center text-sm text-gray-600">
-                <Clock size={14} className="mr-1" />
-                <span>{post.readTime}</span>
+
+              {/* Compact Navigation Controls */}
+              <div className="flex flex-col sm:flex-row items-center justify-between mt-6 pt-4 border-t border-gray-200 gap-3">
+                <button 
+                  onClick={goToPreviousTestimonial}
+                  className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-50 text-sm"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                  Previous
+                </button>
+                <div className="flex items-center space-x-3">
+                  <span className="text-xs font-medium text-gray-600">
+                    <span className="text-[#0D3B66] font-bold">{currentTestimonial + 1}</span> / <span className="text-gray-800 font-bold">{testimonialsData.length}</span>
+                  </span>
+                  <div className="flex space-x-1">
+                    {testimonialsData.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleTestimonialClick(index)}
+                        className={`w-1.5 h-1.5 rounded-full transition-all ${
+                          index === currentTestimonial ? 'bg-[#0D3B66] scale-125' : 'bg-gray-300 hover:bg-gray-400'
+                        }`}
+                        aria-label={`Go to review ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <button 
+                  onClick={goToNextTestimonial}
+                  className="flex items-center text-[#0D3B66] hover:text-[#E8A3B9] transition-colors font-medium px-3 py-2 rounded-lg hover:bg-gray-50 text-sm"
+                >
+                  Next
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
               </div>
-              <a 
-                href={post.filePath}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#0D3B66] hover:text-[#E8A3B9] font-medium text-sm flex items-center focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
-                aria-label={`Read full article: ${post.title} (opens in new tab)`}
-              >
-                Read Full Article
-                <ExternalLink size={14} className="ml-1" />
-              </a>
             </div>
           </div>
-        </article>
-      ))}
-    </div>
-  </div>
-</section>
+        </section>
+
+        {/* Blog Section */}
+        <section id="blogs" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="blogs-heading">
+          <div className="px-5 sm:px-6 max-w-7xl mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center bg-[#F8D4E3] rounded-full px-4 py-2 mb-4">
+                <FileText size={16} className="text-[#0D3B66] mr-2" />
+                <span className="text-sm font-bold text-[#0D3B66] tracking-wide">HEALTH BLOG</span>
+              </div>
+              <h2 id="blogs-heading" className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 mb-4">Health & Wellness Insights</h2>
+              <p className="text-base leading-relaxed text-gray-700 max-w-2xl mx-auto">
+                Expert medical advice and comprehensive health guides from our specialist team
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {blogPostsData.map((post) => (
+                <article key={post.id} className="bg-white rounded-lg shadow-lg hover:shadow-2xl transition-all border border-gray-100 hover:-translate-y-1 overflow-hidden group focus:outline-none focus:ring-2 focus:ring-[#E8A3B9]">
+                  <div className="h-2 bg-gradient-to-r from-[#0D3B66] to-[#4A90E2]"></div>
+                  <div className="p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] rounded-lg flex items-center justify-center">
+                        <post.icon size={20} className="text-[#E8A3B9]" />
+                      </div>
+                      <div className="ml-3">
+                        <div className="text-sm font-semibold text-[#0D3B66]">{post.category}</div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Calendar size={14} className="mr-1" />
+                          {post.date}
+                        </div>
+                      </div>
+                    </div>
+                    <h3 className="text-lg md:text-xl font-semibold text-gray-900 mb-3 group-hover:text-[#E8A3B9] transition-colors line-clamp-2 leading-tight break-words">
+                      {post.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-gray-700 mb-4 line-clamp-3 break-words">
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <Clock size={14} className="mr-1" />
+                        <span>{post.readTime}</span>
+                      </div>
+                      <a 
+                        href={post.filePath}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#0D3B66] hover:text-[#E8A3B9] font-medium text-sm flex items-center focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+                        aria-label={`Read full article: ${post.title} (opens in new tab)`}
+                      >
+                        Read Full Article
+                        <ExternalLink size={14} className="ml-1" />
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Contact Section */}
         <section id="contact" className="py-12 md:py-20 px-5 bg-white" aria-labelledby="contact-heading">
@@ -1211,24 +1237,24 @@ Please contact the patient to confirm the appointment.
                     </div>
                     
                     <div className="flex items-start">
-  <div className="bg-[#E8A3B9] p-3 rounded-lg mr-4 flex-shrink-0">
-    <Mail size={20} className="text-[#0D3B66]" />
-  </div>
-  <div>
-    <h4 className="font-semibold text-base mb-2">Email</h4>
-    <a 
-  href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="hover:underline text-base opacity-90 break-all block"
->
-  {config.CLINIC_EMAIL}
-</a>
-    <span className="text-sm text-white/70 mt-1 block">
-      
-    </span>
-  </div>
-</div>
+                      <div className="bg-[#E8A3B9] p-3 rounded-lg mr-4 flex-shrink-0">
+                        <Mail size={20} className="text-[#0D3B66]" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-base mb-2">Email</h4>
+                        <a 
+                          href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline text-base opacity-90 break-all block"
+                        >
+                          {config.CLINIC_EMAIL}
+                        </a>
+                        <span className="text-sm text-white/70 mt-1 block">
+                          
+                        </span>
+                      </div>
+                    </div>
                     
                     <div className="flex items-start">
                       <div className="bg-[#E8A3B9] p-3 rounded-lg mr-4 flex-shrink-0">
@@ -1238,50 +1264,46 @@ Please contact the patient to confirm the appointment.
                         <h4 className="font-semibold text-base mb-2">Working Hours</h4>
                         <p className="text-base opacity-90">Monday - Saturday: 9:00 AM – 9:00 PM</p>
                         <p className="text-base opacity-90">Sunday: 9:00 AM – 4:00 PM</p>
-
                       </div>
                     </div>
                   </div>
-
-                 
                 </div>
 
                 <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
                   <div className="p-6">
-                    
                     <div className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-  <div className="p-6">
-    <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
-      <MapPin size={24} className="mr-3 text-[#E8A3B9]" />
-      Our Location
-    </h3>
-    
-    {/* Embedded Map with Red Pin - No "View larger map" option */}
-    <div className="relative rounded-lg overflow-hidden border border-gray-200 bg-gray-100 aspect-video mb-4">
-      <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.207359106582!2d80.1759338!3d12.8669939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDUyJzAxLjIiTiA4MMKwMTAnMzMuNCJF!5e0!3m2!1sen!2sin!4v1733400000000&markers=color:red%7Csize:large%7C12.8669939,80.1759338&zoom=19&output=embed"
-        width="100%"
-        height="100%"
-        style={{ border: 0 }}
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        title="Lotus Polyclinic Location in Ponmar, Chennai"
-        className="w-full h-full"
-      />
-    </div>
-    
-    {/* Custom Google Maps Link */}
-    <a
-      href="https://www.google.com/maps/search/?api=1&query=12.8669939,80.1759338"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-4 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium"
-    >
-      <MapPin size={16} className="mr-2" />
-      Open in Google Maps with location pin
-    </a>
-  </div>
-</div>
+                      <div className="p-6">
+                        <h3 className="text-xl md:text-2xl font-semibold text-gray-900 mb-4 flex items-center">
+                          <MapPin size={24} className="mr-3 text-[#E8A3B9]" />
+                          Our Location
+                        </h3>
+                        
+                        {/* Embedded Map with Red Pin - No "View larger map" option */}
+                        <div className="relative rounded-lg overflow-hidden border border-gray-200 bg-gray-100 aspect-video mb-4">
+                          <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3887.207359106582!2d80.1759338!3d12.8669939!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDUyJzAxLjIiTiA4MMKwMTAnMzMuNCJF!5e0!3m2!1sen!2sin!4v1733400000000&markers=color:red%7Csize:large%7C12.8669939,80.1759338&zoom=19&output=embed"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 0 }}
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            title="Lotus Polyclinic Location in Ponmar, Chennai"
+                            className="w-full h-full"
+                          />
+                        </div>
+                        
+                        {/* Custom Google Maps Link */}
+                        <a
+                          href="https://www.google.com/maps/search/?api=1&query=12.8669939,80.1759338"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center bg-gradient-to-r from-[#0D3B66] to-[#4A90E2] text-white px-4 py-3 rounded-lg hover:from-[#E8A3B9] hover:to-[#F8D4E3] hover:text-[#0D3B66] transition-all font-medium"
+                        >
+                          <MapPin size={16} className="mr-2" />
+                          Open in Google Maps with location pin
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1314,48 +1336,48 @@ Please contact the patient to confirm the appointment.
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
-  <label htmlFor="phone" className="block text-sm font-semibold text-gray-800 mb-3">
-    Phone Number *
-    <span className="text-xs text-gray-600 ml-2"></span>
-  </label>
-  <input
-    id="phone"
-    type="tel"
-    placeholder="Enter 10-digit mobile number"
-    required
-    value={formData.phone}
-    onChange={handleInputChange}
-    pattern="[6-9]\d{9}"
-    title="Please enter a valid 10-digit Indian phone number starting with 6,7,8,9"
-    maxLength="10"
-    className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
-  />
-  {formData.phone && !/^[6-9]\d{9}$/.test(formData.phone) && (
-    <p className="text-red-500 text-xs mt-1">
-      Please enter a valid 10-digit number starting with 6-9
-    </p>
-  )}
-</div>
-<div>
-  <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-3">
-    Email *
-    <span className="text-xs text-gray-600 ml-2"></span>
-  </label>
-  <input
-    id="email"
-    type="email"
-    placeholder="your.email@example.com"
-    required
-    value={formData.email}
-    onChange={handleInputChange}
-    className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
-  />
-  {formData.email && !emailRegex.test(formData.email) && (
-    <p className="text-red-500 text-xs mt-1">
-      Please enter a valid email address
-    </p>
-  )}
-</div>
+                        <label htmlFor="phone" className="block text-sm font-semibold text-gray-800 mb-3">
+                          Phone Number *
+                          <span className="text-xs text-gray-600 ml-2"></span>
+                        </label>
+                        <input
+                          id="phone"
+                          type="tel"
+                          placeholder="Enter 10-digit mobile number"
+                          required
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          pattern="[6-9]\d{9}"
+                          title="Please enter a valid 10-digit Indian phone number starting with 6,7,8,9"
+                          maxLength="10"
+                          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
+                        />
+                        {formData.phone && !/^[6-9]\d{9}$/.test(formData.phone) && (
+                          <p className="text-red-500 text-xs mt-1">
+                            Please enter a valid 10-digit number starting with 6-9
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-3">
+                          Email *
+                          <span className="text-xs text-gray-600 ml-2"></span>
+                        </label>
+                        <input
+                          id="email"
+                          type="email"
+                          placeholder="your.email@example.com"
+                          required
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base focus:outline-none"
+                        />
+                        {formData.email && !emailRegex.test(formData.email) && (
+                          <p className="text-red-500 text-xs mt-1">
+                            Please enter a valid email address
+                          </p>
+                        )}
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -1373,32 +1395,32 @@ Please contact the patient to confirm the appointment.
                       <div>
                         <label htmlFor="time" className="block text-sm font-semibold text-gray-800 mb-3">Time *</label>
                         <select
-  id="time"
-  required
-  value={formData.time}
-  onChange={handleInputChange}
-  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base bg-white focus:outline-none"
->
-  <option value="">Select time</option>
-  <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
-  <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
-  <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
-  <option value="12:00-13:00">12:00 PM - 1:00 PM</option>
-  <option value="13:00-14:00">1:00 PM - 2:00 PM</option>
-  <option value="14:00-15:00">2:00 PM - 3:00 PM</option>
-  <option value="15:00-16:00">3:00 PM - 4:00 PM</option>
-  
-  {/* Show these slots only if NOT Sunday */}
-  {!isSunday(formData.date) && (
-    <>
-      <option value="16:00-17:00">4:00 PM - 5:00 PM</option>
-      <option value="17:00-18:00">5:00 PM - 6:00 PM</option>
-      <option value="18:00-19:00">6:00 PM - 7:00 PM</option>
-      <option value="19:00-20:00">7:00 PM - 8:00 PM</option>
-      <option value="20:00-21:00">8:00 PM - 9:00 PM</option>
-    </>
-  )}
-</select>
+                          id="time"
+                          required
+                          value={formData.time}
+                          onChange={handleInputChange}
+                          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E8A3B9] focus:border-[#E8A3B9] transition-all text-base bg-white focus:outline-none"
+                        >
+                          <option value="">Select time</option>
+                          <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
+                          <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+                          <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+                          <option value="12:00-13:00">12:00 PM - 1:00 PM</option>
+                          <option value="13:00-14:00">1:00 PM - 2:00 PM</option>
+                          <option value="14:00-15:00">2:00 PM - 3:00 PM</option>
+                          <option value="15:00-16:00">3:00 PM - 4:00 PM</option>
+                          
+                          {/* Show these slots only if NOT Sunday */}
+                          {!isSunday(formData.date) && (
+                            <>
+                              <option value="16:00-17:00">4:00 PM - 5:00 PM</option>
+                              <option value="17:00-18:00">5:00 PM - 6:00 PM</option>
+                              <option value="18:00-19:00">6:00 PM - 7:00 PM</option>
+                              <option value="19:00-20:00">7:00 PM - 8:00 PM</option>
+                              <option value="20:00-21:00">8:00 PM - 9:00 PM</option>
+                            </>
+                          )}
+                        </select>
                       </div>
                     </div>
 
@@ -1449,127 +1471,124 @@ Please contact the patient to confirm the appointment.
         </section>
       </main>
 
-{/* Footer */}
-<footer className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white py-12 px-5" role="contentinfo">
-  <div className="px-5 sm:px-6 max-w-7xl mx-auto">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-      <div>
-        <div className="flex items-center space-x-3 mb-6">
-          <div>
-            <div className="text-xl font-bold">LOTUS</div>
-            <div className="text-sm font-medium -mt-1 opacity-90">POLYCLINIC</div>
-          </div>
-        </div>
-        <p className="text-sm leading-relaxed mb-6 opacity-90">
-          "Caring beyond treatment" - Comprehensive healthcare provider committed to compassionate care.
-        </p>
-        <div className="flex space-x-4">
-        
-          <a 
-            href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
-            className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
-            aria-label="Call us"
-          >
-            <Phone size={20} />
-          </a>
-          <a 
-            href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
-            aria-label="Email us via Gmail"
-          >
-            <Mail size={20} />
-          </a>
-        </div>
-      </div>
-      
-      <div>
-        <h4 className="font-semibold text-lg mb-6">Quick Links</h4>
-        <div className="space-y-3">
-          {['home', 'about', 'services', 'facilities', 'blogs', 'testimonials', 'contact'].map((item) => (
-            <button
-              key={item}
-              onClick={() => scrollToSection(item)}
-              className="block text-white/80 hover:text-[#E8A3B9] transition-colors capitalize text-sm text-left focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
-              aria-label={`Navigate to ${item} section`}
-            >
-              {item === 'about' ? 'About Us' : 
-               item === 'contact' ? 'Contact Us' : 
-               item.charAt(0).toUpperCase() + item.slice(1)}
-            </button>
-          ))}
-        </div>
-      </div>
-      
-      <div>
-        <h4 className="font-semibold text-lg mb-6">Contact Info</h4>
-        <div className="space-y-3 text-white/80 text-sm">
-          <div className="flex items-start">
-            <MapPin size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
-            <span>No 1/285, ASM Complex, <br /> Vedhagiri Nagar,Ponmar,<br />  Chennai - 600127</span>
-          </div>
-          <div className="flex items-center">
-            <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
-            <a 
-              href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
-              className="hover:text-[#E8A3B9] transition-colors hover:underline"
-            >
-              {config.CLINIC_PHONE}
-            </a>
-          </div>
-          <div className="flex items-start">
-            <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
+      {/* Footer */}
+      <footer className="bg-gradient-to-br from-[#0D3B66] to-[#4A90E2] text-white py-12 px-5" role="contentinfo">
+        <div className="px-5 sm:px-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             <div>
-              <a 
-                href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-[#E8A3B9] transition-colors hover:underline break-words text-sm block mb-1"
-              >
-                {config.CLINIC_EMAIL}
-              </a>
+              <div className="flex items-center space-x-3 mb-6">
+                <div>
+                  <div className="text-xl font-bold">LOTUS</div>
+                  <div className="text-sm font-medium -mt-1 opacity-90">POLYCLINIC</div>
+                </div>
+              </div>
+              <p className="text-sm leading-relaxed mb-6 opacity-90">
+                "Caring beyond treatment" - Comprehensive healthcare provider committed to compassionate care.
+              </p>
+              <div className="flex space-x-4">
+                <a 
+                  href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
+                  className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
+                  aria-label="Call us"
+                >
+                  <Phone size={20} />
+                </a>
+                <a 
+                  href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/80 hover:text-[#E8A3B9] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded p-2"
+                  aria-label="Email us via Gmail"
+                >
+                  <Mail size={20} />
+                </a>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-lg mb-6">Quick Links</h4>
+              <div className="space-y-3">
+                {['home', 'about', 'services', 'facilities', 'blogs', 'testimonials', 'contact'].map((item) => (
+                  <button
+                    key={item}
+                    onClick={() => scrollToSection(item)}
+                    className="block text-white/80 hover:text-[#E8A3B9] transition-colors capitalize text-sm text-left focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+                    aria-label={`Navigate to ${item} section`}
+                  >
+                    {item === 'about' ? 'About Us' : 
+                    item === 'contact' ? 'Contact Us' : 
+                    item.charAt(0).toUpperCase() + item.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-lg mb-6">Contact Info</h4>
+              <div className="space-y-3 text-white/80 text-sm">
+                <div className="flex items-start">
+                  <MapPin size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
+                  <span>No 1/285, ASM Complex, <br /> Vedhagiri Nagar,Ponmar,<br />  Chennai - 600127</span>
+                </div>
+                <div className="flex items-center">
+                  <Phone size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
+                  <a 
+                    href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
+                    className="hover:text-[#E8A3B9] transition-colors hover:underline"
+                  >
+                    {config.CLINIC_PHONE}
+                  </a>
+                </div>
+                <div className="flex items-start">
+                  <Mail size={18} className="mr-3 text-[#E8A3B9] mt-0.5 flex-shrink-0" />
+                  <div>
+                    <a 
+                      href={`https://mail.google.com/mail/?view=cm&to=${config.CLINIC_EMAIL}&su=Appointment%20Inquiry%20-%20Lotus%20Polyclinic&body=Hello%20Lotus%20Polyclinic,%0A%0AI%20would%20like%20to%20inquire%20about%20an%20appointment%20or%20get%20more%20information%20about%20your%20services.%0A%0AThank%20you.`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-[#E8A3B9] transition-colors hover:underline break-words text-sm block mb-1"
+                    >
+                      {config.CLINIC_EMAIL}
+                    </a>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <Clock size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
+                  <span>Mon-Sat: 9AM - 9PM <br />Sun: 9AM - 4PM</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold text-lg mb-6">Emergency</h4>
+              <div className="space-y-3">
+                <div className="text-[#E8A3B9] font-medium text-sm"> Support Available</div>
+                <a 
+                  href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
+                  className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+                >
+                  Day Care Helpline
+                </a>
+              </div>
             </div>
           </div>
-          <div className="flex items-center">
-            <Clock size={18} className="mr-3 text-[#E8A3B9] flex-shrink-0" />
-            <span>Mon-Sat: 9AM - 9PM <br />Sun: 9AM - 4PM</span>
+          
+          <div className="border-t border-white/20 pt-8 text-center mt-8">
+            <p className="text-white/80 text-sm leading-relaxed mb-4">
+              © 2025 Lotus Polyclinic. | Built on the foundation of Sri Sai Clinic
+            </p>
+            <button
+              onClick={scrollToTop}
+              className="text-white/70 hover:text-[#E8A3B9] transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
+              aria-label="Scroll back to top of the page"
+            >
+              Back to Top ↑
+            </button>
           </div>
         </div>
-      </div>
-      
-      <div>
-        <h4 className="font-semibold text-lg mb-6">Emergency</h4>
-        <div className="space-y-3">
-          <div className="text-[#E8A3B9] font-medium text-sm"> Support Available</div>
-          <a 
-            href={`tel:${config.CLINIC_PHONE || '+91 9840398908'}`}
-            className="text-white/80 hover:text-[#E8A3B9] transition-colors hover:underline block text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
-          >
-            Day Care Helpline
-          </a>
-
-        </div>
-      </div>
-    </div>
-    
-    <div className="border-t border-white/20 pt-8 text-center mt-8">
-      <p className="text-white/80 text-sm leading-relaxed mb-4">
-        © 2025 Lotus Polyclinic. | Built on the foundation of Sri Sai Clinic
-      </p>
-      <button
-        onClick={scrollToTop}
-        className="text-white/70 hover:text-[#E8A3B9] transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A3B9] rounded px-2 py-1"
-        aria-label="Scroll back to top of the page"
-      >
-        Back to Top ↑
-      </button>
-    </div>
-  </div>
-</footer>
+      </footer>
     </div>
   );
 };
 
 export default App;
-
